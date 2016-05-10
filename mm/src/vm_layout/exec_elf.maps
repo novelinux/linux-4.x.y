@@ -1,0 +1,20 @@
+00008000-00009000 r-xp 00000000 b3:02 165        /home/pi/test/exec_elf
+00010000-00011000 rw-p 00000000 b3:02 165        /home/pi/test/exec_elf
+b6e00000-b6f23000 r-xp 00000000 b3:02 1925       /lib/arm-linux-gnueabihf/libc-2.13.so
+b6f23000-b6f2a000 ---p 00123000 b3:02 1925       /lib/arm-linux-gnueabihf/libc-2.13.so
+b6f2a000-b6f2c000 r--p 00122000 b3:02 1925       /lib/arm-linux-gnueabihf/libc-2.13.so
+b6f2c000-b6f2d000 rw-p 00124000 b3:02 1925       /lib/arm-linux-gnueabihf/libc-2.13.so
+b6f2d000-b6f30000 rw-p 00000000 00:00 0
+b6f30000-b6f50000 r-xp 00000000 b3:02 41964      /lib/arm-linux-gnueabihf/libgcc_s.so.1
+b6f50000-b6f57000 ---p 00020000 b3:02 41964      /lib/arm-linux-gnueabihf/libgcc_s.so.1
+b6f57000-b6f58000 rw-p 0001f000 b3:02 41964      /lib/arm-linux-gnueabihf/libgcc_s.so.1
+b6f67000-b6f69000 r-xp 00000000 b3:02 28719      /usr/lib/arm-linux-gnueabihf/libcofi_rpi.so
+b6f69000-b6f70000 ---p 00002000 b3:02 28719      /usr/lib/arm-linux-gnueabihf/libcofi_rpi.so
+b6f70000-b6f71000 rw-p 00001000 b3:02 28719      /usr/lib/arm-linux-gnueabihf/libcofi_rpi.so
+b6f71000-b6f8e000 r-xp 00000000 b3:02 1919       /lib/arm-linux-gnueabihf/ld-2.13.so
+b6f92000-b6f96000 rw-p 00000000 00:00 0
+b6f96000-b6f97000 r--p 0001d000 b3:02 1919       /lib/arm-linux-gnueabihf/ld-2.13.so
+b6f97000-b6f98000 rw-p 0001e000 b3:02 1919       /lib/arm-linux-gnueabihf/ld-2.13.so
+becaa000-beccb000 rw-p 00000000 00:00 0          [stack]
+beed9000-beeda000 r-xp 00000000 00:00 0          [sigpage]
+ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]

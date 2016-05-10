@@ -1,0 +1,54 @@
+```
+cat /proc/6242/maps
+b6c00000-b6e00000 rw-p 00000000 00:00 0
+b6e28000-b6e29000 r--p 00000000 00:00 0
+b6e29000-b6e5c000 r-xp 00000000 b3:17 1413       /system/lib/libstlport.so
+b6e5c000-b6e5e000 r--p 00032000 b3:17 1413       /system/lib/libstlport.so
+b6e5e000-b6e5f000 rw-p 00034000 b3:17 1413       /system/lib/libstlport.so
+b6e60000-b6e61000 r-xp 00000000 b3:17 1127       /system/lib/libcnefeatureconfig.so
+b6e61000-b6e62000 r--p 00000000 b3:17 1127       /system/lib/libcnefeatureconfig.so
+b6e62000-b6e63000 rw-p 00001000 b3:17 1127       /system/lib/libcnefeatureconfig.so
+b6e63000-b6e67000 r-xp 00000000 b3:17 2138       /system/vendor/lib/libvendorconn.so
+b6e67000-b6e68000 r--p 00003000 b3:17 2138       /system/vendor/lib/libvendorconn.so
+b6e68000-b6e69000 rw-p 00004000 b3:17 2138       /system/vendor/lib/libvendorconn.so
+b6e69000-b6e6b000 r-xp 00000000 b3:17 1302       /system/lib/libnetd_client.so
+b6e6b000-b6e6c000 r--p 00001000 b3:17 1302       /system/lib/libnetd_client.so
+b6e6c000-b6e6d000 rw-p 00002000 b3:17 1302       /system/lib/libnetd_client.so
+b6e6d000-b6e8d000 r--s 00000000 00:0b 5119       /dev/__properties__
+b6e8d000-b6e98000 r-xp 00000000 b3:17 1134       /system/lib/libcutils.so
+b6e98000-b6e99000 r--p 0000a000 b3:17 1134       /system/lib/libcutils.so
+b6e99000-b6e9a000 rw-p 0000b000 b3:17 1134       /system/lib/libcutils.so
+b6e9a000-b6e9c000 r-xp 00000000 b3:17 2099       /system/vendor/lib/libNimsWrap.so
+b6e9c000-b6e9d000 r--p 00001000 b3:17 2099       /system/vendor/lib/libNimsWrap.so
+b6e9d000-b6e9e000 rw-p 00002000 b3:17 2099       /system/vendor/lib/libNimsWrap.so
+b6e9e000-b6ea0000 r-xp 00000000 b3:17 1412       /system/lib/libstdc++.so
+b6ea0000-b6ea1000 r--p 00001000 b3:17 1412       /system/lib/libstdc++.so
+b6ea1000-b6ea2000 rw-p 00002000 b3:17 1412       /system/lib/libstdc++.so
+b6ea2000-b6eb8000 r-xp 00000000 b3:17 1235       /system/lib/libm.so
+b6eb8000-b6eb9000 r--p 00015000 b3:17 1235       /system/lib/libm.so
+b6eb9000-b6eba000 rw-p 00016000 b3:17 1235       /system/lib/libm.so
+b6ebb000-b6ebf000 r-xp 00000000 b3:17 1233       /system/lib/liblog.so
+b6ebf000-b6ec0000 r--p 00003000 b3:17 1233       /system/lib/liblog.so
+b6ec0000-b6ec1000 rw-p 00004000 b3:17 1233       /system/lib/liblog.so
+b6ec1000-b6ec2000 r--p 00000000 00:00 0
+b6ec2000-b6f24000 r-xp 00000000 b3:17 1071       /system/lib/libc.so
+b6f24000-b6f27000 r--p 00061000 b3:17 1071       /system/lib/libc.so
+b6f27000-b6f2a000 rw-p 00064000 b3:17 1071       /system/lib/libc.so
+b6f2a000-b6f33000 rw-p 00000000 00:00 0
+b6f34000-b6f35000 r-xp 00000000 b3:17 1368       /system/lib/libsigchain.so
+b6f35000-b6f36000 r--p 00000000 b3:17 1368       /system/lib/libsigchain.so
+b6f36000-b6f37000 rw-p 00001000 b3:17 1368       /system/lib/libsigchain.so
+b6f37000-b6f38000 rw-p 00000000 00:00 0
+b6f38000-b6f39000 r--p 00000000 00:00 0
+b6f39000-b6f3b000 rw-p 00000000 00:00 0
+b6f3b000-b6f3c000 r-xp 00000000 00:00 0          [sigpage]
+b6f3c000-b6f49000 r-xp 00000000 b3:17 310        /system/bin/linker
+b6f49000-b6f4a000 r--p 0000c000 b3:17 310        /system/bin/linker
+b6f4a000-b6f4b000 rw-p 0000d000 b3:17 310        /system/bin/linker
+b6f4b000-b6f4c000 rw-p 00000000 00:00 0
+b6f4c000-b6f4d000 r-xp 00000000 b3:17 2156       /system/bin/dyn_elf
+b6f4d000-b6f4e000 r--p 00000000 b3:17 2156       /system/bin/dyn_elf
+b6f4e000-b6f4f000 rw-p 00000000 00:00 0
+befa0000-befc1000 rw-p 00000000 00:00 0          [stack]
+ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
+```

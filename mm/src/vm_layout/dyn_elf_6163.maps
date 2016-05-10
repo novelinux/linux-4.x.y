@@ -1,0 +1,54 @@
+```
+# cat /proc/6163/maps
+2a000000-2a001000 r-xp 00000000 b3:17 2156       /system/bin/dyn_elf
+2a001000-2a002000 r--p 00000000 b3:17 2156       /system/bin/dyn_elf
+2a002000-2a003000 rw-p 00000000 00:00 0          [heap]
+b6c00000-b6e00000 rw-p 00000000 00:00 0
+b6edc000-b6edd000 r--p 00000000 00:00 0
+b6edd000-b6f10000 r-xp 00000000 b3:17 1413       /system/lib/libstlport.so
+b6f10000-b6f12000 r--p 00032000 b3:17 1413       /system/lib/libstlport.so
+b6f12000-b6f13000 rw-p 00034000 b3:17 1413       /system/lib/libstlport.so
+b6f14000-b6f15000 r-xp 00000000 b3:17 1127       /system/lib/libcnefeatureconfig.so
+b6f15000-b6f16000 r--p 00000000 b3:17 1127       /system/lib/libcnefeatureconfig.so
+b6f16000-b6f17000 rw-p 00001000 b3:17 1127       /system/lib/libcnefeatureconfig.so
+b6f17000-b6f1b000 r-xp 00000000 b3:17 2138       /system/vendor/lib/libvendorconn.so
+b6f1b000-b6f1c000 r--p 00003000 b3:17 2138       /system/vendor/lib/libvendorconn.so
+b6f1c000-b6f1d000 rw-p 00004000 b3:17 2138       /system/vendor/lib/libvendorconn.so
+b6f1d000-b6f1f000 r-xp 00000000 b3:17 1302       /system/lib/libnetd_client.so
+b6f1f000-b6f20000 r--p 00001000 b3:17 1302       /system/lib/libnetd_client.so
+b6f20000-b6f21000 rw-p 00002000 b3:17 1302       /system/lib/libnetd_client.so
+b6f21000-b6f41000 r--s 00000000 00:0b 5119       /dev/__properties__
+b6f41000-b6f4c000 r-xp 00000000 b3:17 1134       /system/lib/libcutils.so
+b6f4c000-b6f4d000 r--p 0000a000 b3:17 1134       /system/lib/libcutils.so
+b6f4d000-b6f4e000 rw-p 0000b000 b3:17 1134       /system/lib/libcutils.so
+b6f4e000-b6f50000 r-xp 00000000 b3:17 2099       /system/vendor/lib/libNimsWrap.so
+b6f50000-b6f51000 r--p 00001000 b3:17 2099       /system/vendor/lib/libNimsWrap.so
+b6f51000-b6f52000 rw-p 00002000 b3:17 2099       /system/vendor/lib/libNimsWrap.so
+b6f52000-b6f54000 r-xp 00000000 b3:17 1412       /system/lib/libstdc++.so
+b6f54000-b6f55000 r--p 00001000 b3:17 1412       /system/lib/libstdc++.so
+b6f55000-b6f56000 rw-p 00002000 b3:17 1412       /system/lib/libstdc++.so
+b6f56000-b6f6c000 r-xp 00000000 b3:17 1235       /system/lib/libm.so
+b6f6c000-b6f6d000 r--p 00015000 b3:17 1235       /system/lib/libm.so
+b6f6d000-b6f6e000 rw-p 00016000 b3:17 1235       /system/lib/libm.so
+b6f6f000-b6f73000 r-xp 00000000 b3:17 1233       /system/lib/liblog.so
+b6f73000-b6f74000 r--p 00003000 b3:17 1233       /system/lib/liblog.so
+b6f74000-b6f75000 rw-p 00004000 b3:17 1233       /system/lib/liblog.so
+b6f75000-b6f76000 r--p 00000000 00:00 0
+b6f76000-b6fd8000 r-xp 00000000 b3:17 1071       /system/lib/libc.so
+b6fd8000-b6fdb000 r--p 00061000 b3:17 1071       /system/lib/libc.so
+b6fdb000-b6fde000 rw-p 00064000 b3:17 1071       /system/lib/libc.so
+b6fde000-b6fe7000 rw-p 00000000 00:00 0
+b6fe8000-b6fe9000 r-xp 00000000 b3:17 1368       /system/lib/libsigchain.so
+b6fe9000-b6fea000 r--p 00000000 b3:17 1368       /system/lib/libsigchain.so
+b6fea000-b6feb000 rw-p 00001000 b3:17 1368       /system/lib/libsigchain.so
+b6feb000-b6fec000 rw-p 00000000 00:00 0
+b6fec000-b6fed000 r--p 00000000 00:00 0
+b6fed000-b6fef000 rw-p 00000000 00:00 0
+b6fef000-b6ff0000 r-xp 00000000 00:00 0          [sigpage]
+b6ff0000-b6ffd000 r-xp 00000000 b3:17 310        /system/bin/linker
+b6ffd000-b6ffe000 r--p 0000c000 b3:17 310        /system/bin/linker
+b6ffe000-b6fff000 rw-p 0000d000 b3:17 310        /system/bin/linker
+b6fff000-b7000000 rw-p 00000000 00:00 0
+befdf000-bf000000 rw-p 00000000 00:00 0          [stack]
+ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
+```

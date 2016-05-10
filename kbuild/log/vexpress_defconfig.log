@@ -1,0 +1,14 @@
+make -f ./scripts/Makefile.build obj=scripts/basic
+  gcc -Wp,-MD,scripts/basic/.fixdep.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89     -o scripts/basic/fixdep scripts/basic/fixdep.c  
+rm -f .tmp_quiet_recordmcount
+make -f ./scripts/Makefile.build obj=scripts/kconfig vexpress_defconfig
+  gcc -Wp,-MD,scripts/kconfig/.conf.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89   -I/usr/include/ncursesw   -DCURSES_LOC="<ncurses.h>" -DLOCALE   -c -o scripts/kconfig/conf.o scripts/kconfig/conf.c
+  cat scripts/kconfig/zconf.tab.c_shipped > scripts/kconfig/zconf.tab.c
+  cat scripts/kconfig/zconf.lex.c_shipped > scripts/kconfig/zconf.lex.c
+  cat scripts/kconfig/zconf.hash.c_shipped > scripts/kconfig/zconf.hash.c
+  gcc -Wp,-MD,scripts/kconfig/.zconf.tab.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89   -I/usr/include/ncursesw   -DCURSES_LOC="<ncurses.h>" -DLOCALE  -Iscripts/kconfig -c -o scripts/kconfig/zconf.tab.o scripts/kconfig/zconf.tab.c
+  gcc  -o scripts/kconfig/conf scripts/kconfig/conf.o scripts/kconfig/zconf.tab.o  
+scripts/kconfig/conf  --defconfig=arch/arm/configs/vexpress_defconfig Kconfig
+#
+# configuration written to .config
+#
