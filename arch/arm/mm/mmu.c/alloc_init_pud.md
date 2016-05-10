@@ -33,4 +33,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/pg
 alloc_init_pmd
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/alloc_init_pmd.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/alloc_init_pmd.md

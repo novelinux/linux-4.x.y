@@ -145,8 +145,8 @@ maps
 
 ### exec_elf
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/exec_elf.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/exec_elf.maps
 
 ### dyn_elf
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/dyn_elf_6163.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/dyn_elf_6163.maps

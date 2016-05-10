@@ -172,7 +172,7 @@ vm_ops
 
 如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mm_h/vm_operations_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_h/vm_operations_struct.md
 
 vm_pgoff
 ----------------------------------------

@@ -43,7 +43,7 @@ static void __init map_lowmem(void)
 struct memblock_region的形式存在。map_lowmem的作用就是将以struct memblock_region类型的
 内存节点转换为struct map_desc类型然后传递给create_mapping。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/memblock.c/memblock.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock.md
 
 ### dmesg
 
@@ -128,12 +128,12 @@ create_mapping
 
 ### __phys_to_pfn
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/memory.h/__phys_to_pfn.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/__phys_to_pfn.md
 
 ### __phys_to_virt
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/memory.h/__pa_vs__va.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/__pa_vs__va.md
 
 ### create_mapping
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/create_mapping.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/create_mapping.md

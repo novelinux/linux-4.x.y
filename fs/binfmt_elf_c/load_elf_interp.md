@@ -75,7 +75,7 @@ out:
 
 ### total_mapping_size实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/binfmt_elf_c/total_mapping_size.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/total_mapping_size.md
 
 经过total_mapping_size计算出的size值大小如下:
 
@@ -238,4 +238,4 @@ bss区的大小. 所以它们之间的距离正好是bss段的大小. vm_brk的�
 
 vm_brk的具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/vm_brk.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/vm_brk.md

@@ -177,7 +177,7 @@ struct pid_link
 
 上述各结构组织如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/id/res/id_struct.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/id/res/id_struct.jpg
 
 pid指向进程所属的pid结构实例，node用作散列表元素。为在给定的命名空间中查找对应于指定PID数值的pid
 结构实例，使用了一个散列表:

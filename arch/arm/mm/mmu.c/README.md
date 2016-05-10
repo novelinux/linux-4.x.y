@@ -3,7 +3,7 @@ MMU - page table
 
 arm mmu的页表结构的通用框图:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/mmu.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/mmu.jpg
 
 以上是arm的页表框图的典型结构 - 即是二级页表结构.
 
@@ -28,13 +28,13 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/
 * 对没有或者禁止高速缓存的系统（包括在没有高速缓存系统中的所有存储器访问），物理地址将被用
   作主存储器访问的地址。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/mmu_tlb_mm.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/mmu_tlb_mm.jpg
 
 其中第一级页表（L1）是由虚拟地址的高12bit（bits[31：20]）组成,所以第一级页表有4096个item，
 每个item占4个字节，所以一级页表的大小为16KB，而在第一级页表中的每个entry的最低2bit可以用
 来区分具体是什么种类的页表项，2bit可以区分4种页表项，具体每种页表项的结构如下：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/page_item_category.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/page_item_category.png
 
 简而言之L1页表的页表项主要有两大类:
 
@@ -48,7 +48,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/
 Linux page table
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/misc/page_table.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/page_table.md
 
 ARM是2级的页表目录管理，事实上，只有PGD, PTE才是真正有意义的。
 
@@ -57,11 +57,11 @@ ARM是2级的页表目录管理，事实上，只有PGD, PTE才是真正有意�
 但在linux内核启动的初始化阶段，临时建立页表（initial page tables）以供linux内核初始化提供
 执行环境，这时L1的页表项使用的就是第二种页表项（section enty），他直接映射的是1M的内存空间。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/__create_page_tables.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__create_page_tables.md
 
 针对这种section page translation，mmu硬件执行虚拟地址转物理地址的过程如下：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/L1.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/L1.png
 
 ### paging_init
 
@@ -72,7 +72,7 @@ paging_init-->map_lowmem函数中会重新建立页表，该函数为物理内�
 
 说到这里引入一个重要的概念，就是与低端内存相对的高端内存，什么是高端内存？为什么需要高端内存？
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/misc/high_memory-low_memory.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/high_memory-low_memory.md
 
 为了解析这个问题，我们假设我们使用的物理内存有2GB大小，另外由于我们内核空间的地址范围是从
 3G-4G的空间，并且前面也说到了，linux内核的低端内存空间都是一一映射的，如果不引入高端内存这个概念，
@@ -90,11 +90,11 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/misc/high_memory-lo
 
 arm mmu硬件是如何在二级页表结构中，实现虚拟地址转物理地址的.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/L2.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/L2.png
 
 那么内核代码是如何建立映射表的呢？
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/paging_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/paging_init.md
 
 ARM 页表描述符
 ----------------------------------------
@@ -114,44 +114,44 @@ ARM 页表描述符
 
 #### L1
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/pg_armv45_l1.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/pg_armv45_l1.jpg
 
 #### L2
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/pg_armv45_l2.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/pg_armv45_l2.jpg
 
 ### ARMv6
 
 #### L1
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/pg_armv6_l1.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/pg_armv6_l1.jpg
 
 #### L2
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/pg_armv6_l2.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/pg_armv6_l2.jpg
 
 页表计算
 ----------------------------------------
 
 ### 页目录(PGD)
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/create_mapping.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/create_mapping.md
 
 #### 页目录项地址
 
 页目录项地址的计算是通过宏pgd_offset_k来计算的，如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgtable.h/pgd_offset_k.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/pgd_offset_k.md
 
 #### 页目录项值
 
 页目录项值的计算是通过宏__pmd来计算的，如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/README.md
 
 #### 具体流程
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/__map_init_section.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/__map_init_section.md
 
 ### 一级页表项(PMD)
 
@@ -159,7 +159,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/__ma
 
 同页目录项地址
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgtable.h/pgd_offset_k.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/pgd_offset_k.md
 
 #### 一级页表项值
 
@@ -168,7 +168,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/p
         __pmd_populate(pmd, __pa(pte), prot);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/early_pte_alloc.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/early_pte_alloc.md
 
 ### 二级页表项(PTE)
 
@@ -178,7 +178,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/earl
         pte_t *pte = early_alloc(PTE_HWTABLE_OFF + PTE_HWTABLE_SIZE);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/early_alloc.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/early_alloc.md
 
 #### 二级页表项值
 
@@ -188,4 +188,4 @@ pte = pte_offset_kernel(pmd, addr);
 set_pte_ext(pte, pfn_pte(pfn, __pgprot(type->prot_pte)), 0);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/alloc_init_pte.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/alloc_init_pte.md

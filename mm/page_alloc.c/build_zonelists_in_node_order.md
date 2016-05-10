@@ -32,4 +32,4 @@ static void build_zonelists_in_node_order(pg_data_t *pgdat, int node)
 build_zonelists_node
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/build_zonelists_node.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonelists_node.md

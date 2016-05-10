@@ -20,7 +20,7 @@ Linux使用三级页表。
 Linux page table
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y//mm/misc/page_table.md
+https://github.com/novelinux/linux-4.x.y/tree/master//mm/misc/page_table.md
 
 Linux arm page table
 ----------------------------------------

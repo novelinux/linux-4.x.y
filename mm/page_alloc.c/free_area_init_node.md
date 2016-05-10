@@ -4,7 +4,7 @@ free_area_init_node
 zone_sizes_init函数在初始化完成Node 0的ZONE大小之后便调用free_area_init_node函数来继续初始化
 Node的其余数据结构.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/init.c/zone_sizes_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/zone_sizes_init.md
 
 Arguments
 ----------------------------------------

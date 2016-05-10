@@ -322,7 +322,7 @@ mem_types
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/mem_types.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/mem_types.md
 
 ### aries_dmesg
 

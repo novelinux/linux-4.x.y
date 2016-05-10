@@ -91,7 +91,7 @@ dup_task_struct来建立父进程task_struct的副本。用于子进程的新的
 
 例如init_task的相关信息:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/init_task.c
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c
 
 ```
     retval = -ENOMEM;
@@ -102,11 +102,11 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/init_t
 
 其中,current指向当前正在运行的进程，其获取方式如下:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/asm-generic/current.h/current.h.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/current.h/current.h.md
 
 dup_task_struct的具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/fork.c/dup_task_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/dup_task_struct.md
 
 4.检查当前特定用户进程数
 ----------------------------------------
@@ -510,7 +510,7 @@ pid_nr函数对给定的pid实例计算全局数值PID。
 
 有关进程id相关操作如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/id/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/id/README.md
 
 流程图
 ----------------------------------------

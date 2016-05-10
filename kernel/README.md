@@ -59,7 +59,7 @@ Linux用clone方法创建线程。其工作方式类似于fork，但启用了精
 而无法感知到其他进程的存在。应用程序无需关注其他程序的存在，好像计算机中只有一个进程一样。Linux将虚拟地址空间划分为两个部分，
 分别称为内核空间和用户空间，如图所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/res/virtual_space.png
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/res/virtual_space.png
 
 系统中每个用户进程都有自身的虚拟地址范围，从0到TASK_SIZE。用户空间之上的区域
 （从TASK_SIZE到232或264）保留给内核专用，用户进程不能访问。TASK_SIZE是一个特定于
@@ -81,7 +81,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/res/virtual_spa
 进程可以驻留在某一特权级别。每个特权级别都有各种限制，例如对执行某些汇编语言指令或访问虚拟地址空间某一特定部分的限制。
 IA-32体系结构使用4种特权级别构成的系统，各级别可以看作是环。内环能够访问更多的功能，外环则较少，如图所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/res/privilege.png
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/res/privilege.png
 
 尽管英特尔处理器区分4种特权级别，但Linux只使用两种不同的状态：核心态和用户状态。
 两种状态的关键差别在于对高于TASK_SIZE的内存区域的访问。简而言之，在用户状态禁止访问内核空间。
@@ -115,7 +115,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/res/privilege.p
 系统将所有进程保存在一个进程表中，无论其状态是运行、睡眠或等待。但睡眠进程会特别标记出来，调度器会知道它们无法立即运行。
 睡眠进程会分类到若干队列中，因此它们可在适当的时间唤醒，例如在进程等待的外部事件已经发生时。下图描述了进程的几种状态及其转换。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/res/task_state.png
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/res/task_state.png
 
 对于一个排队中的可运行进程，我们来考察其各种可能的状态转换。该进程已经就绪，但没有运行，因为CPU分配给了其他进程（因此该进程的状态是“等待”）。
 在调度器授予CPU时间之前，进程会一直保持该状态。在分配CPU时间之后，其状态改变为“运行”（路径④）。在调度器决定从该进程收回CPU资源时，
@@ -142,7 +142,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/res/task_state.
 
 Linux内核涉及进程和程序的所有算法都围绕一个名为task_struct的数据结构建立，该结构定义如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/task_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/task_struct.md
 
 进程类型
 ----------------------------------------
@@ -167,14 +167,14 @@ init_task
 
 init_task在Linux系统中，只有这个进程是静态分配的:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/init_task.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c/README.md
 
 进程创建
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/fork.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/README.md
 
 进程调度
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/sched/core.c/__schedule.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/__schedule.md

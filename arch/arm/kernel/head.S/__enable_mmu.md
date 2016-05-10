@@ -69,7 +69,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/d
 
 ### __v7_setup
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/proc-v7.S/__v7_setup.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/proc-v7.S/__v7_setup.md
 
 接下来再次跳转到__turn_mmu_on执行:
 
@@ -130,7 +130,7 @@ ENDPROC(__turn_mmu_on)
 __mmap_switched
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__mmap_switched.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__mmap_switched.md
 
 参考资料
 ----------------------------------------

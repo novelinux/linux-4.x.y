@@ -4,7 +4,7 @@ load_elf_binary
 针对本例，我们使用如下elf文件进行分析，其中exec_elf是EXEC类型的，dyn_elf是DYN类型的.
 其区别如下:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/EXEC_DYN.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/EXEC_DYN.md
 
 path: fs/binfmt_elf.c
 ```
@@ -392,7 +392,7 @@ setup_arg_pages函数用来重新调整当前进程的栈区域位置，权限�
 
 STACK_TOP值在arm体系结构定义如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/memory_h/memory.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory_h/memory.md
 
 setup_arg_pages具体实现如下所示:
 
@@ -616,7 +616,7 @@ elf_brk=0x2004
 
 进程虚拟内存空间布局如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/task_vm_layout.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/task_vm_layout.md
 
 ```
     ...
@@ -644,7 +644,7 @@ elf_brk=b6f86004
 
 对应完整的maps如下所示
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/binfmt_elf_c/elf.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf.maps
 
 接下来调用set_brk来设置bss段和brk段信息,如下所示:
 
@@ -670,7 +670,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/binfmt_elf_c/elf.ma
 
 set_brk函数用来设置当前进程brk空间区域，具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/binfmt_elf_c/set_brk.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/set_brk.md
 
 经过set_brk设置之后，当前进程的brk段起始地址和结束地址如下所示:
 

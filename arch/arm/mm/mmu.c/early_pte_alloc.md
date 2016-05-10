@@ -27,19 +27,19 @@ static pte_t * __init early_pte_alloc(pmd_t *pmd, unsigned long addr, unsigned l
 PTE_HWTABLE_OFF vs PTE_HWTABLE_SIZE
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/PTE_HWTABLE_XXX.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/PTE_HWTABLE_XXX.md
 
 early_alloc
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/early_alloc.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/early_alloc.md
 
 __pmd_populate
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgalloc.h/__pmd_populate.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgalloc.h/__pmd_populate.md
 
 pte_offset_kernel
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgtable.h/pte_offset_kernel.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/pte_offset_kernel.md

@@ -33,7 +33,7 @@ static int build_zonelists_node(pg_data_t *pgdat, struct zonelist *zonelist,
         zone = pgdat->node_zones + zone_type;
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/enum_zone_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_type.md
 
 populated_zone
 ----------------------------------------
@@ -46,7 +46,7 @@ populated_zone
         if (populated_zone(zone)) {
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/populated_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/populated_zone.md
 
 zoneref_set_zone
 ----------------------------------------
@@ -63,4 +63,4 @@ zoneref_set_zone
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/zoneref_set_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zoneref_set_zone.md

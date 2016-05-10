@@ -56,4 +56,4 @@ path: include/generated/bounds.h
 __MAX_NR_ZONES
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/enum_zone_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_type.md

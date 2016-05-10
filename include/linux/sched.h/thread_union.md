@@ -33,7 +33,7 @@ thread_info保存了特定于体系结构的汇编语言代码需要访问的那
 
 ### arm
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/thread_info.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/thread_info.md
 
 current vs current_thread_info
 ----------------------------------------

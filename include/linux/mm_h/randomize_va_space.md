@@ -26,16 +26,16 @@ path: mm/src/vm_layout/dyn_elf
 
 1. randomize_va_space set 0.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/dyn_elf_6163.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/dyn_elf_6163.maps
 
 vs
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/dyn_elf_6189.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/dyn_elf_6189.maps
 
 2. randomize_va_space set 2
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/dyn_elf_6189.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/dyn_elf_6189.maps
 
 vs
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/src/vm_layout/dyn_elf_6242.maps
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/src/vm_layout/dyn_elf_6242.maps

@@ -97,4 +97,4 @@ switch_to
 
 ### arm
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/switch_to.h/switch_to.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/switch_to.h/switch_to.md

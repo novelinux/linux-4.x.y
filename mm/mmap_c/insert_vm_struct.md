@@ -52,7 +52,7 @@ int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
 2.find_vma_links
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/find_vma_links.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/find_vma_links.md
 
 3.vma_link
 ----------------------------------------
@@ -60,4 +60,4 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/find_vma_lin
 在通过find_vma_links找到足够的信息后，接下来调用vma_link函数将新区域合并到该进程现存
 的数据结构中去.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/vma_link.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/vma_link.md

@@ -39,4 +39,4 @@ static int run_init_process(const char *init_filename)
 do_execve
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/exec_c/do_execve.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/do_execve.md

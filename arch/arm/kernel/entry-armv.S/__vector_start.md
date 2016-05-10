@@ -52,4 +52,4 @@ __stubs_start:
 
 ### vector_swi
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/entry-common.S/vector_swi.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/vector_swi.md

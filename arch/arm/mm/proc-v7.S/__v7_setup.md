@@ -4,7 +4,7 @@ __v7_setup
 __v7_setup用来配置与armv7平台相关的MMU和页表相关信息.配置完毕后才能enable MMU.
 其在内核启动过程中被调用.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/README.md
 
 完成的主要工作如下：
 
@@ -178,7 +178,7 @@ v7_crval定义了三个常量.
     adr    r5, v7_crval
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/proc-v7-2level.S/v7_crval.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/proc-v7-2level.S/v7_crval.md
 
 ### set cp15
 
@@ -209,7 +209,7 @@ ENDPROC(__v7_setup)
 
 ### __enable_mmu
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/README.md
 
 CP15
 ----------------------------------------

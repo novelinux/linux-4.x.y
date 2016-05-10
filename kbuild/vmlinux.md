@@ -56,7 +56,7 @@ arm-none-eabi-ld -EL -p --no-undefined -X --pic-veneer --build-id -o vmlinux -T 
 
 if_changed命令定义如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/cmd.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/cmd.md
 
 ### vmlinux.lds
 

@@ -52,4 +52,4 @@ handle_unknown
 在parse_early_options函数中handle_unknown函数为do_early_param用来处理
 传递给内核的参数.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/do_early_param.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/do_early_param.md

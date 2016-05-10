@@ -33,7 +33,7 @@ early_pte_alloc函数判断对应的pmd所指向的L2(PTE)页表是否存在，�
     pte_t *pte = early_pte_alloc(pmd, addr, type->prot_l1);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/early_pte_alloc.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/early_pte_alloc.md
 
 set_pte_ext
 ----------------------------------------
@@ -49,4 +49,4 @@ set_pte_ext
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/set_pte_ext.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/set_pte_ext.md

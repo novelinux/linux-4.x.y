@@ -14,7 +14,7 @@ Linux采用页表的概念来管理虚拟地址空间。MIPS与i386一样，都�
 
 如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/misc/res/linux_page.JPG
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/res/linux_page.JPG
 
 图中有个cr3，它是一个寄存器，专门用于保存页全局目录的基地址，内核的主内核页全局目录的基地址保存
 在swapper_pg_dir全局变量中，但需要使用主内核页表时系统会把这个变量的值放入cr3寄存器，进程们自己
@@ -38,9 +38,9 @@ LINUX 逻辑上把虚拟地址从高到低分成5部分，分别作为PGD、PUD�
 5.虚拟地址中的最后一个位段是物理页面的页内偏移，将此偏移与物理页面的起始地址相加便得到
   虚拟地址对应的物理地址。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/misc/res/virt_to_phy.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/res/virt_to_phy.jpg
 
 ARM
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/README.md

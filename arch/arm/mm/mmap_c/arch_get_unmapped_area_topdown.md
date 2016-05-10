@@ -84,7 +84,7 @@ find_vma用于在进程虚拟地址空间中查找结束地址在给定地址之
 
 具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/find_vma.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/find_vma.md
 
 3.vm_unmapped_area
 ----------------------------------------
@@ -144,4 +144,4 @@ vm_unmapped_area(struct vm_unmapped_area_info *info)
 
 unmapped_area_topdown的具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/unmapped_area_topdown.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/unmapped_area_topdown.md

@@ -16,15 +16,15 @@ $ make zImage
 zImage编译过程
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/zImage.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/zImage.md
 
 log
 ----------------------------------------
 
 ### make vexpress_defconfig
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/log/vexpress_defconfig.log
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/log/vexpress_defconfig.log
 
 ### make zImage
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/log/zImage.log
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/log/zImage.log

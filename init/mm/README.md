@@ -19,7 +19,7 @@ Linux内核的内存模型。例如，在IA-32系统上需要切换到保护模�
 内存域之间分配情况的信息。所有平台上都实现了特定于体系结构的NODE_DATA宏，用于通过结点编号，
 来查询与一个NUMA结点相关的pg_data_t实例。有关物理内存的管理概述如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/misc/PHY_manage.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/PHY_manage.md
 
 分析场景
 ----------------------------------------
@@ -55,11 +55,11 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/setup.
 
 ### setup_per_cpu_areas
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/percpu.c/setup_per_cpu_areas.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/percpu.c/setup_per_cpu_areas.md
 
 ### build_all_zonelists
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/build_all_zonelists.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_all_zonelists.md
 
 ### mm_init
 

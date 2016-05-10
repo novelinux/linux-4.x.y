@@ -6,7 +6,7 @@ do_brk()有两个参数，addr是要扩展到的目标区域的开始地址，le
 
 其具体实现可参考do_mmap_pgoff,其实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/do_mmap_pgoff.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/do_mmap_pgoff.md
 
 path: mm/mmap.c
 ```

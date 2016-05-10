@@ -9,7 +9,7 @@ bootloader加载并执行的。
 zImage编译过程
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/zImage.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/zImage.md
 
 zImage的执行
 ----------------------------------------
@@ -61,8 +61,8 @@ path: kbuild/binary/arch/arm/boot/compressed/vmlinux.S
 
 完整的反汇编文件如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/binary/arch/arm/boot/compressed/vmlinux.S
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/binary/arch/arm/boot/compressed/vmlinux.S
 
 上述反汇编出来的0地址处部分代码,即为对应head.S文件start标志处开始的代码，如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/boot/compressed/head.S/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/boot/compressed/head.S/README.md

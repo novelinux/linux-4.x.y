@@ -13,7 +13,7 @@ void __init bootmem_init(void)
     memblock_allow_resize();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/memblock.c/memblock_allow_resize.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_allow_resize.md
 
 find_limits
 ----------------------------------------

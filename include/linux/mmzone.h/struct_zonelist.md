@@ -35,14 +35,14 @@ struct zonelist {
 struct zonelist_cache
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/struct_zonelist_cache.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zonelist_cache.md
 
 struct zoneref
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/struct_zoneref.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zoneref.md
 
 MAX_ZONES_PER_ZONELIST
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/MAX_ZONES_PER_ZONELIST.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/MAX_ZONES_PER_ZONELIST.md

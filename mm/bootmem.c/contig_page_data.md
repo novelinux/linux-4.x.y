@@ -18,7 +18,7 @@ bootmem_data_t bootmem_node_data[MAX_NUMNODES] __initdata;
 struct pglist_data
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/pg_data_t.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/pg_data_t.md
 
 bootmem_data_t
 ----------------------------------------

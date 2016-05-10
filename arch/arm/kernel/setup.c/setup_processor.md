@@ -51,7 +51,7 @@ static void __init setup_processor(void)
 [    0.000000] CPU: ARMv7 Processor [511f06f0] revision 0 (ARMv7), cr=10c5387d
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/lookup_processor_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/lookup_processor_type.md
 
 other
 ----------------------------------------

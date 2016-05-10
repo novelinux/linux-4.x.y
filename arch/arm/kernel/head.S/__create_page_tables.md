@@ -193,7 +193,7 @@ create_page_table完成了3种地址映射的页表空间填写：
 * kernel image的线性映射
 * atags所在1M空间的线性映射
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/res/map.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/res/map.jpg
 
 问题
 ----------------------------------------
@@ -230,4 +230,4 @@ atags地址是有bootloader中指定，然后告诉kernel。那就有这样一�
 
 有关ARM一级页表的相关信息如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/res/L1.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/res/L1.png

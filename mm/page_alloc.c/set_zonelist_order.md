@@ -15,14 +15,14 @@ static void set_zonelist_order(void)
 user_zonelist_order
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/user_zonelist_order.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/user_zonelist_order.md
 
 current_zonelist_order
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/current_zonelist_order.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/current_zonelist_order.md
 
 default_zonelist_order
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/default_zonelist_order.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/default_zonelist_order.md

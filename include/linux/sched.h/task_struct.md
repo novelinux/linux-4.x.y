@@ -497,7 +497,7 @@ rlim数组中的位置标识了受限制资源的类型，这也是内核需要�
 关联起来的原因。下表列出了可能的常数及其含义。关于如何最佳地运用各种限制，系统程序
 设计方面的教科书提供了详细的说明，而setrlimit(2)的手册页详细描述了所有的限制。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/res/rlimit.png
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/res/rlimit.png
 
 内核在proc文件系统中对每个进程都包含了对应的一个文件，这样就可以查看当前的rlimit值：
 
@@ -524,11 +524,11 @@ Max realtime timeout      unlimited            unlimited            us
 
 ### struct nsproxy
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/README.md
 
 ### id
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/id/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/id/README.md
 
 ### 进程关系
 
@@ -539,7 +539,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/
   进程A和进程C之间有时称之为祖孙关系。
 * 如果进程A分支若干次形成几个子进程B1，B2，…，Bn，各个Bi进程之间的关系称之为兄弟关系。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/res/task_relation.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/res/task_relation.jpg
 
 task_struct数据结构提供了两个链表表头，用于实现这些关系：
 

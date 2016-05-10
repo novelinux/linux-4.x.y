@@ -20,7 +20,7 @@ static void __init create_mapping(struct map_desc *md)
 {
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/mach/map.h/struct_map_desc.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/mach/map.h/struct_map_desc.md
 
 参数合法性检查
 ----------------------------------------
@@ -85,7 +85,7 @@ mem_types
     ...
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/mem_types.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/mem_types.md
 
 pgd
 ----------------------------------------
@@ -208,7 +208,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/pg
 
 ### alloc_init_pud
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/alloc_init_pud.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/alloc_init_pud.md
 
 问题
 ----------------------------------------

@@ -50,4 +50,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/p
 early_pte_alloc
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/early_pte_alloc.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/early_pte_alloc.md

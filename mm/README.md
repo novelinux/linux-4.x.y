@@ -37,7 +37,7 @@ https://github.com/leeminghao/doc-linux/blob/master/arch/arm/msm8960/memory_layo
 
 #### MMU
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/README.md
 
 物理内存管理
 ----------------------------------------
@@ -52,4 +52,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/init/mm/README.md
 进程虚拟地址空间
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/task_vm_layout.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/task_vm_layout.md

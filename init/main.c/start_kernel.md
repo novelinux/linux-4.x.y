@@ -5,7 +5,7 @@ path: init/main.c
 
 __mmap_switched在为内核跳转到start_kernel C函数准备运行环境:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__mmap_switched.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__mmap_switched.md
 
 asmlinkage vs __init
 ----------------------------------------
@@ -22,11 +22,11 @@ asmlinkage和__init这两个宏是写内核代码的一种特定表示，一种�
 
 * asmlinkage
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/appendix/gcc_op/asmlinkage.md
+https://github.com/novelinux/linux-4.x.y/tree/master/appendix/gcc_op/asmlinkage.md
 
 * __init
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/appendix/gcc_op/__init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/appendix/gcc_op/__init.md
 
 lockdep_init
 ----------------------------------------
@@ -39,7 +39,7 @@ lockdep_init
     lockdep_init();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/locking/lockdep.c/lockdep_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/locking/lockdep.c/lockdep_init.md
 
 set_task_stack_end_magic
 ----------------------------------------
@@ -48,7 +48,7 @@ set_task_stack_end_magic
     set_task_stack_end_magic(&init_task);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/fork.c/set_task_stack_end_magic.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/set_task_stack_end_magic.md
 
 smp_setup_processor_id
 ----------------------------------------
@@ -61,7 +61,7 @@ smp_setup_processor_id
 
 ### ARM
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/setup.c/smp_setup_processor_id.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/smp_setup_processor_id.md
 
 debug_objects_early_init
 ----------------------------------------
@@ -92,7 +92,7 @@ boot_init_stack_canary
 
 ### ARM
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/stackprotector.h/boot_init_stack_canary.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/stackprotector.h/boot_init_stack_canary.md
 
 cgroup_init_early
 ----------------------------------------
@@ -101,7 +101,7 @@ cgroup_init_early
     cgroup_init_early();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/cgroup.c/cgroup_init_early.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/cgroup.c/cgroup_init_early.md
 
 local_irq_disable
 ----------------------------------------
@@ -118,7 +118,7 @@ local_irq_disable
     */
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/irqflags.h/local_irq_disable.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/irqflags.h/local_irq_disable.md
 
 boot_cpu_init
 ----------------------------------------
@@ -127,7 +127,7 @@ boot_cpu_init
     boot_cpu_init();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/boot_cpu_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/boot_cpu_init.md
 
 page_address_init
 ----------------------------------------
@@ -156,7 +156,7 @@ setup_arch
 
 ### ARM
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/setup.c/setup_arch.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/setup_arch.md
 
 mm_init_cpumask
 ----------------------------------------
@@ -165,7 +165,7 @@ mm_init_cpumask
     mm_init_cpumask(&init_mm);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mm_types.h/mm_init_cpumask.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/mm_init_cpumask.md
 
 setup_command_line
 ----------------------------------------
@@ -176,7 +176,7 @@ setup_command_line
     setup_command_line(command_line);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/setup_command_line.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/setup_command_line.md
 
 setup_nr_cpu_ids
 ----------------------------------------
@@ -185,7 +185,7 @@ setup_nr_cpu_ids
     setup_nr_cpu_ids();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/smp.c/setup_nr_cpu_ids.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/smp.c/setup_nr_cpu_ids.md
 
 setup_per_cpu_areas
 ----------------------------------------
@@ -197,7 +197,7 @@ CPU的per_cpu变量申请空间。
     setup_per_cpu_areas();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/percpu.c/setup_per_cpu_areas.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/percpu.c/setup_per_cpu_areas.md
 
 smp_prepare_boot_cpu
 ----------------------------------------
@@ -210,7 +210,7 @@ smp_prepare_boot_cpu
 
 ### ARM
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/smp.c/smp_prepare_boot_cpu.c
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/smp.c/smp_prepare_boot_cpu.c
 
 build_all_zonelists
 ----------------------------------------
@@ -243,7 +243,7 @@ parse_early_param
            0, 0, &unknown_bootoption);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/parse_early_param.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/parse_early_param.md
 
 jump_label_init
 ----------------------------------------
@@ -879,4 +879,4 @@ late_time_init
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/rest_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md

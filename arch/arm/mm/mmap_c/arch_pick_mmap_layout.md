@@ -58,17 +58,17 @@ static int mmap_is_legacy(void)
 
 ### mmap_is_legacy等于1表示使用经典布局
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/old_vpm_layout.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/old_vpm_layout.png
 
 在经典的配置下，mmap区域的起始点是TASK_UNMAPPED_BASE, 其值位于TASK_SIZE / 3处，大约在
 0x40000000（1GB）处, 而标准函数arch_get_unmapped_area(其名称虽然带着arch, 但该函数不一定
 是特定于体系结构的，内核也提供了一个标准实现)用于自下而上的创建新的映射.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/memory_h/memory.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory_h/memory.md
 
 ### mmap_is_legacy等于0表示使用新的布局
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/new_vpm_layout.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/new_vpm_layout.png
 
 在使用新的布局时，内存映射自顶向下增长。标准函数arch_get_unmapped_area_topdown.
 内存映射基地址的选择是由函数mmap_base来决定的，具体实现如下所示:

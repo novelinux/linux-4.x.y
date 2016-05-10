@@ -5,11 +5,11 @@ zone_sizes_init
 一般是三个内存域ZONE_DMA, ZONE_NORMAL, ZONE_HIGHMEM. 通常DMA的相关操作也会从NORMAL
 中分配内存, 其关系如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/res/node_zone_page.gif
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/node_zone_page.gif
 
 ### enum zone_type
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/enum_zone_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_type.md
 
 Arguments
 ----------------------------------------

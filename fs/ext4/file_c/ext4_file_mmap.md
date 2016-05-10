@@ -26,4 +26,4 @@ static const struct vm_operations_struct ext4_file_vm_ops = {
 
 其关键元素是failemap_fault, 其具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/filemap_c/filemap_fault.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/filemap_c/filemap_fault.md

@@ -4,7 +4,7 @@ head.S 内核启动
 zImage由其头部的解压程序将真正的内核代码解压到zreladdr地址处后，将跳转到改地址执行
 真正的内核代码, 相应的解压过程如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/boot/compressed/head.S/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/boot/compressed/head.S/README.md
 
 内核入口
 ----------------------------------------
@@ -51,7 +51,7 @@ SECTIONS
 
 有关linker script的详细解释如下:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/vmlinux.lds.S/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/vmlinux.lds.S/README.md
 
 ```
 /*
@@ -85,15 +85,15 @@ https://github.com/torvalds/linux/blob/bdec41963890f8ed9ad89f8b418959ab3cdc2aa3/
 
 * PHYS_OFFSET
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/memory.h/PHYS_OFFSET.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PHYS_OFFSET.md
 
 * PAGE_OFFSET
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
 
 * TEXT_OFFSET
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/Makefile/TEXT_OFFSET
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/Makefile/TEXT_OFFSET
 
 流程
 ----------------------------------------
@@ -128,7 +128,7 @@ ENTRY(stext)
     beq    __error_p            @ yes, error 'p'
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__lookup_processor_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__lookup_processor_type.md
 
 #### 计算内存RAM的起始物理地址phys_offset保存到r8寄存器.
 
@@ -171,7 +171,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-c
     bl    __vet_atags
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__vet_atags.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__vet_atags.md
 
 #### 创建初始化页表
 
@@ -179,7 +179,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-c
     bl    __create_page_tables
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/__create_page_tables.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__create_page_tables.md
 
 #### 保存__mmap_switched虚拟地址到sp寄存器
 
@@ -211,7 +211,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S
 proc-v7.S中分析过，__v7_proc_info中使用__v7_proc宏定义定义了其中的一些成员变量，
 其中__cpu_flush=__v7_setup.__v7_setup在proc-v7.S中定义如下：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/proc-v7.S/__v7_setup.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/proc-v7.S/__v7_setup.md
 
 __v7_setup执行完毕，回到stext，接下来跳转到__enable_mmu.
 
@@ -225,11 +225,11 @@ __v7_setup执行完毕，回到stext，接下来跳转到__enable_mmu.
 ENDPROC(stext)
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/__enable_mmu.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__enable_mmu.md
 
 __mmap_switched
 ----------------------------------------
 
 在打开MMU后就要跳转到__mmap_switched函数中去执行:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__mmap_switched.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__mmap_switched.md

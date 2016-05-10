@@ -3,7 +3,7 @@ sanity_check_meminfo
 
 在通过arm_memblock_init函数通过memblock算法初始化了内核初始化阶段的物理内存分配器:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/init.c/arm_memblock_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/arm_memblock_init.md
 
 初始化完成之后可用物理内存region如下所示:
 

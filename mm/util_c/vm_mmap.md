@@ -60,4 +60,4 @@ vm_mmap_pgoff函数在进行完映射文件的安全性检查之后调用do_mmap
 do_mmap_pgoff
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/do_mmap_pgoff.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/do_mmap_pgoff.md

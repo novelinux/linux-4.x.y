@@ -51,14 +51,14 @@ ret_slow_syscall和ret_fast_syscall差不多，都在调用restore_user_regs，�
 
 ret_fast_syscall详见:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/entry-common.S/vector_swi.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/vector_swi.md
 
 注意: 我们在__switch_to函数中已经恢复过一次当前线程的上下文了(struct cpu_context_save),
 接下来又调用restore_user_regs来恢复模式上下文(struct pt_regs).
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/res/threadinfo.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/res/threadinfo.png
 
 restore_user_regs
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/entry-header.S/restore_user_regs.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-header.S/restore_user_regs.md

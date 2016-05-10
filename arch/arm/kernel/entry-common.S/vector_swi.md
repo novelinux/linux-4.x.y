@@ -153,7 +153,7 @@ restore_user_regs基本上是vector_swi的逆过程了。注意restore_user_regs
 且目标寄存器是pc。这是一种特殊的用法，CPU会将当前spsr中的值写入cpsr中，这样就回到了用户态。
 以上就是系统调用时的CPU寄存器的保护和还原过程。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/entry-header.S/restore_user_regs.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-header.S/restore_user_regs.md
 
 系统调用刚进入到内核态，就会将当前的寄存器组保存在内核态的栈中；
 当系统调用执行完内核态时，会将内核态栈中的寄存器组重新装载进来。

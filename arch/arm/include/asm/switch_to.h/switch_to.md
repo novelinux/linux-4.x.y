@@ -19,4 +19,4 @@ do {                                                 \
 __switch_to
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/entry-armv.S/__switch_to.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-armv.S/__switch_to.md

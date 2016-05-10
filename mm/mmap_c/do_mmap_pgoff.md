@@ -84,7 +84,7 @@ get_unmapped_area函数用于在进程虚拟地址空间中找到一个合适的
 
 get_unmapped_area具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/get_unmapped_area.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/get_unmapped_area.md
 
 3.计算标志
 ----------------------------------------
@@ -223,4 +223,4 @@ def_flags的值为0或者VM_LOCK. 前者不会改变结果标志集,而VM_LOCK�
 
 在检查过参数并设置好所有需要的标志后，剩余的工作交给mmap_region函数，具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/mmap_region.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/mmap_region.md

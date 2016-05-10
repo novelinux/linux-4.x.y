@@ -28,4 +28,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memory.c/high_memor
 
 ### 初始化
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/sanity_check_meminfo.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/sanity_check_meminfo.md

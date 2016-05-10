@@ -33,4 +33,4 @@ static void __init boot_cpu_init(void)
 set_cpu_online
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/cpu.c/setup_cpu_online.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/cpu.c/setup_cpu_online.md

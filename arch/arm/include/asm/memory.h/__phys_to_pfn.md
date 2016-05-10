@@ -13,4 +13,4 @@ path: arch/arm/include/asm/memory.h
 PAGE_SHIFT
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/page.h/page.h.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/page.h/page.h.md

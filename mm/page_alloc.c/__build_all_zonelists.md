@@ -68,7 +68,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h
 
 在UMA系统上contig_page_data的初始化如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/init.c/bootmem_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/bootmem_init.md
 
 build_zonelists
 ----------------------------------------
@@ -77,7 +77,7 @@ build_zonelists
         build_zonelists(pgdat);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/build_zonelists.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonelists.md
 
 build_zonelist_cache
 ----------------------------------------

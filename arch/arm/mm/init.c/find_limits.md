@@ -29,7 +29,7 @@ memblock.current_limit值是在如下调用过程中设置的:
 setup_arch --> sanity_check_meminfo --> memblock_set_current_limit
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/setup.c/setup_arch.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/setup_arch.md
 
 memblock_start_of_DRAM
 ----------------------------------------

@@ -48,4 +48,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/params.c/parse_
 do_early_param
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/do_early_param.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/do_early_param.md

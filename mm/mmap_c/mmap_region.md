@@ -83,7 +83,7 @@ munmap_back:
 以及红黑树中节点对应的数据. 如果在指定的映射位置已经存在一个映射，
 则通过do_munmap删除它.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/find_vma_links.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/find_vma_links.md
 
 3.检查资源限制和安全性等.
 ----------------------------------------
@@ -130,7 +130,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/find_vma_lin
 在新区域被创建并加到进程的地址空间时，内核会检查它是否可以与一个或多个
 现存区域合并. 如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/vma_merge.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/vma_merge.md
 
 5.分配并初始化一个新的vm_area_struct实例
 ----------------------------------------
@@ -205,7 +205,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/vma_merge.md
 
 **注意**: 但是常用的ext4文件系统是将mmap函数设置为ext4_file_mmap，具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/ext4/file_c/ext4_file_mmap.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file_c/ext4_file_mmap.md
 
 6.vma_link
 ----------------------------------------
@@ -218,7 +218,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/ext4/file_c/ext4_fi
 
 vma_link函数将新区域合并到该进程现存的数据结构mm_struct中去.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/mmap_c/vma_link.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/vma_link.md
 
 7.检查vm_flags并进行对应操作
 ----------------------------------------

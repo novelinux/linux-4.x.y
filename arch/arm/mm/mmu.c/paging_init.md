@@ -3,7 +3,7 @@ paging_init
 
 在那linux刚启动时，系统创建了一个临时页表，那个是临时的，既然正式的要上场了，临时的当然要退休了.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/__create_page_tables.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__create_page_tables.md
 
 aries virtual memory layout
 ----------------------------------------
@@ -29,7 +29,7 @@ void __init paging_init(const struct machine_desc *mdesc)
     build_mem_type_table();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/build_mem_type_table.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/build_mem_type_table.md
 
 prepare_page_table
 ----------------------------------------
@@ -40,7 +40,7 @@ prepare_page_table则用于初始化页表.
     prepare_page_table();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/prepare_page_table.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/prepare_page_table.md
 
 map_lowmem
 ----------------------------------------
@@ -51,7 +51,7 @@ map_lowmem()是为低端物理内存建立映.
     map_lowmem();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/map_lowmem.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/map_lowmem.md
 
 dma_contiguous_remap
 ----------------------------------------
@@ -60,7 +60,7 @@ dma_contiguous_remap
     dma_contiguous_remap();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/dma-mapping.c/dma_contiguous_remap.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/dma-mapping.c/dma_contiguous_remap.md
 
 devicemaps_init
 ----------------------------------------
@@ -69,7 +69,7 @@ devicemaps_init
     devicemaps_init(mdesc);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/devicemaps_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/devicemaps_init.md
 
 kmap_init
 ----------------------------------------
@@ -78,7 +78,7 @@ kmap_init
     kmap_init();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/kmap_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/kmap_init.md
 
 tcm_init
 ----------------------------------------
@@ -105,4 +105,4 @@ bootmem_init
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/init.c/bootmem_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/bootmem_init.md

@@ -3,7 +3,7 @@ zImage
 
 zImage的生成过程可以由下图概括:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/res/zImage.gif
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/res/zImage.gif
 
 zImage
 ----------------------------------------
@@ -53,7 +53,7 @@ $(BOOT_TARGETS): vmlinux
 由此可以看出zImage依赖于vmlinux文件。当然其他格式的Image文件也
 无独有偶的源于vmlinux. 其编译过程如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kbuild/vmlinux.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/vmlinux.md
 
 ### Q变量
 

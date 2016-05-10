@@ -21,7 +21,7 @@
 只有资源和包含资源的命名空间构成的二元组仍然是全局唯一的。虽然在给定容器内部资源是自足的，但无法
 提供在容器外部具有唯一性的ID。下图给出了此情况的一个概述。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/res/nsproxy.png
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/res/nsproxy.png
 
 考虑系统上有3个不同命名空间的情况。命名空间可以组织为层次，我会在这里讨论这种情况。一个命名空间是
 父命名空间，衍生了两个子命名空间。假定容器用于虚拟主机配置中，其中的每个容器必须看起来像是单独的
@@ -48,7 +48,7 @@ chroot系统调用。该方法可以将进程限制到文件系统的某一部�
 置身于一个独立的系统环境中，以此达到独立和隔离的目的。Linux内核中就提供了这六种namespace隔离的
 系统调用，如下表所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/res/six.png
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/res/six.png
 
 APIS
 ----------------------------------------
@@ -146,7 +146,7 @@ int unshare(int flags);
 命名空间的实现需要两个部分：每个子系统的命名空间结构，将此前所有的全局组件包装到命名空间中；
 将给定进程关联到所属各个命名空间的机制。下图说明了具体情形:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/res/task_with_nsproxy.png
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/res/task_with_nsproxy.png
 
 子系统此前的全局属性现在封装到命名空间中，每个进程关联到一个选定的命名空间。每个可以感知命名空间
 的内核子系统都必须提供一个数据结构，将所有通过命名空间形式提供的对象集中起来。struct nsproxy用于
@@ -248,24 +248,24 @@ struct nsproxy init_nsproxy = {
 
 ### UTS namespace
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/UTS_namespace.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/UTS_namespace.md
 
 ### IPC namespace
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/IPC_namespace.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/IPC_namespace.md
 
 ### MNT namespace
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/MNT_namespace.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/MNT_namespace.md
 
 ### PID namespace
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/PID_namespace.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/PID_namespace.md
 
 ### USER namespace
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/USER_namespace.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/USER_namespace.md
 
 ### NET namespace
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/nsproxy/NET_namespace.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/NET_namespace.md

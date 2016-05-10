@@ -113,4 +113,4 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
 build_all_zonelists
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/build_all_zonelists.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_all_zonelists.md

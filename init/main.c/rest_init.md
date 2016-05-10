@@ -29,13 +29,13 @@ static noinline void __init_refok rest_init(void)
     kernel_thread(kernel_init, NULL, CLONE_FS | CLONE_SIGHAND);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/process.c/kernel_thread.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/kernel_thread.md
 
 通过kernel_thread函数启动了一个内核子线程之后，最后跳转到对应的入口函数kernel_init中去执行.
 
 ### kernel_init
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/kernel_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/kernel_init.md
 
 3.kthreadd
 ----------------------------------------

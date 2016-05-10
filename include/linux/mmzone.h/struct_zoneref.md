@@ -16,4 +16,4 @@ struct zoneref {
 struct zone
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/struct_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md

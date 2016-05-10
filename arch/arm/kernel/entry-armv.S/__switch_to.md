@@ -3,7 +3,7 @@ __switch_to
 
 __switch_to函数是由函数switch_to来调用的:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/switch_to.h/switch_to.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/switch_to.h/switch_to.md
 
 path: arch/arm/kernel/asm-offsets.c
 ```
@@ -95,7 +95,7 @@ ENDPROC(__switch_to)
 并且将移入进程的thread_info->cpu_context结构体中的值restore到cpu的寄存器中，从而实现堆栈，
 pc指针和cpu通用寄存器都切换到新的进程上开始执行。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/thread_info.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/thread_info.md
 
 set_tls
 ----------------------------------------
@@ -108,7 +108,7 @@ tp_value就是为了设置TLS register的值,在多线程应用程序，其中�
 确实有这TLS的寄存器可用（CP15）。内核对TLS需要做的事情是能够让用户态程序
 （通常是nptl——一个pthread的实现）在某个时刻能够设置线程唯一的基址值到内核的线程信息结构内。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/tls.h/set_tls.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/tls.h/set_tls.md
 
 ret_from_fork
 ----------------------------------------
@@ -118,11 +118,11 @@ copy_thread()中设置的ret_from_fork了。
 
 copy_thread:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/process.c/copy_thread.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/copy_thread.md
 
 接下来将要调用ret_from_fork继续后续工作:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/entry-common.S/ret_from_fork.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/ret_from_fork.md
 
 注意
 ----------------------------------------
@@ -152,4 +152,4 @@ r4-r10，根据APCS约束，由于这些寄存器会被编译器用来暂存变�
 
 **注意**: __switch_to函数用户切换线程上下文，而ret_from_fork用来切换模式上下文.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/res/threadinfo.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/res/threadinfo.png

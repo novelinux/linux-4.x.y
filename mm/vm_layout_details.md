@@ -7,7 +7,7 @@
 所有运行的程序上，也包括内核自己。因此虚拟地址空间必须为内核预留一部分(否则就没办法和内核交互了):
 如下图所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/linux_vm_layout.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/linux_vm_layout.png
 
 给内核预留那么多空间，并不是说内核真的使用了那么多物理内存，只是内核可以这部分虚拟地址自由的
 映射到某片物理内存上（而不用和其它虚拟地址遵循相同的规则）。内核空间在页表中被标记为专属的特权
@@ -15,14 +15,14 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/linux_vm_layout
 Linux的内核空间在所有进程中都映射到相同的物理内存上。内核代码和数据总是可寻址的(总是可以找到的),
 任意时刻都可处理中断和系统调用。作为对比，当进程切换时，用户态地址空间的映射就会发生改变：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/vm_switch.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/vm_switch.png
 
 蓝色区域表示映射到物理内存的虚拟地址空间，而白色区域则表示未映射的空间。在这个例子中，
 Firefox惊人的内存需求让它使用的虚拟地址远远超过了其自身的地址空间。内存地址空间是按
 堆、栈这样的内存段进行管理的。要记住内存段就是简单的一个内存地址范围，而且与Intel风格的段
 没有任何关系。下面是一个Linux进程的最新的内存段布局：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/new_layout_specify.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/new_layout_specify.png
 
 如果计算过程轻松愉快、准确无误，那么上图显示的内存段起始虚拟地址在几乎每个进程中都是一样的。
 这导致了远程利用安全漏洞变得非常容易。一次漏洞探测通常需要引用内存的绝对地址：
@@ -61,7 +61,7 @@ expand_stack()调用，实际上是调用acct_stack_growth()检查当前是否�
 的微妙算法。满足一次堆请求的时间差异可以非常大。实时系统需要特殊用途的分配器来处理这个问题。
 使用时堆也会变的很碎片化，见下图：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/brk_fragment.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/brk_fragment.png
 
 最后，我们看一下最下面的内存段：BSS,data,代码段。在C里面BSS和data段都是存储静态变量(全局)的数据。
 区别是BSS段存储没有初始化的静态变量，即在代码中没有初始值的静态变量。BSS区是匿名的：不映射自
@@ -76,7 +76,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/brk_fragment.pn
 映射程序文件，但对它的写操作会引发段错误。这会避免一些指针bug，但不像第一时间在C代码中避免指针
 bug那么有效。下图显示了这些段和示例变量：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/pointer.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/pointer.png
 
 你可以读/proc/pid_of_process/maps来检查一个Linux进程的内存区。一个内存段可能包含多个内存区。
 例如，每个mmap映射的文件都会在mmap段有一个单独的内存区，而动态库还会有在BSS和data段的内存区。
@@ -86,4 +86,4 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/pointer.png
 布局是Linux的“灵活”布局，也是近年来Linux的默认布局。它假设RLIMIT_STACK有值。否则Linux会回到
 下图的“经典”布局：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/old_layout_specify.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/old_layout_specify.png

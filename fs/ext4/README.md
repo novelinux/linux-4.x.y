@@ -16,4 +16,4 @@ Linux Ext4 Filesystem
 
 Ext4文件系统的标准磁盘布局如下：
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/ext4/res/ext4_layout.png
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/res/ext4_layout.png

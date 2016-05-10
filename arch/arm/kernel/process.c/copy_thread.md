@@ -43,7 +43,7 @@ copy_thread(unsigned long clone_flags, unsigned long stack_start,
 
 ### struct thread_info
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/thread_info.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/thread_info.md
 
 task_pt_regs
 ----------------------------------------
@@ -61,4 +61,4 @@ path: include/linux/sched.h
 
 在内核栈中struct cpu_context_save同struct pt_regs位置如下所示:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/res/threadinfo.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/res/threadinfo.png

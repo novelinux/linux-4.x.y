@@ -34,7 +34,7 @@ https://github.com/leeminghao/doc-linux/blob/master/0.11/memory/MMU.md
 
 ### 经典的进程空间布局
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/old_vpm_layout.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/old_vpm_layout.png
 
 如果计算机提供了巨大的虚拟地址空间，那么使用上述的地址空间布局会工作得非常好。
 但在32位计算机上可能会出问题. 对于每个用户进程其虚拟地址空间从0到0xc0000000,有
@@ -44,7 +44,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/old_vpm_layout.
 
 ### 新的进程空间布局
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/new_vpm_layout.png
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/res/new_vpm_layout.png
 
 其目的在于使用固定值限制栈的最大长度. 由于栈是有界的，因此安置内存映射的区域可以在栈
 末端的下方开始.与经典方法相反，改区域现在是自顶向下扩展。由于堆仍然位于虚拟地址空间
@@ -53,7 +53,7 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/res/new_vpm_layout.
 
 ### 进程内存布局综述
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/vm_layout_details.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vm_layout_details.md
 
 数据结构
 ----------------------------------------
@@ -61,4 +61,4 @@ https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/vm_layout_details.m
 系统中的每个进程都有一个struct mm_struct的实例，可以通过task_struct访问.
 这个实例保存了进程内存管理信息:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mm_types_h/mm_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types_h/mm_struct.md

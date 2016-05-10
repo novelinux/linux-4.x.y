@@ -15,4 +15,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/numa.h/M
 MAX_NR_ZONES
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/bounds.c/MAX_NR_ZONES.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/bounds.c/MAX_NR_ZONES.md

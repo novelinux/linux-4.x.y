@@ -293,4 +293,4 @@ ASSERT((__arch_info_end - __arch_info_begin), "no machine record defined")
 LMA 和 VMA
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/VMA_LMA.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/VMA_LMA.md

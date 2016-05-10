@@ -13,7 +13,7 @@ static int __ref kernel_init(void *unused)
     kernel_init_freeable();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/kernel_init_freeable.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/kernel_init_freeable.md
 
 通用设置
 ----------------------------------------
@@ -70,4 +70,4 @@ try_to_run_init_process
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/try_to_run_init_process.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/try_to_run_init_process.md

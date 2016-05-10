@@ -64,4 +64,4 @@ ext3文件系统引入了日志概念，以在系统突然停止时提高文件�
 EXT4
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/fs/ext4/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/README.md

@@ -56,7 +56,7 @@ EXPORT_SYMBOL(kernel_thread);
 
 注意: 在系统刚启动时sp是在__mmap_switched函数中指定的:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__mmap_switched.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__mmap_switched.md
 
 2.接下来调用我们熟悉的do_fork函数。
 
@@ -71,6 +71,6 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/fork.c/do_fork.
 之后，接下来调用ret_from_fork恢复了模式上下文(struct pt_regs). 也就是跳转到regs.ARM_pc所保存
 的pc寄存器中的函数指针kernel_thread_helper中去执行.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/process.c/kernel_thread_helper.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/kernel_thread_helper.md
 
 在kernel_thread_helper函数中最后会调用到对应子线程的入口函数去执行.

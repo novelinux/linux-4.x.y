@@ -28,7 +28,7 @@ current_zonelist_order指定当前zonelist的顺序，由函数set_zonelist_orde
     int order = current_zonelist_order;
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/current_zonelist_order.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/current_zonelist_order.md
 
 node_zonelists
 ----------------------------------------
@@ -46,7 +46,7 @@ node_zonelists
     }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/pg_data_t.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/pg_data_t.md
 
 nodes_clear
 ----------------------------------------
@@ -59,7 +59,7 @@ nodes_clear
     nodes_clear(used_mask);
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/nodemask.h/nodes_clear.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nodemask.h/nodes_clear.md
 
 node_order
 ----------------------------------------
@@ -68,7 +68,7 @@ node_order
     memset(node_order, 0, sizeof(node_order));
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/nodes_order.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/nodes_order.md
 
 build_zonelists_in_node_order
 ----------------------------------------
@@ -98,17 +98,17 @@ build_zonelists_in_node_order
 
 ### find_next_best_node
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/find_next_best_node.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/find_next_best_node.md
 
 ### node_distance
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/topology.h/node_distance.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/topology.h/node_distance.md
 
 ### buile_zonelist_in_node_order
 
 实际工作则委托给buile_zonelist_in_node_order在调用时，它首先生成本地结点内分配内存时的备用次序。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/mm/page_alloc.c/build_zonelists_in_node_order.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonelists_in_node_order.md
 
 build_zonelists_in_zone_order
 ----------------------------------------

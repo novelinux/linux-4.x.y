@@ -27,11 +27,11 @@ typedef struct pglist_data {
 
 是一个数组，包含了结点中各内存域的数据结构。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/struct_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
 
 ### MAX_NR_ZONES
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/kernel/bounds.c/MAX_NR_ZONES.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/bounds.c/MAX_NR_ZONES.md
 
 node_zonelists
 ----------------------------------------
@@ -44,11 +44,11 @@ node_zonelists
 该数组用来表示所描述的层次结构。node_zonelists数组对每种可能的内存域类型，都配置
 了一个独立的数组项。数组项包含了类型为zonelist的一个备用列表:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/struct_zonelist.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zonelist.md
 
 ### MAX_ZONELISTS
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/MAX_ZONELISTS.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/MAX_ZONELISTS.md
 
 nr_zones
 ----------------------------------------
@@ -181,7 +181,7 @@ zone_type
     enum zone_type classzone_idx;
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/mmzone.h/enum_zone_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_type.md
 
 ----------------------------------------
 

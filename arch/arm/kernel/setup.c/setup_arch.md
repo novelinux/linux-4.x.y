@@ -85,7 +85,7 @@ memmap=XXX[KkmM], @XXX[KkmM]之类的参数通常与内存相关.
     parse_early_param();
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/init/main.c/parse_early_param.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/parse_early_param.md
 
 early_paging_init
 ----------------------------------------
@@ -96,7 +96,7 @@ early_paging_init
     early_paging_init(mdesc, lookup_processor_type(read_cpuid_id()));
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/early_paging_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/early_paging_init.md
 
 sanity_check_meminfo
 ----------------------------------------
@@ -107,7 +107,7 @@ sanity_check_meminfo
 
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/sanity_check_meminfo.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/sanity_check_meminfo.md
 
 arm_memblock_init
 ----------------------------------------
@@ -171,4 +171,4 @@ paging_init
 }
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/mm/mmu.c/paging_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/paging_init.md

@@ -4,7 +4,7 @@ init_task
 系统启动的时候，内核为进程0首先分配了一个thread_union --> init_thread_union;
 然后将内核栈指针sp指向了init_thread_union + THREAD_START_SP.
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head-common.S/__mmap_switched.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__mmap_switched.md
 
 初始化init_thread_union
 ----------------------------------------
@@ -37,7 +37,7 @@ union thread_union init_thread_union __init_task_data =
 
 ### union thread_union
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/thread_union.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/thread_union.md
 
 ### __init_task_data
 
@@ -104,7 +104,7 @@ path: arch/arm/include/asm/thread_info.h
 
 #### struct thread_info
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/include/asm/thread_info.h/thread_info.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/thread_info.md
 
 ### INIT_TASK
 
@@ -185,7 +185,7 @@ path: include/linux/init_task.h
 
 对应的task_struct进程描述符如下:
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/include/linux/sched.h/task_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/task_struct.md
 
 #### init_thread_info
 
@@ -202,7 +202,7 @@ task_struct, thread_info和内核栈之间关系
 此外在紧急情况下输出调用栈回溯时将会导致错误的信息出现，因此内核提供了kstack_end函数，用于判断
 给出的地址是否位于栈的有效部分之内。
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/init_task.c/res/task_struct-thread_info-stack.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c/res/task_struct-thread_info-stack.jpg
 
 init_task内核栈
 ----------------------------------------

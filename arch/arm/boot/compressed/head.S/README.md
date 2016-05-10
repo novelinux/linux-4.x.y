@@ -254,4 +254,4 @@ path: arch/arm/boot/compressed/head.S
  THUMB(		bx	r4	)		@ entry point is always ARM
 ```
 
-https://github.com/leeminghao/doc-linux/blob/master/4.x.y/arch/arm/kernel/head.S/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/README.md
