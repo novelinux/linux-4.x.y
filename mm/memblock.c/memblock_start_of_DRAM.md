@@ -13,4 +13,4 @@ phys_addr_t __init_memblock memblock_start_of_DRAM(void)
 memblock
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memblock.c/memblock.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock.md

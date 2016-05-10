@@ -78,9 +78,9 @@ https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/parse_early_par
 next_arg
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/params.c/next_arg.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/params.c/next_arg.md
 
 parse_one
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/params.c/parse_one.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/params.c/parse_one.md

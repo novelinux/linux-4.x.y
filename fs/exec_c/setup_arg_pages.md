@@ -221,7 +221,7 @@ mprotect_fixup函数用来检查该区域的安全性.
 在当前函数setup_arg_pages我们重新确认了堆栈的位置之后我们需要重新
 使用stack_shift位移堆栈.具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/shift_arg_pages.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/shift_arg_pages.md
 
 7.扩展堆栈
 -----------------------------------------

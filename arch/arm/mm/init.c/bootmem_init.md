@@ -24,7 +24,7 @@ find_limits
     find_limits(&min, &max_low, &max_high);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/init.c/find_limits.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/find_limits.md
 
 arm_memory_present
 ----------------------------------------
@@ -59,7 +59,7 @@ zone_sizes_init
     zone_sizes_init(min, max_low, max_high);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/init.c/zone_sizes_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/zone_sizes_init.md
 
 min_low_pfn vs max_low_pfn vs max_pfn
 ----------------------------------------

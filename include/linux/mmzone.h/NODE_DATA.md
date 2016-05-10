@@ -21,6 +21,6 @@ contig_page_data
 
 ### CONFIG_NO_BOOTMEM is not set
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/bootmem.c/contig_page_data.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/bootmem.c/contig_page_data.md
 
 ### CONFIG_NO_BOOTMEM=y

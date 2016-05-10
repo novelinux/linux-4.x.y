@@ -43,7 +43,7 @@ void __init parse_early_options(char *cmdline)
 parse_args
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/params.c/parse_args.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/params.c/parse_args.md
 
 do_early_param
 ----------------------------------------

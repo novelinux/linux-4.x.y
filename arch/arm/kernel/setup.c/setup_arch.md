@@ -25,7 +25,7 @@ setup_processor
     setup_processor();
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/setup.c/setup_processor.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/setup_processor.md
 
 setup_machine_fdt
 ----------------------------------------
@@ -36,7 +36,7 @@ setup_machine_fdt
     mdesc = setup_machine_fdt(__atags_pointer);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/devtree.c/setup_machine_fdt.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/devtree.c/setup_machine_fdt.md
 
 setup_machine_tags
 ----------------------------------------
@@ -51,7 +51,7 @@ setup_machine_tags
     dump_stack_set_arch_desc("%s", mdesc->name);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/atags_parse.c/setup_machine_tags.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/atags_parse.c/setup_machine_tags.md
 
 **注意**: 对应带有Device Tree信息和不带Device Tree信息的ATAGS是由bootloader来组织的:
 
@@ -118,7 +118,7 @@ Linux内核初期内存管理memblock
     arm_memblock_init(mdesc);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/init.c/arm_memblock_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/arm_memblock_init.md
 
 paging_init
 ----------------------------------------

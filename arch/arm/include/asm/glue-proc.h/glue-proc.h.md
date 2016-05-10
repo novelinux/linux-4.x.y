@@ -261,4 +261,4 @@ CONFIG_CPU_V7=y
 
 ### cpu_v7_set_pte_ext
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/proc-v7-2level.S/cpu_v7_set_pte_ext.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/proc-v7-2level.S/cpu_v7_set_pte_ext.md

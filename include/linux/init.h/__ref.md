@@ -28,4 +28,4 @@ path: include/linux/init.h
 .ref.data
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/vmlinux.lds.h/DATA_DATA.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/vmlinux.lds.h/DATA_DATA.md

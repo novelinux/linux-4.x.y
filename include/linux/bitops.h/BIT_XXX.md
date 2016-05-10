@@ -20,4 +20,4 @@ DIV_ROUND_UP
 
 DIV_ROUND_UP作用是将n/d，除非整除，否则向上取整。
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/kernel.h/DIV_ROUND_UP.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/kernel.h/DIV_ROUND_UP.md

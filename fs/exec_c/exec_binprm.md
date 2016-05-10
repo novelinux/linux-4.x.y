@@ -98,7 +98,7 @@ EXPORT_SYMBOL(search_binary_handler);
 
 在Linux内核中，每种二进制格式都表示为下列数据结构:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/binfmts.h/binfmts.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/binfmts.h/binfmts.md
 
 每种二进制格式首先必须使用register_binfmt向内核注册.该函数的目的是
 向一个链表增加一个新的二进制格式，该链表的表头是:
@@ -110,4 +110,4 @@ static LIST_HEAD(formats);
 
 常用ELF二进制文件是使用load_elf_binary来装载的, 具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/binfmt_elf.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/binfmt_elf.md

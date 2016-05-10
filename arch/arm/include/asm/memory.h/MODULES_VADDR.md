@@ -41,4 +41,4 @@ MODULES_VADDR和MODULES_END之间。
 PAGE_OFFSET
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory_h/PAGE_OFFSET.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory_h/PAGE_OFFSET.md

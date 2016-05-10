@@ -14,4 +14,4 @@ current_tread_info
 
 ### ARM
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/thread_info.h/current_thread_info.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/current_thread_info.md

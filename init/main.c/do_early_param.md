@@ -28,7 +28,7 @@ static int __init do_early_param(char *param, char *val, const char *unused)
 struct obs_kernel_param
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/init.h/struct_obs_kernel_param.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/init.h/struct_obs_kernel_param.md
 
 __setup_start vs __setup_end
 ----------------------------------------
@@ -80,4 +80,4 @@ __setup("root=", root_dev_setup);
 
 对应的__setup宏实现参考:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/init.h/struct_obs_kernel_param.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/init.h/struct_obs_kernel_param.md

@@ -59,4 +59,4 @@ path: include/linux/list.h
 container_of
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/appendix/container_of/container_of.md
+https://github.com/novelinux/linux-4.x.y/tree/master/appendix/container_of/container_of.md

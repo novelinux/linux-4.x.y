@@ -30,4 +30,4 @@ struct memblock {
 struct memblock_type
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/memblock.h/struct_memblock_type.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/struct_memblock_type.md

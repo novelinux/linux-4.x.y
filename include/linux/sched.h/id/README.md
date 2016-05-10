@@ -195,11 +195,11 @@ pidhash_init用于计算恰当的容量并分配所需的内存。
 
 ### 1.alloc_pid
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/pid.c/alloc_pid.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/pid.c/alloc_pid.md
 
 ### 2.attach_pid
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/pid.c/attach_pid.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/pid.c/attach_pid.md
 
 ### 3.task_struct <--> ID
 

@@ -18,4 +18,4 @@ void set_task_stack_end_magic(struct task_struct *tsk)
 end_of_stack
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/sched.h/end_of_stack.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/end_of_stack.md

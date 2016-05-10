@@ -10,7 +10,7 @@ path: include/linux/mmzone.h
 MAX_NUMNODES
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/numa.h/MAX_NUMNODES.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/numa.h/MAX_NUMNODES.md
 
 MAX_NR_ZONES
 ----------------------------------------

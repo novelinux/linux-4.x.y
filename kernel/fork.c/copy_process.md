@@ -70,7 +70,7 @@ Linux有时候在操作成功时需要返回指针，而在失败时则返回错
 的地址范围内部，那么该调用就失败了，其原因可以由指针的数值判断。ERR_PTR是一个辅助宏，用于将
 数值常数(例如EINVAL，非法操作)编码为指针:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/err.h/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/err.h/README.md
 
 2.security_task_create
 ----------------------------------------
@@ -143,7 +143,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/dup_task_stru
 是从父进程的task_struct精确复制而来，因此相关的指针最初都指向同样的资源，或者说同样的具体资源
 实例，如图所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/fork.c/res/share_res.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/share_res.jpg
 
 假定我们有两个资源：res_abc和res_def。最初父子进程的task_struct中的对应指针都指向了资源的同一个
 实例，即内存中特定的数据结构。如果CLONE_ABC置位，则两个进程会共享res_abc。此外，为防止与资源实例
@@ -338,7 +338,7 @@ copy_thread与这里讨论的所有其他复制操作都大不相同，这是一
 其定义是体系结构相关的。它包含了所有寄存器（和其他信息），内核在进程之间切换时需要保存和恢复进程
 的内容，该结构可用于此。为理解各个thread_struct结构的布局，需要深入了解各种CPU的相关知识。
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/process.c/copy_thread.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/copy_thread.md
 
 6.设置ID
 ----------------------------------------
@@ -515,4 +515,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/id/RE
 流程图
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/fork.c/res/copy_process.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/copy_process.jpg

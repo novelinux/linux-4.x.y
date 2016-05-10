@@ -17,14 +17,14 @@ static inline void cpumask_set_cpu(unsigned int cpu, struct cpumask *dstp)
 cpumask_check
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/cpumask.h/cpumask_check.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/cpumask.h/cpumask_check.md
 
 cpumask_bits
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/cpumask.h/cpumask_bits.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/cpumask.h/cpumask_bits.md
 
 set_bit
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/bitops/atomic.h/set_bit.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/bitops/atomic.h/set_bit.md

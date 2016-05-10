@@ -23,12 +23,12 @@ struct mm_struct init_mm = {
 struct mm_struct
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mm_types.h/mm_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/mm_struct.md
 
 swapper_pg_dir
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/head.S/swapper_pg_dir.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/swapper_pg_dir.md
 
 ### aries
 

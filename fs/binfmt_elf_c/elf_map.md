@@ -139,4 +139,4 @@ b6f85000-b6f86000 r--p 00000000 b3:15 2178       /system/bin/dyn_elf
 vm_mmap
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/util_c/vm_mmap.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/util_c/vm_mmap.md

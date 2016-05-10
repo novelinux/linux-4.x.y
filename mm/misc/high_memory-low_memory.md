@@ -36,7 +36,7 @@ PAGE_OFFSET ),最多管理1G物理内存，也就是1G的物理内存挨着挨�
 其实内核不仅仅预留了highmem的地址空间,还给fixmap,vmalloc预留了虚存空间.实际上,系统初始化的时候
 预留128M虚存,896M用于"直接"映射物理内存。
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/misc/res/high-low-mem.JPG
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/res/high-low-mem.JPG
 
 映射到“内核动态映射空间”
 ----------------------------------------

@@ -21,4 +21,4 @@ path: include/linux/cpumask.h
 struct cpumask
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/cpumask.h/struct_cpumask.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/cpumask.h/struct_cpumask.md

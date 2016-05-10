@@ -4,7 +4,7 @@ elf
 布局和结构
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_format/res/elf.png
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_format/res/elf.png
 
 ### 链接视图
 
@@ -59,14 +59,14 @@ typedef __s64    Elf64_Sxword;
 elf头部
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_format/elf_header.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_format/elf_header.md
 
 程序头表
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_format/programe_header.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_format/programe_header.md
 
 节头表
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_format/section_header.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_format/section_header.md

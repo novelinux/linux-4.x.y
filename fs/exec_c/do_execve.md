@@ -89,7 +89,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 
 linux_binprm结构定义如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/binfmts.h/binfmts.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/binfmts.h/binfmts.md
 
 3.prepare_bprm_creds
 ----------------------------------------
@@ -102,7 +102,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/binfmts.
 
 prepare_bprm_creds用于准备可执行credential. 具体实现如下:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/prepare_bprm_creds.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/prepare_bprm_creds.md
 
 4.do_open_execat
 ----------------------------------------
@@ -120,7 +120,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/prepare_bprm
 调用do_open_execat函数打开进程的可执行文件并返回struct file结构保存到bprm的file成员变量中.
 具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/do_open_execat.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/do_open_execat.md
 
 5.sched_exec
 ----------------------------------------
@@ -187,7 +187,7 @@ extern void sched_exec(void);
 bprm_mm_init函数调用mm_alloc来生成一个新的mm_struct实例来管理进程的地址空间.
 具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/bprm_mm_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/bprm_mm_init.md
 
 7.prepare_binprm
 ----------------------------------------
@@ -213,7 +213,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/bprm_mm_init
 
 prepare_binprm用于提供一些父进程相关的值(特别数有效UID和GID).
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/prepare_binprm.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/prepare_binprm.md
 
 8.exec_binprm
 ----------------------------------------
@@ -238,4 +238,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/prepare_binp
 }
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/exec_binprm.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/exec_binprm.md

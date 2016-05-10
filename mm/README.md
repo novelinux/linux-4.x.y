@@ -42,12 +42,12 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/README.md
 物理内存管理
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/README.md
 
 初始化内存管理
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/init/mm/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/mm/README.md
 
 进程虚拟地址空间
 ----------------------------------------

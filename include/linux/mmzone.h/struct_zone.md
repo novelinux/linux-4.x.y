@@ -52,7 +52,7 @@ struct zone {
 
 一般情况下，watermark[WMARK_HIGH]缺省值是watermark[WMARK_MIN]的3倍。
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/enum_zone_watermarks.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_watermarks.md
 
 lowmem_reserve
 ----------------------------------------
@@ -279,7 +279,7 @@ flags
 
 描述内存域的当前状态。允许使用下列标志：
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/enum_zone_flags.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_flags.md
 
 lruvec
 ----------------------------------------
@@ -294,7 +294,7 @@ lruvec
     struct lruvec        lruvec;
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/struct_lruvec.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_lruvec.md
 
 vm_stat
 ----------------------------------------

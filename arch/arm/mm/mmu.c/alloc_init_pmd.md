@@ -31,7 +31,7 @@ pmd
 
 对于arm平台来说通常只有两级页表，所以pmd == pud == pgd.
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/pmd_offset.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/pmd_offset.md
 
 pmd_addr_end
 ----------------------------------------
@@ -45,7 +45,7 @@ pmd_addr_end
         next = pmd_addr_end(addr, end);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/pgtable.h/pmd_addr_end.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/pgtable.h/pmd_addr_end.md
 
 生成页表项
 ----------------------------------------
@@ -75,7 +75,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/pg
 
 ### SECTION_MASK
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/SECTION_XXX.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/SECTION_XXX.md
 
 ### __map_init_section
 

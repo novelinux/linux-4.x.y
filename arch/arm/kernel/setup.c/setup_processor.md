@@ -85,4 +85,4 @@ cacheid_init
 }
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/setup.c/cacheid_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/cacheid_init.md

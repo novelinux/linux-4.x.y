@@ -51,7 +51,7 @@ static int __build_all_zonelists(void *data)
     for_each_online_node(nid) {
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/nodemask.h/for_each_online_node.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nodemask.h/for_each_online_node.md
 
 NODE_DATA
 ----------------------------------------
@@ -62,7 +62,7 @@ NODE_DATA
         pg_data_t *pgdat = NODE_DATA(nid);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/NODE_DATA.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/NODE_DATA.md
 
 ### UMA
 

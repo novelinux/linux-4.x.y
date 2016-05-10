@@ -8,7 +8,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__cr
 aries virtual memory layout
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/init.c/aries_virtual_memory_layout.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/aries_virtual_memory_layout.md
 
 build_mem_type_table
 ----------------------------------------

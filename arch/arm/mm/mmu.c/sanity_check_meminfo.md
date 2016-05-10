@@ -55,7 +55,7 @@ for_each_memblock
     for_each_memblock(memory, reg) {
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/memblock.h/for_each_memblock.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/for_each_memblock.md
 
 计算high_memory
 ----------------------------------------
@@ -150,7 +150,7 @@ memblock_set_current_limit
 }
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memblock.c/memblock_set_current_limit.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_set_current_limit.md
 
 ### aries
 
@@ -161,4 +161,4 @@ memblock_limit=afa00000
 high_memory vs low_memory
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/misc/high_memory-low_memory.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/high_memory-low_memory.md

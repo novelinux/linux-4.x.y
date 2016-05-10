@@ -34,9 +34,9 @@ static inline unsigned long __phys_to_virt(phys_addr_t x)
 PAGE_OFFSET
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
 
 PHYS_OFFSET
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory.h/PHYS_OFFSET.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PHYS_OFFSET.md

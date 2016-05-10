@@ -84,7 +84,7 @@ path: include/linux/elf.h
 
 elf头部具体定义如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_format/elf_format.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_format/elf_format.md
 
 2.校验二进制文件elf header
 ----------------------------------------
@@ -124,7 +124,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_fo
 
 load_elf_phdrs具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/load_elf_phdrs.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/load_elf_phdrs.md
 
 4.初始化进程布局信息
 ----------------------------------------
@@ -325,13 +325,13 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/load_e
 
 在bprm_mm_init函数中
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/bprm_mm_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/bprm_mm_init.md
 
 我们专门为可执行的二进制文件申请了一个地址空间，使用mm_struct来表示，这个地址空间用来
 替换当前进程的地址空间，flush_old_exec函数的作用就是用来替换当前进程地址空间的.
 具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/flush_old_exec.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/flush_old_exec.md
 
 10.设置与体系结构相关特性
 ----------------------------------------
@@ -357,7 +357,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/flush_old_ex
 
 randomize_va_space的描述如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mm_h/randomize_va_space.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_h/randomize_va_space.md
 
 11.设置进程虚拟地址空间的布局
 ----------------------------------------
@@ -372,7 +372,7 @@ setup_new_exec函数用来设置进程虚拟地址空间的布局.
 
 setup_new_exec函数具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/setup_new_exec.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/setup_new_exec.md
 
 12.设置进程栈空间布局
 ----------------------------------------
@@ -396,7 +396,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory
 
 setup_arg_pages具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/setup_arg_pages.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/setup_arg_pages.md
 
 13.映射PT_LOAD段
 ----------------------------------------
@@ -583,7 +583,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/setup_arg_pa
 
 elf_map的具体实现如下所示：
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/elf_map.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_map.md
 
 ### 计算进程空间各段起始地址和结束地址
 
@@ -730,7 +730,7 @@ elf_interpreter指向解释器(连接器)名称,如果有解释器，则调用lo
 
 load_elf_interp具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/load_elf_interp.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/load_elf_interp.md
 
 针对本例来说，linker作为解释器，其映射首地址为b6f74000(elf_entry),也就是load_elf_interp的返回值.
 
@@ -760,7 +760,7 @@ static struct linux_binfmt elf_format = {
 接下来调用set_binfmt函数将对应的elf格式文件的处理接口函数包存到描述当前进程空间的
 数据结构mm_struct实例的成员变量binfmt中去.具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/set_binfmt.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/set_binfmt.md
 
 18.install_exec_creds
 ----------------------------------------
@@ -779,7 +779,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/set_binfmt.m
 
 install_exec_creds为新的可执行二进制文件配置credentials.具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/install_exec_creds.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/install_exec_creds.md
 
 19.create_elf_tables
 ----------------------------------------
@@ -796,7 +796,7 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/install_exec
 调用create_elf_tables，它将argc、argv等，还有一些辅助向量(Auxiliary Vector)等信息复制到用户栈空间.
 具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/binfmt_elf_c/create_elf_tables.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/create_elf_tables.md
 
 针对本实例，设置完成后用户栈顶指针(bprm->p)指向的地址为0xbeb36850.
 
@@ -865,4 +865,4 @@ start_thread跟体系结构相关，具体实现如下所示:
 
 ### arm
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/processor_h/start_thread.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/processor_h/start_thread.md

@@ -23,4 +23,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/pg_d
 bootmem_data_t
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/bootmem.h/bootmem_data_t.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/bootmem.h/bootmem_data_t.md

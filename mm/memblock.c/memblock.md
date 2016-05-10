@@ -32,9 +32,9 @@ struct memblock memblock __initdata_memblock = {
 struct memblock
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/memblock.h/struct_memblock.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/struct_memblock.md
 
 MEMBLOCK_ALLOC_ANYWHERE
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/memblock.h/MEMBLOCK_ALLOC_ANYWHERE.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/MEMBLOCK_ALLOC_ANYWHERE.md

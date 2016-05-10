@@ -83,7 +83,7 @@ copy_process
              child_tidptr, NULL, trace);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/fork.c/copy_process.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/copy_process.md
 
 do_fork以调用copy_process开始，后者执行生成新进程的实际工作，并根据指定的标志重用父进程的数据。
 在子进程生成之后，内核必须执行下列收尾操作：
@@ -166,4 +166,4 @@ do_fork()函数在创建好task_struct和thread_info等数据结构，并设置�
 流程图
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/fork.c/res/do_fork.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/do_fork.jpg

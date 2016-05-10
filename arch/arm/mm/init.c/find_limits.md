@@ -21,7 +21,7 @@ min=80200, max_low=afa00, max_high=fffff
 memblock_get_current_limit
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memblock.c/memblock_get_current_limit.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_get_current_limit.md
 
 memblock.current_limit值是在如下调用过程中设置的:
 
@@ -34,14 +34,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/set
 memblock_start_of_DRAM
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memblock.c/memblock_start_of_DRAM.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_start_of_DRAM.md
 
 memblock_end_of_DRAM
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memblock.c/memblock_end_of_DRAM.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_end_of_DRAM.md
 
 PFN_XXX
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/pfn.h/PFN_XXX.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pfn.h/PFN_XXX.md

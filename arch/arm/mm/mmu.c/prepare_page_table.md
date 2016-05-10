@@ -5,19 +5,19 @@ prepare_page_table
 
 * PMD_SIZE
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/PMD_XXX.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/PMD_XXX.md
 
 * MODULES_VADDR
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory.h/MODULES_VADDR.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/MODULES_VADDR.md
 
 * PAGE_OFFSET
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
 
 * VMALLOC_START
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgtable.h/VMALLOC.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/VMALLOC.md
 
 prepare_page_table
 ----------------------------------------
@@ -83,4 +83,4 @@ Virutal kernel memory layout (aries)
 
 在我们实验环境对应的虚拟地址空间映射如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/init.c/aries_virtual_memory_layout.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/aries_virtual_memory_layout.md

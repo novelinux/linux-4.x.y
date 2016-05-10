@@ -9,4 +9,4 @@ path: arch/arm/include/asm/pgtble-2level.h
 cpu_set_pte_ext
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/glue-proc.h/glue-proc.h.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/glue-proc.h/glue-proc.h.md

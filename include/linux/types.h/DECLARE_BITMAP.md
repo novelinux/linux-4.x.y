@@ -10,4 +10,4 @@ path: include/linux/types.h
 BITS_TO_LONGS
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/bitops.h/BIT_XXX.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/bitops.h/BIT_XXX.md

@@ -45,7 +45,7 @@ get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
 选择进程虚拟地址空间的布局是在setup_new_exec函数中调用
 arch_pick_mmap_layout来选择的，具体实现如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/setup_new_exec.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/setup_new_exec.md
 
 * 对于经典的进程空间布局是使用arch_get_unmapped_area函数来寻找空闲映射区域的:
 

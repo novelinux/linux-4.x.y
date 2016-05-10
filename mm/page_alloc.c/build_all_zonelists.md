@@ -20,11 +20,11 @@ void __ref build_all_zonelists(pg_data_t *pgdat, struct zone *zone)
 
 ### pgdat
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/pg_data_t.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/pg_data_t.md
 
 ### zone
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/struct_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
 
 set_zonelist_order
 ----------------------------------------

@@ -19,32 +19,32 @@ NUMA计算机（非一致内存访问，non-uniformmemory access）总是多处�
 
 * 区别
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/res/uma_numa.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/uma_numa.jpg
 
 数据结构
 ----------------------------------------
 
 Linux采用Node、Zone和Page三级结构来描述物理内存的.其关系如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/res/node_zone_page.gif
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/node_zone_page.gif
 
 Linux用一个pg_data_t(struct pglist_data)结构来描述系统的物理内存，系统中每个结点都挂接在一个
 pgdat_list列表中，对UMA体系结构，则只有一个静态的pg_data_t结构contig_page_data。如下图所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/res/relation.jpg
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/relation.jpg
 
 NODE_DATA:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/NODE_DATA.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/NODE_DATA.md
 
 ### 结点
 
 首先，内存划分为结点。每个结点关联到系统中的一个处理器，在内核中表示为pg_data_t的实例。
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/pg_data_t.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/pg_data_t.md
 
 ### 内存域
 
 各个结点又划分为内存域，是内存的进一步细分。
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/mmzone.h/struct_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md

@@ -30,7 +30,7 @@ aries设备输出dmesg
 
 __pa宏用于将虚拟地址转换为物理地址.
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory.h/__pa_vs__va.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/__pa_vs__va.md
 
 System.map
 ```
@@ -41,7 +41,7 @@ c1a4e2e4 B _end
 
 ### memblock_reserve
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/memblock.c/memblock_reserve.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_reserve.md
 
 
 memblock_reserve - initrd

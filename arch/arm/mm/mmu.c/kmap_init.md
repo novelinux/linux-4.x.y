@@ -35,17 +35,17 @@ CONFIG_HIGHMEM=y
 PKMAP_BASE
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/highmem.h/PKMAP_BASE.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/highmem.h/PKMAP_BASE.md
 
 FIXADDR_START
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/fixmap.h/FIXADDR_XXX.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/fixmap.h/FIXADDR_XXX.md
 
 _PAGE_KERNEL_TABLE
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgalloc.h/_PAGE_KERNEL_TABLE.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgalloc.h/_PAGE_KERNEL_TABLE.md
 
 early_pte_alloc
 ----------------------------------------

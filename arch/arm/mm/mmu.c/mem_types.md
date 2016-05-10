@@ -119,7 +119,7 @@ static struct mem_type mem_types[] = {
 struct mem_type
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/struct_mem_type.h
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/struct_mem_type.h
 
 映射类型
 ----------------------------------------
@@ -134,4 +134,4 @@ https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/struct_mem
 访问控制属性
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/domain.h/domain.h.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/domain.h/domain.h.md

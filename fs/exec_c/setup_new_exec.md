@@ -61,7 +61,7 @@ current->mm经过函数flush_old_exec以后已经被替换成了新程序在bprm
 虚拟地址空间. arch_pick_mmap_layout函数的作用是选择新进程的虚拟地址空间布局,如果对应的
 体系结构没有提供一个具体的函数，则使用内核默认的历程.
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/mmap_c/arch_pick_mmap_layout.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmap_c/arch_pick_mmap_layout.md
 
 2.__set_task_common
 ----------------------------------------

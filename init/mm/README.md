@@ -51,7 +51,7 @@ extern struct pglist_data contig_page_data;
 
 #### ARM
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/setup.c/setup_arch.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/setup_arch.md
 
 ### setup_per_cpu_areas
 
@@ -63,7 +63,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_all_z
 
 ### mm_init
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/init/main.c/mm_init.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/mm_init.md
 
 ### setup_per_cpu_pageset
 

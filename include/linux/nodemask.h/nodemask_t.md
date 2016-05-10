@@ -21,9 +21,9 @@ typedef struct { unsigned long bits[1]; } nodemask_t;
 DECLARE_BITMAP
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/types.h/DECLARE_BITMAP.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/types.h/DECLARE_BITMAP.md
 
 MAX_NUMNODES
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/numa.h/MAX_NUMNODES.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/numa.h/MAX_NUMNODES.md

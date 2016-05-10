@@ -27,4 +27,4 @@ https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/CP15.md
 MMU
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/mmu.c
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c

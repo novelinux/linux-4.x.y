@@ -23,12 +23,12 @@ pud
 
 对于arm平台来说通常只有两级页表，所以pud == pgd.
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/4level-fixup.h/pud_offset.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/4level-fixup.h/pud_offset.md
 
 pud_addr_end
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/pgtable.h/pud_addr_end.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/pgtable.h/pud_addr_end.md
 
 alloc_init_pmd
 ----------------------------------------

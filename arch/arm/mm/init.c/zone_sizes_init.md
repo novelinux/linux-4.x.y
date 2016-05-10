@@ -123,4 +123,4 @@ free_area_init_node
 }
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/mm/page_alloc.c/free_area_init_node.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/free_area_init_node.md

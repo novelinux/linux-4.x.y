@@ -46,19 +46,19 @@ EXPORT_SYMBOL(flush_old_exec);
 de_thread
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/de_thread.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/de_thread.md
 
 set_mm_exe_file
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/fork/set_mm_exe_file.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork/set_mm_exe_file.md
 
 acct_arg_size
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/acct_arg_size.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/acct_arg_size.md
 
 exec_mmap
 -----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/fs/exec_c/exec_mmap.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/exec_mmap.md

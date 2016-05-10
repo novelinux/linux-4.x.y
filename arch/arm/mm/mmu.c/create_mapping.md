@@ -49,7 +49,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/mach/m
 
 ### TASK_SIZE
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/memory.h/TASK_SIZE.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/TASK_SIZE.md
 
 mem_types
 ----------------------------------------
@@ -124,7 +124,7 @@ pgd
     pgd = pgd_offset_k(addr);
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgtable.h/pgd_offset_k.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/pgd_offset_k.md
 
 
 alloc_init_pud
@@ -159,7 +159,7 @@ alloc_init_pud()函数为定位到的L1页目录表项pgd所指向的二级页�
 
 ### pgd_addr_end
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/asm-generic/pgtable.h/pgd_addr_end.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/pgtable.h/pgd_addr_end.md
 
 ### demsg
 
@@ -217,4 +217,4 @@ L1表项所能映射为什么是2MB而不是1MB呢? 这个是linux的一个处�
 arm典型的mmu映射框架图显示的是映射1MB, linux映射框架图在它的基础做了些调整和优化。
 linux所做的调整描述如下:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/pgtable-2level.h/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/README.md

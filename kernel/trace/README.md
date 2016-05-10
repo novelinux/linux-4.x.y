@@ -28,4 +28,4 @@ TRACE
 ftrace
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/trace/ftrace/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/trace/ftrace/README.md

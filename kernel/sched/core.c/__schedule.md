@@ -133,4 +133,4 @@ need_resched:
 
 ### context_switch
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/sched/core.c/context_switch.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/context_switch.md

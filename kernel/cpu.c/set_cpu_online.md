@@ -17,14 +17,14 @@ void set_cpu_online(unsigned int cpu, bool online)
 to_cpumask
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/cpumask.h/to_cpumask.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/cpumask.h/to_cpumask.md
 
 cpu_online_bits
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/kernel/cpu.c/cpu_oneline_bits.md
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/cpu.c/cpu_oneline_bits.md
 
 cpumask_set_cpu
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/cpumask.h/cpumask_set_cpu.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/cpumask.h/cpumask_set_cpu.md

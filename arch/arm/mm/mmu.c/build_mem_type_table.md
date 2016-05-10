@@ -42,7 +42,7 @@ static void __init build_mem_type_table(void)
 
 cp对应的内存策略如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/mm/mmu.c/struct_cachepolicy.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/struct_cachepolicy.md
 
 get_cr
 ----------------------------------------

@@ -37,4 +37,4 @@ boot_command_line
 
 boot_command_line的初始化如下所示:
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/kernel/atags_parse.c/setup_machine_tags.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/atags_parse.c/setup_machine_tags.md

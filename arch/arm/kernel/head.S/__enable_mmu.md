@@ -62,7 +62,7 @@ __enable_mmu:
 ENDPROC(__enable_mmu)
 ```
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/arch/arm/include/asm/domain.h/domain.h.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/domain.h/domain.h.md
 
 需要注意的是前面__v7_setup中只是无效掉cache，无效是cache操作一种，表示cache中数据无效了，
 下次由cache读取数据，则需要cache从内存中重新获取数据。这是保证cache数据一致性的手段。

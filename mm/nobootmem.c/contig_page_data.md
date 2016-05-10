@@ -12,4 +12,4 @@ EXPORT_SYMBOL(contig_page_data);
 __refdata
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/tree/master/4.x.y/include/linux/init.h/__ref.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/init.h/__ref.md
