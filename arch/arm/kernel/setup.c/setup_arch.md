@@ -55,7 +55,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/atags_parse
 
 **注意**: 对应带有Device Tree信息和不带Device Tree信息的ATAGS是由bootloader来组织的:
 
-https://github.com/leeminghao/doc-linux/blob/master/bootloader/lk/apps/aboot/aboot_c/boot_linux.md
+https://github.com/novelinux/bootloader-lk/tree/master/lk/apps/aboot/aboot_c/boot_linux.md
 
 设置init_mm的代码段和数据段
 ----------------------------------------

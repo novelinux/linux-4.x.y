@@ -27,7 +27,7 @@ Linux内核启动
 
 ### bootloader
 
-https://github.com/leeminghao/doc-linux/blob/master/bootloader/README.md
+https://github.com/novelinux/bootloader-lk/tree/master/README.md
 
 ### kernel
 

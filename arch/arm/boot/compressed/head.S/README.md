@@ -3,7 +3,7 @@ head.S 内核解压
 
 在bootloader加载完内核之后，即将跳转到内核代码执行时，必须关闭MMU和cache。这时候都是使用物理地址.
 
-https://github.com/leeminghao/doc-linux/blob/master/bootloader/lk/apps/aboot/aboot_c/boot_linux.md
+https://github.com/novelinux/bootloader-lk/tree/master/lk/apps/aboot/aboot_c/boot_linux.md
 
 相关地址值
 ----------------------------------------
@@ -52,7 +52,7 @@ https://github.com/torvalds/linux/blob/bdec41963890f8ed9ad89f8b418959ab3cdc2aa3/
 例如在使用lk来加载内核是将kernel加载到地址0x80208000处.该地址一般由boot_img_hdr(boot.img
 的header结构体)中指定.详情参考:
 
-https://github.com/leeminghao/doc-linux/tree/master/bootloader/lk/README.md
+https://github.com/novelinux/bootloader-lk/tree/master/lk/README.md
 
 对应的内存布局如下：
 

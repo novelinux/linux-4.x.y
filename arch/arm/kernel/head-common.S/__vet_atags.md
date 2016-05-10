@@ -3,7 +3,7 @@ __vet_atags
 
 atags的地址是由bootloader传递给kernel的，在我们的bootloader中其构建atags的过程如下:
 
-https://github.com/leeminghao/doc-linux/blob/master/bootloader/lk/apps/aboot/aboot_c/generate_atags.md
+https://github.com/novelinux/bootloader-lk/tree/master/lk/apps/aboot/aboot_c/generate_atags.md
 
 这里对atag的检查主要检查其是不是以ATAG_CORE开头，size对不对等.
 
