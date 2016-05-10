@@ -29,11 +29,11 @@ Linux内存管理
 
 #### msm8960
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/msm8960/memory_map.md
+https://github.com/novelinux/arch-arm-msm-8960/tree/master/memory_map.md
 
 #### aries
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/msm8960/memory_layout.md
+https://github.com/novelinux/arch-arm-msm-8960/tree/master/memory_layout.md
 
 #### MMU
 

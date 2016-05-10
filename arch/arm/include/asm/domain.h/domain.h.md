@@ -43,7 +43,7 @@ ARM Linux 中只是用了16个域中的三个域D0-D2。它们由上面的宏来
 在ARM处理器中，MMU中的每个域的访问权限分别由CP15的C3寄存器中的两位来设定，c3寄存器的小为32bits，
 刚好可以设置16个域的访问权限。下表列出了域的访问控制字段不同取值及含义：
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/CP15.md
+https://github.com/novelinux/arch-arm-common/tree/master/CP15.md
 
 * 0b00    无访问权限      此时访问该域将产生访问失效
 

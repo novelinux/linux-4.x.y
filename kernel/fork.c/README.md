@@ -104,7 +104,7 @@ path: kernel/arch/arm/include/asm/unistd.h
 
 当使用swi触发软中断的时候将会调用vector_swi处的中断处理函数来处理对应的软件中断.
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/swi.md
+https://github.com/novelinux/arch-arm-common/tree/master/swi.md
 
 在linux arm中，会查询sys_call_table跳转表,这个表中存储的是一系列的函数指针,这些
 指针就是系统调用函数的指针.

@@ -214,4 +214,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/READ
 CP15
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/CP15.md
+https://github.com/novelinux/arch-arm-common/tree/master/CP15.md

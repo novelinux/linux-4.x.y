@@ -3,7 +3,7 @@ vector_swi
 
 ### swi中断
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/swi.md
+https://github.com/novelinux/arch-arm-common/tree/master/swi.md
 
 当使用swi触发软中断的时候将会调用vector_swi处的中断处理函数来处理对应的软件中断.
 

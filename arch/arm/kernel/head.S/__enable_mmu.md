@@ -137,4 +137,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common
 
 CP15协处理器的作用如下:
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/CP15.md
+https://github.com/novelinux/arch-arm-common/tree/master/CP15.md

@@ -56,7 +56,7 @@ https://github.com/novelinux/bootloader-lk/tree/master/lk/README.md
 
 对应的内存布局如下：
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/msm8960/memory_layout.md
+https://github.com/novelinux/arch-arm-msm-8960/tree/master/memory_layout.md
 
 在bootloader加载kernel映像zImage执行的过程我们知道,第一条指定即指向了head.S中start标志
 开始代码，如下所示:

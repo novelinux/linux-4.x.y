@@ -22,7 +22,7 @@ v7_crval:
 CP15
 ----------------------------------------
 
-https://github.com/leeminghao/doc-linux/blob/master/arch/arm/common/CP15.md
+https://github.com/novelinux/arch-arm-common/tree/master/CP15.md
 
 MMU
 ----------------------------------------
