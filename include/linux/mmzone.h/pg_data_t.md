@@ -42,7 +42,9 @@ node_zonelists
 
 指定了备用结点及其内存域的列表，以便在当前结点没有可用空间时，在备用结点分配内存。
 该数组用来表示所描述的层次结构。node_zonelists数组对每种可能的内存域类型，都配置
-了一个独立的数组项。数组项包含了类型为zonelist的一个备用列表:
+了一个独立的数组项。数组项包含了类型为zonelist的一个备用列表.由于该备用列表必须
+包括所有结点的所有内存域，因此由(MAX_NUMNODES * MAX_NR_ZONES)项组成，外加一个
+用于标记列表结束的空指针:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zonelist.md
 

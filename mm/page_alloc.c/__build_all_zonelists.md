@@ -24,12 +24,8 @@ __build_all_zonelists对系统中的各个NUMA结点分别调用build_zonelists�
 内核还针对当前内存结点的备选结点，定义了一个等级次序。这有助于在当前结点所有内存域的内存
 都用尽时，确定一个备选结点。
 
-for_each_online_node
+build_zonelists
 ----------------------------------------
-
-for_each_online_node遍历了系统中所有的活动结点。由于UMA系统只有一个结点，build_zonelists
-只调用了一次，就对所有的内存创建了内存域列表。NUMA系统调用该函数的次数等同于结点的数目。
-每次调用对一个不同结点生成内存域数据。
 
 path: mm/page_alloc.c
 ```
@@ -48,44 +44,36 @@ static int __build_all_zonelists(void *data)
         build_zonelist_cache(self);
     }
 
+    /* for_each_online_node遍历了系统中所有的活动结点。由于UMA系统只有一个结点，build_zonelists
+     * 只调用了一次，就对所有的内存创建了内存域列表。NUMA系统调用该函数的次数等同于结点的数目。
+     * 每次调用对一个不同结点生成内存域数据。
+     */
     for_each_online_node(nid) {
+        pg_data_t *pgdat = NODE_DATA(nid);
+        build_zonelists(pgdat);
+        build_zonelist_cache(pgdat);
+    }
 ```
+
+### for_each_online_node
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nodemask.h/for_each_online_node.md
 
-NODE_DATA
-----------------------------------------
+### NODE_DATA
 
 在UMA系统上，NODE_DATA返回contig_page_data的地址。
 
-```
-        pg_data_t *pgdat = NODE_DATA(nid);
-```
-
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/NODE_DATA.md
-
-### UMA
 
 在UMA系统上contig_page_data的初始化如下所示:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/bootmem_init.md
 
-build_zonelists
-----------------------------------------
-
-```
-        build_zonelists(pgdat);
-```
+### build_zonelists
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonelists.md
 
-build_zonelist_cache
-----------------------------------------
-
-```
-        build_zonelist_cache(pgdat);
-    }
-```
+### build_zonelist_cache
 
 setup_pageset
 ----------------------------------------

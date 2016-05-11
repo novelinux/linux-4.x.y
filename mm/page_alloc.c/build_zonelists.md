@@ -1,10 +1,11 @@
 build_zonelists
 ========================================
 
+建立备用层次结构的任务委托给build_zonelists，该函数为每个NUMA结点都创建了相应的数据结构。
+
 Arguments
 ----------------------------------------
 
-建立备用层次结构的任务委托给build_zonelists，该函数为每个NUMA结点都创建了相应的数据结构。
 build_zonelists需要一个指向pgdat_t实例的指针作为参数，其中包含了结点内存配置的所有现存信息，
 而新建的数据结构也会放置在其中。
 
@@ -33,10 +34,6 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/current_zon
 node_zonelists
 ----------------------------------------
 
-内核使用pg_data_t中的zonelist数组，来表示所描述的层次结构。node_zonelists数组对每种可能的内存域
-类型，都配置了一个独立的数组项。数组项包含了类型为zonelist的一个备用列表.由于该备用列表必须包括
-所有结点的所有内存域，因此由MAX_NUMNODES * MAX_NZ_ZONES项组成，外加一个用于标记列表结束的空指针。
-
 ```
     /* initialize zonelists */
     for (i = 0; i < MAX_ZONELISTS; i++) {
@@ -64,6 +61,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nodemask.h/no
 node_order
 ----------------------------------------
 
+node_order用来记录跟local_node由近及远的node节点号.
+
 ```
     memset(node_order, 0, sizeof(node_order));
 ```
@@ -75,7 +74,7 @@ build_zonelists_in_node_order
 
 ```
     j = 0;
-
+    // 找一个离local_node最近距离的节点
     while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
         /*
          * We don't want to pressure a particular node.
@@ -106,7 +105,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/topology.h/no
 
 ### buile_zonelist_in_node_order
 
-实际工作则委托给buile_zonelist_in_node_order在调用时，它首先生成本地结点内分配内存时的备用次序。
+按照node排序,在local_node节点上的zonelist如下所示:
+
+```
+local_node->zonelist[0]->_zonerefs[0 ~ node * node->node_zones] =
+n1.h n1.n n1.d32 n1.d n2.h n2.n n2.d32 n2.d ...
+```
+
+其中n1、n2代表节点，h=highmem, n=normal, d32=DMA32, d=DMA
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonelists_in_node_order.md
 
@@ -120,10 +126,25 @@ build_zonelists_in_zone_order
     }
 ```
 
+按照zone排序,在local_node节点上的zonelist如下所示:
+
+```
+local_node->zonelist[0]->zonerefs[0 ~ node * node->node_zones] =
+n1.h n2.h n3.h n1.n n2.n n3.n .....
+```
+
+其中n1、n2代表节点，h=highmem, n=normal, d32=DMA32, d=DMA
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonelists_in_zone_order.md
+
 build_thisnode_zonelists
 ----------------------------------------
+
+配当前节点的zone排序：
 
 ```
     build_thisnode_zonelists(pgdat);
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_thisnode_zonelists.md

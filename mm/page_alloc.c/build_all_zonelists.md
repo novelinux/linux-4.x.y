@@ -46,21 +46,7 @@ build_all_zonelists中将所有工作都委托给__build_all_zonelists，后者�
 ```
     if (system_state == SYSTEM_BOOTING) {
         __build_all_zonelists(NULL);
-```
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__build_all_zonelists.md
-
-mminit_verify_zonelist
-----------------------------------------
-
-```
         mminit_verify_zonelist();
-```
-
-cpuset_init_current_mems_allowed
-----------------------------------------
-
-```
         cpuset_init_current_mems_allowed();
     } else {
 #ifdef CONFIG_MEMORY_HOTPLUG
@@ -73,6 +59,14 @@ cpuset_init_current_mems_allowed
         /* cpuset refresh routine should be here */
     }
 ```
+
+### __build_all_zonelists
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__build_all_zonelists.md
+
+### mminit_verify_zonelist
+
+### cpuset_init_current_mems_allowed
 
 other
 ----------------------------------------
