@@ -106,3 +106,8 @@ void __init mem_init(void)
     }
 }
 ```
+
+Virtual kernel memory layout
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/aries_virtual_memory_layout.md

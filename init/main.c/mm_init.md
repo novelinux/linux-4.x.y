@@ -13,6 +13,12 @@ static void __init mm_init(void)
      * bigger than MAX_ORDER unless SPARSEMEM.
      */
      page_ext_init_flatmem();
+```
+
+mem_init
+--------------------------------------
+
+```
      mem_init();
      kmem_cache_init();
      percpu_init_late();
@@ -21,3 +27,7 @@ static void __init mm_init(void)
      ioremap_huge_init();
 }
 ```
+
+### ARM
+
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/mem_init.md

@@ -57,16 +57,16 @@ table
 
 * PMD_SIZE
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/PMD_XXX.md
+  https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable-2level.h/PMD_XXX.md
 
 * MODULES_VADDR
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/MODULES_VADDR.md
+  https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/MODULES_VADDR.md
 
 * PAGE_OFFSET
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
+  https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/PAGE_OFFSET.md
 
 * VMALLOC_START
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/VMALLOC.md
+  https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/pgtable.h/VMALLOC.md
