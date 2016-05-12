@@ -29,7 +29,12 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
     init_waitqueue_head(&pgdat->kswapd_wait);
     init_waitqueue_head(&pgdat->pfmemalloc_wait);
     pgdat_page_ext_init(pgdat);
+```
 
+初始化当前节点zone
+----------------------------------------
+
+```
     for (j = 0; j < MAX_NR_ZONES; j++) {
         struct zone *zone = pgdat->node_zones + j;
         unsigned long size, realsize, freesize, memmap_pages;
@@ -87,8 +92,22 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
         spin_lock_init(&zone->lru_lock);
         zone_seqlock_init(zone);
         zone->zone_pgdat = pgdat;
-        zone_pcp_init(zone);
+```
 
+### zone_pcp_init
+
+zone_pcp_init负责初始化对应zone的CPU高速缓存.在这里仅仅将zone->pageset赋值为与CPU
+相关变量boot_pageset.真正的初始化工作在__build_all_zonelists函数中进行.
+
+```
+        zone_pcp_init(zone);
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_pcp_init.md
+
+###
+
+```
         /* For bootup, initialized properly in watermark setup */
         mod_zone_page_state(zone, NR_ALLOC_BATCH, zone->managed_pages);
 

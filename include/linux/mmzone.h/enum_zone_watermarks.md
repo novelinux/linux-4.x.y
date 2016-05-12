@@ -11,6 +11,22 @@ enum zone_watermarks {
 };
 ```
 
+内存域水印的计算
+----------------------------------------
+
+在计算各种水印之前，内核首先确定需要为关键性分配保留的内存空间的最小值。该值随可用内存的大小而
+非线性增长，并保存在全局变量min_free_kbytes中。下图概述了这种非线性比例关系：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/watermarks_coordinate.jpg
+
+其中主图的横轴采用了对数坐标，插图的横轴采用的是普通坐标，插图放大了总内存容量在0～4 GiB之间的
+变化曲线. 下表给出了一些典型值，主要适用于配备了适量内存的桌面系统:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/typical_min_free_kbytes.jpg
+
+一个不变的约束是，不能少于128 KiB，也不能多于64 MiB。但要注意，只有内存数量确实比较大的时候，
+才能达到上界。用户层可通过文件/proc/sys/vm/min_free_kbytes来读取和修改该设置。
+
 min_free_kbytes
 ----------------------------------------
 

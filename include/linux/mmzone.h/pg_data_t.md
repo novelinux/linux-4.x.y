@@ -36,15 +36,19 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/bounds.c/MAX_NR_ZONE
 node_zonelists
 ----------------------------------------
 
-```
-    struct zonelist node_zonelists[MAX_ZONELISTS];
-```
+出于性能考虑，在为进程分配内存时，内核总是试图在当前运行的CPU相关联的NUMA结点上进行。但这并不总
+是可行的，例如，该结点的内存可能已经用尽。对此类情况，每个结点都提供了一个备用列表（借助于
+struct zonelist）。该列表包含了其他结点（和相关的内存域），可用于代替当前结点分配内存。列表项的
+位置越靠后，就越不适合分配。
 
-指定了备用结点及其内存域的列表，以便在当前结点没有可用空间时，在备用结点分配内存。
 该数组用来表示所描述的层次结构。node_zonelists数组对每种可能的内存域类型，都配置
 了一个独立的数组项。数组项包含了类型为zonelist的一个备用列表.由于该备用列表必须
 包括所有结点的所有内存域，因此由(MAX_NUMNODES * MAX_NR_ZONES)项组成，外加一个
 用于标记列表结束的空指针:
+
+```
+    struct zonelist node_zonelists[MAX_ZONELISTS];
+```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zonelist.md
 
@@ -55,11 +59,11 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/MAX_
 nr_zones
 ----------------------------------------
 
+结点中不同内存域的数目
+
 ```
     int nr_zones;
 ```
-
-结点中不同内存域的数目
 
 node_mem_map
 ----------------------------------------
@@ -185,6 +189,7 @@ zone_type
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum_zone_type.md
 
+
 ----------------------------------------
 
 ```
@@ -200,3 +205,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/enum
 #endif
 } pg_data_t;
 ```
+
+结点状态管理
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/nodemask.h/enum_node_states.md

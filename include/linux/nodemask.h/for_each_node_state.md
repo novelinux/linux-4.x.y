@@ -1,6 +1,8 @@
 for_each_node_state
 ========================================
 
+宏for_each_node_state(__node, __state)用来迭代处于特定状态的所有结点.
+
 path: include/linux/nodemask.h
 ```
 #define for_each_node_state(__node, __state) \

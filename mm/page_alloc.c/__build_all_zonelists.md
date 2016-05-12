@@ -78,6 +78,9 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_zonel
 setup_pageset
 ----------------------------------------
 
+初始化per-CPU缓存.代码将遍历系统中的所有CPU，同时调用setup_pageset填充每个per_cpu_pageset实例的
+常量boot_pageset。在调用该函数时，使用了per_cpu宏来选择与当前CPU相关的内存域的pageset实例。
+
 ```
     /*
      * Initialize the boot_pagesets that are going to be used
@@ -112,3 +115,11 @@ setup_pageset
     return 0;
 }
 ```
+
+### boot_pageset
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/boot_pageset.md
+
+### setup_pageset
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/setup_pageset.md

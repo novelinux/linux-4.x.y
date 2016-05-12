@@ -1,6 +1,8 @@
 for_each_online_node
 ========================================
 
+for_each_online_node(node)则迭代所有活动结点。
+
 path: include/linux/nodemask.h
 ```
 #define for_each_online_node(node) for_each_node_state(node, N_ONLINE)

@@ -43,8 +43,15 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/NODE
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/pg_data_t.md
 
+各个内存结点保存在一个单链表中，供内核遍历。
+
 ### 内存域
 
 各个结点又划分为内存域，是内存的进一步细分。
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
+
+### 页帧
+
+各个内存域都关联了一个数组，用来组织属于该内存域的物理内存页（内核中称之为页帧）。对每个页帧，
+都分配了一个struct page实例以及所需的管理数据。
