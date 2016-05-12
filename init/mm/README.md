@@ -67,8 +67,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/mm_init.md
 
 ### setup_per_cpu_pageset
 
-从上文提到的struct zone，为pageset数组的第一个数组元素分配内存。分配第一个数组元素，
-换句话说，就是意味着为第一个系统处理器分配。系统的所有内存域都会考虑进来。该函数还
-负责设置冷热分配器的限制.
-
-**注意**: 在SMP系统上对应于其他CPU的pageset数组成员，将会在相应的CPU激活时初始化。
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/setup_per_cpu_pageset.md
