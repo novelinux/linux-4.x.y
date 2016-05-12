@@ -1,9 +1,9 @@
 zone_sizes_init
 ========================================
 
-初始化Node(pg_data_t)管理的各Zone(struct zone)的大小(单位为page - 4KB).
-一般是三个内存域ZONE_DMA, ZONE_NORMAL, ZONE_HIGHMEM. 通常DMA的相关操作也会从NORMAL
-中分配内存, 其关系如下所示:
+zone_sizes_init会初始化系统中Node 0的pg_data_t实例。初始化Node(pg_data_t)管理的各Zone(struct zone)
+的大小(单位为page - 4KB). 一般是三个内存域ZONE_DMA, ZONE_NORMAL, ZONE_HIGHMEM. 通常DMA的相关操作
+也会从NORMAL中分配内存, 其关系如下所示:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/node_zone_page.gif
 

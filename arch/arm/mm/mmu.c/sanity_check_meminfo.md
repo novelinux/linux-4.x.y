@@ -39,28 +39,26 @@ void __init sanity_check_meminfo(void)
     phys_addr_t vmalloc_limit = __pa(vmalloc_min - 1) + 1;
 ```
 
+### VMALLOC_END vs VMALLOC_OFFSET
+
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/include/asm/pgtable.h/VMALLOC.md
+
 ### aries dmesg
 
 ```
 vmalloc_min=ef800000
 ```
 
-for_each_memblock
+high_memory vs arm_lowmem_limit
 ----------------------------------------
+
+如果启用了高端内存支持，则high_memory表示两个内存区lowmem和vmalloc之间的边界(0xef800000).
 
 ```
     struct memblock_region *reg;
 
     /* 逐个扫描可用物理内存region */
     for_each_memblock(memory, reg) {
-```
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/for_each_memblock.md
-
-计算high_memory
-----------------------------------------
-
-```
         phys_addr_t block_start = reg->base;
         phys_addr_t block_end = reg->base + reg->size;
         phys_addr_t size_limit = reg->size;
@@ -134,6 +132,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/fo
         memblock_limit = arm_lowmem_limit;
 ```
 
+### for_each_memblock
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/for_each_memblock.md
+
 ### aries
 
 ```
@@ -157,8 +159,3 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_set_
 ```
 memblock_limit=afa00000
 ```
-
-high_memory vs low_memory
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/misc/high_memory-low_memory.md

@@ -74,13 +74,5 @@ pmd_off_k
 
 pmd_off_k查找一个虚拟地址的内核页表目录项.
 
-
 pmd_clear
 ----------------------------------------
-
-Virutal kernel memory layout (aries)
-----------------------------------------
-
-在我们实验环境对应的虚拟地址空间映射如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/aries_virtual_memory_layout.md

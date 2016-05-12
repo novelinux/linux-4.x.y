@@ -1,14 +1,12 @@
 paging_init
 ========================================
 
-在那linux刚启动时，系统创建了一个临时页表，那个是临时的，既然正式的要上场了，临时的当然要退休了.
+paging_init初始化内核页表并启用内存分页, 在那linux刚启动时，系统创建了一个临时页表:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__create_page_tables.md
 
-aries virtual memory layout
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/aries_virtual_memory_layout.md
+paging_init负责建立只能用于内核的页表，用户空间无法访问。这对管理普通应用程序和内核访问内存的
+方式，有深远的影响。
 
 build_mem_type_table
 ----------------------------------------
@@ -106,3 +104,9 @@ bootmem_init
 ```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/bootmem_init.md
+
+注意
+----------------------------------------
+
+函数paging_init，实际上取名不当。它并不初始化分页机制，只是处理一些稀疏内存系统的设置例程，
+但重要的是该函数还调用了free_area_init_nodes，其负责初始化内核管理物理页帧的数据结构。

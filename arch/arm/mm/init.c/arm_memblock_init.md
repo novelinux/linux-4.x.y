@@ -21,7 +21,8 @@ void __init arm_memblock_init(const struct machine_desc *mdesc)
 #endif
 ```
 
-aries设备输出dmesg
+### aries
+
 ```
 [    0.000000] memblock_reserve: [0x00000080300000-0x00000081c4e2e4] arm_memblock_init+0x68/0x1a0
 ```
@@ -42,7 +43,6 @@ c1a4e2e4 B _end
 ### memblock_reserve
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_reserve.md
-
 
 memblock_reserve - initrd
 ----------------------------------------
@@ -79,7 +79,8 @@ memblock_reserve - initrd
 #endif
 ```
 
-aries设备输出dmesg
+### aries
+
 ```
 [    0.000000] memblock_reserve: [0x00000082200000-0x000000823e1a0d] arm_memblock_init+0xe8/0x1a0
 ```
