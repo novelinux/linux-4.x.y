@@ -14,12 +14,12 @@ Memory
 * 进程的地址空间。
 
 
-初始化内存管理
+Initialization
 ----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/init/mm/README.md
 
-内存布局
+Layout
 ----------------------------------------
 
 ### ARM
@@ -30,10 +30,17 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/README.md
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm64/mm/README.md
 
-物理内存管理
+Physical memory manager
 ----------------------------------------
 
+### Data Structure
+
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/README.md
+
+### Memblock
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/mm/memblock.c/README.md
+
 
 进程虚拟地址空间
 ----------------------------------------
