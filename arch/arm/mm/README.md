@@ -1,6 +1,10 @@
 Memory Layout
 ========================================
 
+在bootloader加载完kernel之后aries各个模块物理内存布局如下所示:
+
+https://github.com/novelinux/arch-arm-msm-8960/tree/master/memory_layout.md
+
 在ARM系统上内核通常将总的4 GiB可用虚拟地址空间按3 : 1的比例划分。低端3 GiB用于用户状态应用程序，
 而高端的1 GiB则专用于内核。尽管在分配内核的虚拟地址空间时，当前系统上下文是不相干的，但每个过程
 都有自身特定的地址空间。这些划分主要的动机如下所示:
@@ -89,11 +93,13 @@ https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/include/asm/pgtabl
 
 持久映射用于将高端内存域中的非持久页映射到内核中。
 
-https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/mmu.c/kmap_init.md
-
 PKMAP_BASE定义了pkmap的起始位置:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/highmem.h/PKMAP_BASE.md
+
+##### 映射过程
+
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/mmu.c/kmap_init.md
 
 #### fixmap (0xfff00000 - 0xfffe0000)
 
@@ -137,6 +143,11 @@ aries physical memory layout
 a0000000-a57fffff : System RAM
 a5900000-ff2fefff : System RAM
 ```
+
+phsical memory <--> virtual memory
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/README.md
 
 highmem
 ----------------------------------------
