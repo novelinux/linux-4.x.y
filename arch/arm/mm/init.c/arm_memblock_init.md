@@ -7,8 +7,6 @@ memblock实现比较简单,而它的作用就是在page allocator初始化之前
 memblock_reserve - kernel
 ----------------------------------------
 
-将kernel占用的内存空间添加到已分配内存集合reserved中
-
 path: arch/arm/mm/init.c
 ```
 void __init arm_memblock_init(const struct machine_desc *mdesc)
@@ -21,10 +19,17 @@ void __init arm_memblock_init(const struct machine_desc *mdesc)
 #endif
 ```
 
-### aries
+将kernel占用的内存空间添加到已分配内存集合reserved中
 
 ```
 [    0.000000] memblock_reserve: [0x00000080300000-0x00000081c4e2e4] arm_memblock_init+0x68/0x1a0
+```
+
+通过查看/proc/iomem查看到kernel所占用的物理内存信息如下所示:
+
+```
+  80208000-81007f7f : Kernel code
+  8121e000-81c4e2e3 : Kernel data
 ```
 
 ### __pa
@@ -33,21 +38,8 @@ __pa宏用于将虚拟地址转换为物理地址.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory.h/__pa_vs__va.md
 
-System.map
-```
-c0100000 T _stext
-...
-c1a4e2e4 B _end
-```
-
-### memblock_reserve
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_reserve.md
-
 memblock_reserve - initrd
 ----------------------------------------
-
-将ramdisk(initrd)占用的物理内存空间添加到已分配内存集合reserved中
 
 ```
 #ifdef CONFIG_BLK_DEV_INITRD
@@ -79,11 +71,22 @@ memblock_reserve - initrd
 #endif
 ```
 
-### aries
+将ramdisk(initrd)占用的物理内存空间添加到已分配内存集合reserved中:
 
 ```
 [    0.000000] memblock_reserve: [0x00000082200000-0x000000823e1a0d] arm_memblock_init+0xe8/0x1a0
 ```
+
+### aries
+
+```
+CONFIG_BLK_DEV_INITRD=y
+```
+
+memblock_reserve
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_reserve.md
 
 arm_mm_memblock_reserve
 ----------------------------------------
@@ -92,7 +95,7 @@ arm_mm_memblock_reserve
     arm_mm_memblock_reserve();
 ```
 
-other
+mdesc->reserve
 ----------------------------------------
 
 ```
@@ -109,24 +112,19 @@ other
     dma_contiguous_reserve(arm_dma_limit);
 
     arm_memblock_steal_permitted = false;
+```
+
+memblock_dump_all
+----------------------------------------
+
+```
     memblock_dump_all();
 }
 ```
 
-aries demsg
-----------------------------------------
-
-向内核参数传入: "memblock=debug"即可打印对应的memblock信息.
+### aries
 
 ```
-[    0.000000] memblock_reserve: [0x00000080300000-0x00000081c4e2e4] arm_memblock_init+0x68/0x1a0
-[    0.000000] memblock_reserve: [0x00000082200000-0x000000823e1a0d] arm_memblock_init+0xe8/0x1a0
-[    0.000000] memblock_reserve: [0x00000080204000-0x00000080208000] arm_memblock_init+0x110/0x1a0
-
-[    0.000000] memblock_reserve: [0x000000af800000-0x000000b0000000] memblock_alloc_base_nid+0x48/0x5c
-[    0.000000] memblock_reserve: [0x000000a0000000-0x000000a5800000] dma_declare_contiguous+0xb4/0x16c
-[    0.000000] memblock_reserve: [0x000000ae800000-0x000000af800000] memblock_alloc_base_nid+0x48/0x5c
-
 [    0.000000] MEMBLOCK configuration:
 [    0.000000]  memory size = 0x7d1ff000 reserved size = 0x8b33cf1
 [    0.000000]  memory.cnt  = 0x7

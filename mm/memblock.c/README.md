@@ -39,14 +39,25 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/st
 +---------------------------+   +---------------------------+
 ```
 
-memblock
+Initialization
 ----------------------------------------
 
 结构体memblock的初始化变量名和结构体名相同是memblock.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock.md
 
-arm_memblock_init
-----------------------------------------
+#### ARM - arm_memblock_init:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/arm_memblock_init.md
+
+APIS
+----------------------------------------
+
+#### memblock_add_range
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_add_range.md
+
+debug
+----------------------------------------
+
+向内核参数传入: "memblock=debug"即可打印对应的memblock信息.

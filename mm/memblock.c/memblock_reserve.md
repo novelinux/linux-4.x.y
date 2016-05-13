@@ -30,10 +30,6 @@ static int __init_memblock memblock_reserve_region(phys_addr_t base,
 }
 ```
 
-### memblock
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock.md
-
 memblock_add_range
 ----------------------------------------
 

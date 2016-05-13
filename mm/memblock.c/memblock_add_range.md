@@ -1,6 +1,9 @@
 memblock_add_range
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/memblock.c
 ```
 /**
@@ -23,8 +26,15 @@ int __init_memblock memblock_add_range(struct memblock_type *type,
                 phys_addr_t base, phys_addr_t size,
                 int nid, unsigned long flags)
 {
+```
+
+memblock_set_region_node
+----------------------------------------
+
+```
     bool insert = false;
     phys_addr_t obase = base;
+    // 如下代码获得内存区域的结束位置
     phys_addr_t end = base + memblock_cap_size(base, &size);
     int i, nr_new;
 
@@ -41,6 +51,15 @@ int __init_memblock memblock_add_range(struct memblock_type *type,
         type->total_size = size;
         return 0;
     }
+```
+
+检查type结构体中是否存在内存区域。如果没有，我们就用给定的值填充新的memory_region，我们就把
+新的内存区域添加到memblock_type类型的memblock中。
+
+memblock_insert_region
+----------------------------------------
+
+```
 repeat:
     /*
      * The following is executed twice.  Once with %false @insert and
@@ -49,7 +68,7 @@ repeat:
      */
     base = obase;
     nr_new = 0;
-
+    // 接下来遍历所有已经存储的内存区域并检查有没有和新的内存区域重叠.
     for (i = 0; i < type->cnt; i++) {
         struct memblock_region *rgn = &type->regions[i];
         phys_addr_t rbase = rgn->base;
@@ -81,11 +100,19 @@ repeat:
             memblock_insert_region(type, i, base, end - base,
                            nid, flags);
     }
+```
 
+把新的内存区域中非重叠的部分作为独立的区域加入到 memblock.
+
+memblock_merge_regions
+----------------------------------------
+
+```
     /*
      * If this was the first round, resize array and repeat for actual
      * insertions; otherwise, merge and return.
      */
+     // 如果这是第一次循环，我们需要检查新内存区域是否可以放入内存块中并调用memblock_double_array
     if (!insert) {
         while (type->cnt + nr_new > type->max)
             if (memblock_double_array(type, obase, size) < 0)
@@ -98,3 +125,5 @@ repeat:
     }
 }
 ```
+
+合并所有相邻的内存区域.
