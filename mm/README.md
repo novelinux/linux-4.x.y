@@ -30,7 +30,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/README.md
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm64/mm/README.md
 
-Physical memory manager
+Physical Memory Manager
 ----------------------------------------
 
 ### Data Structure
@@ -41,6 +41,9 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/READ
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/README.md
 
+### Buddy
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/README.md
 
 进程虚拟地址空间
 ----------------------------------------

@@ -6,6 +6,10 @@ Node的其余数据结构.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/zone_sizes_init.md
 
+相关流程如下所示：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/res/free_area_init_nodes.jpg
+
 Arguments
 ----------------------------------------
 
@@ -45,10 +49,17 @@ Init Node nid(pg_data_t)
         (u64)start_pfn << PAGE_SHIFT,
         end_pfn ? ((u64)end_pfn << PAGE_SHIFT) - 1 : 0);
 #endif
-    /* 计算节点占用的总页面数和除去洞的实际总页面数 */
+```
+
+calculate_node_totalpages
+----------------------------------------
+
+```
     calculate_node_totalpages(pgdat, start_pfn, end_pfn,
                   zones_size, zholes_size);
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/calculate_node_totalpages.md
 
 alloc_node_mem_map
 ----------------------------------------
@@ -61,6 +72,8 @@ alloc_node_mem_map
         (unsigned long)pgdat->node_mem_map);
 #endif
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/alloc_node_mem_map.md
 
 free_area_init_core
 ----------------------------------------

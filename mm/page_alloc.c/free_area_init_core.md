@@ -31,7 +31,7 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
     pgdat_page_ext_init(pgdat);
 ```
 
-初始化当前节点zone
+Initialize Zones
 ----------------------------------------
 
 ```
@@ -40,6 +40,10 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
         unsigned long size, realsize, freesize, memmap_pages;
 
         size = zone->spanned_pages;
+        /* 内存域的真实长度，可通过跨越的页数减去空洞覆盖的页数而得到。这两个值是通过
+         * 两个辅助函数计算的。其复杂性实质上取决于内存模型和所选定的配置选项，但所有
+         * 变体最终都没有什么意外之处。
+         */
         realsize = freesize = zone->present_pages;
 
         /*
@@ -68,13 +72,20 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
                     zone_names[0], dma_reserve);
         }
 
+        /* 内核使用两个全局变量跟踪系统中的页数。nr_kernel_pages统计所有一致映射的页，
+         * 而nr_all_pages还包括高端内存页在内。
+         */
         if (!is_highmem_idx(j))
             nr_kernel_pages += freesize;
         /* Charge for highmem memmap if there are enough kernel pages */
         else if (nr_kernel_pages > memmap_pages * 2)
             nr_kernel_pages -= memmap_pages;
         nr_all_pages += freesize;
+```
 
+### 初始化zone结构表头
+
+```
         /*
          * Set an approximate value for lowmem here, it will be adjusted
          * when the bootmem allocator frees pages into the buddy system.
@@ -94,7 +105,7 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
         zone->zone_pgdat = pgdat;
 ```
 
-### zone_pcp_init
+#### zone_pcp_init
 
 zone_pcp_init负责初始化对应zone的CPU高速缓存.在这里仅仅将zone->pageset赋值为与CPU
 相关变量boot_pageset.真正的初始化工作在__build_all_zonelists函数中进行.
@@ -105,12 +116,19 @@ zone_pcp_init负责初始化对应zone的CPU高速缓存.在这里仅仅将zone-
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_pcp_init.md
 
-###
+#### mod_zone_page_state
 
 ```
         /* For bootup, initialized properly in watermark setup */
         mod_zone_page_state(zone, NR_ALLOC_BATCH, zone->managed_pages);
+```
 
+#### init_currently_empty_zone
+
+初始化free_area列表，并将属于该内存域的所有page实例都设置为初始默认值。所有页属性起初都
+设置为MIGRATE_MOVABLE。
+
+```
         lruvec_init(&zone->lruvec);
         if (!size)
             continue;
@@ -125,6 +143,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_pcp_in
     }
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/init_currently_empty_zone.md
 
 节点和管理区的关键数据已完成初始化，内核在后面为内存管理做得一个准备工作就是将所有节点的管理区
 都链入到zonelist中，便于后面内存分配工作的进行.

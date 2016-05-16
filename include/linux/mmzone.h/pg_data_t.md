@@ -79,6 +79,8 @@ node_mem_map
 
 是指向struct page实例数组的指针，用于描述结点的所有物理内存页。它包含了结点中所有内存域的页。
 
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_page.md
+
 ### aries
 
 ```
