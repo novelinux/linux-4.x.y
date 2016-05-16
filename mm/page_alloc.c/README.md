@@ -150,7 +150,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfpflag
 
 #### pageblock_flags
 
-每个内存域都提供了一个特殊的字段pageblock_flags，可以跟踪包含pageblock_nr_pages个页的内存区的属性。
+每个内存域都提供了一个特殊的字段pageblock_flags，可以跟踪包含pageblock_nr_pages个页的内存区的属性.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
 
@@ -192,7 +192,7 @@ Node 0, zone  HighMem            7            0          311            1       
 #### memmap_init_zone
 
 初始化基于可移动性的分组, 在内存子系统初始化期间，memmap_init_zone负责处理内存域的page实例。
-该函数完成了一些不怎么有趣的标准初始化工作，但其中有一件是实质性的，即所有的页最初都标记为可移动的！
+该函数完成了一些不怎么有趣的标准初始化工作,但其中有一件是实质性的,即所有的页最初都标记为可移动的.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/memmap_init_zone.md
 
@@ -234,3 +234,11 @@ movablecore参数都没有指定，find_zone_movable_pfns_for_nodes会使ZONE_MO
 * 用于为虚拟内存域ZONE_MOVABLE提取内存页的物理内存域，保存在全局变量movable_zone中；
 * 对每个结点来说，zone_movable_pfn[node_id]表示ZONE_MOVABLE在movable_zone内存域中所取得内存的
   起始地址。
+
+APIS
+----------------------------------------
+
+就伙伴系统的接口而言，NUMA或UMA体系结构是没有差别的，二者的调用语法都是相同的。所有函数的一个
+共同点是：只能分配2的整数幂个页。因此，接口中不像C标准库的malloc函数或bootmem分配器那样指定了
+所需内存大小作为参数。相反，必须指定的是分配阶，伙伴系统将在内存中分配2^order页。内核中细粒度的
+分配只能借助于slab分配器（或者slub、slob分配器），后者基于伙伴系统.
