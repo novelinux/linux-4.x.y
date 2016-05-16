@@ -39,7 +39,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/READ
 
 ### Memblock
 
-https://github.com/novelinux/linux-4.x.y/tree/master/init/mm/memblock.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/README.md
 
 
 进程虚拟地址空间
