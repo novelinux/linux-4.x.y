@@ -103,11 +103,10 @@ struct zone的pageset成员用于实现冷热分配器(hot-n-cold allocator)。�
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_per_cpu_pageset.md
 
-zone_start_pfn
+pageblock_flags
 ----------------------------------------
 
 ```
-
     /*
      * This is a per-zone reserve of pages that should not be
      * considered dirtyable memory.
@@ -121,7 +120,12 @@ zone_start_pfn
      */
     unsigned long        *pageblock_flags;
 #endif /* CONFIG_SPARSEMEM */
+```
 
+zone_start_pfn
+----------------------------------------
+
+```
 #ifdef CONFIG_NUMA
     /*
      * zone reclaim becomes active if more unmapped pages exist.
@@ -254,6 +258,9 @@ wait_table vs wait_table_bits vs wait_table_hash_nr_entries
 实现了一个等待队列，可用于进程等待某一页变为可用。直观的概念是很好理解的: 进程排成一个队列，
 等待某些条件。在条件变为真时，内核会通知进程恢复工作。
 
+free_area
+----------------------------------------
+
 ```
     ZONE_PADDING(_pad1_)
 
@@ -264,11 +271,10 @@ wait_table vs wait_table_bits vs wait_table_hash_nr_entries
     struct free_area    free_area[MAX_ORDER];
 ```
 
-free_area
-----------------------------------------
-
 是同名数据结构的数组，用于实现伙伴系统。每个数组元素都表示某种固定长度的一些连续内存区。
 对于包含在每个区域中的空闲内存页的管理，free_area是一个起点。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_free_area.md
 
 flags
 ----------------------------------------
