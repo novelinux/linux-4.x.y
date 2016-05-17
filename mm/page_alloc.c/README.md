@@ -26,7 +26,7 @@ free_area[]数组中各个元素的索引也解释为阶，用于指定对应链
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/free_area.jpg
 
-伙伴不必是彼此连接的。如果一个内存区在分配其间分解为两半，内核会自动将未用的一半加入到对应的链表中。
+伙伴不必是彼此连接的,如果一个内存区在分配其间分解为两半,内核会自动将未用的一半加入到对应的链表中。
 如果在未来的某个时刻，由于内存释放的缘故，两个内存区都处于空闲状态，可通过其地址判断其是否为伙伴。
 管理工作较少，是伙伴系统的一个主要优点。
 基于伙伴系统的内存管理专注于某个结点的某个内存域，例如，DMA或高端内存域。但所有内存域和结点的
@@ -34,8 +34,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/buddy_backup.jpg
 
-在首选的内存域或节点无法满足内存分配请求时，首先尝试同一结点的另一个内存域，接下来再尝试另一个结点，
-直至满足请求。
+在首选的内存域或节点无法满足内存分配请求时，首先尝试同一结点的另一个内存域，接下来再尝试
+另一个结点，直至满足请求。
 
 最后要注意，有关伙伴系统当前状态的信息可以在/proc/buddyinfo中获得：
 
@@ -239,6 +239,100 @@ APIS
 ----------------------------------------
 
 就伙伴系统的接口而言，NUMA或UMA体系结构是没有差别的，二者的调用语法都是相同的。所有函数的一个
-共同点是：只能分配2的整数幂个页。因此，接口中不像C标准库的malloc函数或bootmem分配器那样指定了
+共同点是：只能分配2的整数幂个页。因此，接口中不像C标准库的malloc函数或memblock分配器那样指定了
 所需内存大小作为参数。相反，必须指定的是分配阶，伙伴系统将在内存中分配2^order页。内核中细粒度的
 分配只能借助于slab分配器（或者slub、slob分配器），后者基于伙伴系统.
+
+### Allocation Macros
+
+#### alloc_pages(mask, order)
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/alloc_pages.md
+
+分配2页并返回一个struct page的实例，表示分配的内存块的起始页。
+alloc_page(mask)是前者在order = 0情况下的简化形式，只分配一页。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/alloc_page.md
+
+在空闲内存无法满足请求以至于分配失败的情况下，函数都返回空指针
+
+#### get_zeroed_page(mask)
+
+分配一页并返回一个page实例，页对应的内存填充0(所有其他函数，分配之后页的内容是未定义的)。
+在空闲内存无法满足请求以至于分配失败的情况下，函数都返回0
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/get_zeroed_page.md
+
+#### __get_free_pages(mask, order)
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__get_free_pages.md
+
+其的工作方式与上述函数相同，但返回分配内存块的虚拟地址，而不是page实例。
+__get_free_page(mask)是前者在order = 0情况下的简化形式，只分配一页。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/__get_free_page.md
+
+在空闲内存无法满足请求以至于分配失败的情况下，函数都返回0
+
+#### get_dma_pages(gfp_mask, order)
+
+用来获得适用于DMA的页。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/get_dma_pages.md
+
+以上内存分配各函数关系:
+
+```
+alloc_page    get_zeroed_page    __get_free_page    __get_dma_pages
+   |                 |                  |                 |
+   |                 +------------------+-----------------+
+   |                                    |
+   |                             __get_free_pages
+   |                                    |
+   +----------->alloc_pages<------------+
+                     |
+              alloc_pages_node
+                     |
+             __alloc_pages_node
+                     |
+               __alloc_pages
+                     |
+           __alloc_pages_nodemask
+```
+
+### Free Macros
+
+#### __free_pages(struct page *,order)
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__free_pages.md
+
+用于将一个或2^order页返回给内存管理子系统,内存区的起始地址由指向该内存区的第一个page
+实例的指针表示.
+
+#### free_pages(addr, order)
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__free_pages.md
+
+这两个函数的语义类似于前两个函数，但在表示需要释放的内存区时，使用了虚拟内存地址而不是page实例
+
+以上内存释放函数关系:
+
+```
+__free_page    free_page
+     |             |
+     |         free_pages
+     |             |
+     +------+------+
+            |
+      __free_pages
+```
+
+内核在各次分配之后都必须检查返回的结果。这种惯例与设计得很好的用户层应用程序没什么不同，
+但在内核中忽略检查会导致严重得多的故障。内核除了伙伴系统函数之外，还提供了其他内存管理函数。
+它们以伙伴系统为基础，但并不属于伙伴分配器自身。这些函数包括vmalloc和vmalloc_32，使用页表
+将不连续的内存映射到内核地址空间中，使之看上去是连续的。还有一组kmalloc类型的函数，用于
+分配小于一整页的内存区。
+
+### Allocation Mask
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/README.md
