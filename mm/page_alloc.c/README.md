@@ -128,12 +128,6 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/fallbacks.md
 
 #### pageblock_order vs pageblock_nr_pages
 
-尽管页可移动性分组特性总是编译到内核中，但只有在系统中有足够内存可以分配到多个迁移类型对应的链表时，
-才是有意义的。由于每个迁移链表都应该有适当数量的内存，内核需要定义“适当”的概念。这是通过两个全局
-变量pageblock_order和pageblock_nr_pages提供的。第一个表示是"large"的一个分配阶，pageblock_nr_pages
-则表示该分配阶对应的页数。如果体系结构提供了巨型页机制，则pageblock_order通常定义为巨型页对应的
-分配阶：
-
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/pageblock_order.md
 
 如果各迁移类型的链表中没有一块较大的连续内存，那么页面迁移不会提供任何好处，因此在可用内存太少时
@@ -141,10 +135,6 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-fla
 的内存可用，则全局变量page_group_by_mobility设置为0，否则设置为1。
 
 #### gfpflags_to_migratetype
-
-内核如何知道给定的分配内存属于何种迁移类型？有关各个内存分配的细节都通过分配掩码指定。内核提供了
-两个标志，分别用于表示分配的内存是可移动的（__GFP_MOVABLE）或可回收的（__GFP_RECLAIMABLE）。如果
-这些标志都没有设置，则分配的内存假定为不可移动的。下列辅助函数可用于转换分配标志及对应的迁移类型：
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfpflags_to_migratetype.md
 
@@ -190,9 +180,6 @@ Node 0, zone  HighMem            7            0          311            1       
 ```
 
 #### memmap_init_zone
-
-初始化基于可移动性的分组, 在内存子系统初始化期间，memmap_init_zone负责处理内存域的page实例。
-该函数完成了一些不怎么有趣的标准初始化工作,但其中有一件是实质性的,即所有的页最初都标记为可移动的.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/memmap_init_zone.md
 

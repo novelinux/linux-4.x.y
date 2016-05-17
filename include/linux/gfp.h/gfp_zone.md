@@ -1,6 +1,8 @@
 gfp_zone
 ========================================
 
+计算与给定分配标志兼容的最高内存域,那么内存分配可以从该内存域或更低的内存域进行。
+
 path: include/linux/gfp.h
 ```
 static inline enum zone_type gfp_zone(gfp_t flags)
