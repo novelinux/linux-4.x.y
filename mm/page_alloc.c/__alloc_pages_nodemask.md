@@ -98,6 +98,11 @@ retry_cpuset:
 
     /* We set it here, as __alloc_pages_slowpath might have changed it */
     ac.zonelist = zonelist;
+```
+
+### first_zones_zonelist
+
+```
     /* The preferred zone is used for statistics later */
     preferred_zoneref = first_zones_zonelist(ac.zonelist, ac.high_zoneidx,
                 ac.nodemask ? : &cpuset_current_mems_allowed,

@@ -191,16 +191,27 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_waterm
 如果内存域适用于当前的分配请求，那么buffered_rmqueue试图从中分配所需数目的页,
 如果分配成功，则将页返回给调用者。否则，进入下一个循环，选择备用列表中的下一个内存域。
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/buffered_rmqueue.md
+
 ```
 try_this_zone:
         page = buffered_rmqueue(ac->preferred_zone, zone, order,
                         gfp_mask, ac->migratetype);
+```
+
+#### prep_new_page
+
+在返回指针之前，prep_new_page需要做一些准备工作，以便内核能够处理这些页.
+
+```
         if (page) {
             if (prep_new_page(page, order, gfp_mask, alloc_flags))
                 goto try_this_zone;
             return page;
         }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/prep_new_page.md
 
 ### this_zone_full
 

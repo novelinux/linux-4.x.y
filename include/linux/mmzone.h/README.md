@@ -55,3 +55,5 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/stru
 
 各个内存域都关联了一个数组，用来组织属于该内存域的物理内存页（内核中称之为页帧）。对每个页帧，
 都分配了一个struct page实例以及所需的管理数据。
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mm_types.h/struct_page.md
