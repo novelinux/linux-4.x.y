@@ -1,6 +1,10 @@
 __alloc_pages_high_priority
 ========================================
 
+在忽略水印的情况下，get_page_from_freelist仍然失败了。在这种情况下，也会放弃搜索，报告错误消息。
+但如果设置了__GFP_NOFAIL，内核会进入无限循环首先等待(通过wait_iff_congested)块设备层结束“占线”，
+在回收页时可能出现这种情况。接下来再次尝试分配，直至成功。
+
 path: mm/page_alloc.c
 ```
 /*

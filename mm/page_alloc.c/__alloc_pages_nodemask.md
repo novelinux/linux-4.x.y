@@ -89,7 +89,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfpflag
         alloc_flags |= ALLOC_CMA;
 ```
 
-retry_cpuset
+Allocation
 ----------------------------------------
 
 ```

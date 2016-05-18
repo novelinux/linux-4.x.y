@@ -11,7 +11,12 @@ __alloc_pages_direct_reclaim(gfp_t gfp_mask, unsigned int order,
 {
     struct page *page = NULL;
     bool drained = false;
+```
 
+__perform_reclaim
+----------------------------------------
+
+```
     *did_some_progress = __perform_reclaim(gfp_mask, order, ac);
     if (unlikely(!(*did_some_progress)))
         return NULL;
@@ -19,7 +24,17 @@ __alloc_pages_direct_reclaim(gfp_t gfp_mask, unsigned int order,
     /* After successful reclaim, reconsider all zones for allocation */
     if (IS_ENABLED(CONFIG_NUMA))
         zlc_clear_zones_full(ac->zonelist);
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__perform_reclaim.md
+
+retry
+----------------------------------------
+
+接下来，如果__perform_reclaim函数中的try_to_free_pages释放了一些页，那么内核再次调用
+get_page_from_freelist尝试分配内存.
+
+```
 retry:
     page = get_page_from_freelist(gfp_mask, order,
                     alloc_flags & ~ALLOC_NO_WATERMARKS, ac);

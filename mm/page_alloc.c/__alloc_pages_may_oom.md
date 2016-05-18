@@ -1,12 +1,21 @@
 __alloc_pages_may_oom
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/page_alloc.c
 ```
 static inline struct page *
 __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
     const struct alloc_context *ac, unsigned long *did_some_progress)
 {
+```
+
+Configure
+----------------------------------------
+
+```
     struct oom_control oc = {
         .zonelist = ac->zonelist,
         .nodemask = ac->nodemask,
@@ -26,7 +35,12 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
         schedule_timeout_uninterruptible(1);
         return NULL;
     }
+```
 
+get_page_from_freelist
+----------------------------------------
+
+```
     /*
      * Go through the zonelist yet one more time, keep very high watermark
      * here, this is only to catch a parallel oom killing, we must fail if
@@ -36,7 +50,12 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
                     ALLOC_WMARK_HIGH|ALLOC_CPUSET, ac);
     if (page)
         goto out;
+```
 
+Check
+----------------------------------------
+
+```
     if (!(gfp_mask & __GFP_NOFAIL)) {
         /* Coredumps can quickly deplete all memory reserves */
         if (current->flags & PF_DUMPCORE)
@@ -63,6 +82,17 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
         if (gfp_mask & __GFP_THISNODE)
             goto out;
     }
+```
+
+out_of_memory
+----------------------------------------
+
+该函数选择一个内核认为犯有分配过多内存“罪行”的进程，并杀死该进程。这有很大几率腾出较多的空闲页，
+然后设置did_some_progress=1触发重试分配内存的操作。但杀死一个进程未必立即出现多于2^PAGE_COSTLY_ORDER
+页的连续内存区(其中PAGE_COSTLY_ORDER_PAGES通常设置为3)，因此如果当前要分配如此大的内存区，那么内核
+会饶恕所选择的进程，不执行杀死进程的任务，而是承认失败并跳转到nopage。
+
+```
     /* Exhausted what can be done so it's blamo time */
     if (out_of_memory(&oc) || WARN_ON_ONCE(gfp_mask & __GFP_NOFAIL))
         *did_some_progress = 1;

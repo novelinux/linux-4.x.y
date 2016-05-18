@@ -1,6 +1,9 @@
 __alloc_pages_direct_compact
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/page_alloc.c
 ```
 #ifdef CONFIG_COMPACTION
@@ -16,7 +19,12 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
 
     if (!order)
         return NULL;
+```
 
+try_to_compact_pages
+----------------------------------------
+
+```
     current->flags |= PF_MEMALLOC;
     compact_result = try_to_compact_pages(gfp_mask, order, alloc_flags, ac,
                         mode, contended_compaction);
@@ -37,7 +45,12 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
      * count a compaction stall
      */
     count_vm_event(COMPACTSTALL);
+```
 
+get_page_from_freelist
+----------------------------------------
+
+```
     page = get_page_from_freelist(gfp_mask, order,
                     alloc_flags & ~ALLOC_NO_WATERMARKS, ac);
 
