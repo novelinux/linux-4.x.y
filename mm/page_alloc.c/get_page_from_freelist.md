@@ -4,6 +4,9 @@ get_page_from_freelist
 get_page_from_freelist是伙伴系统使用的另一个重要的辅助函数。它通过标志集和分配阶来判断是否能
 进行分配。如果可以，则发起实际的分配操作。
 
+Arguments
+----------------------------------------
+
 path: mm/page_alloc.c
 ```
 /*
@@ -14,6 +17,12 @@ static struct page *
 get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
                         const struct alloc_context *ac)
 {
+```
+
+Configure
+----------------------------------------
+
+```
     /* 该函数的一个参数是指向备用列表的指针。在预期内存域没有空闲空间的情况下，该列表确定了
      * 扫描系统其他内存域（和结点）的顺序。
      */
@@ -28,17 +37,24 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
                 (gfp_mask & __GFP_WRITE);
     int nr_fair_skipped = 0;
     bool zonelist_rescan;
+```
 
+Scan zonelist
+----------------------------------------
+
+### Check
+
+遍历备用列表的所有内存域，用最简单的方式查找一个适当的空闲内存块。
+首先，解释ALLOC_*标志(cpuset_zone_allowed_softwall是另一个辅助函数，
+用于检查给定内存域是否属于该进程允许运行的CPU)
+
+```
 zonelist_scan:
     zonelist_rescan = false;
 
     /*
      * Scan zonelist, looking for a zone with enough free.
      * See also __cpuset_node_allowed() comment in kernel/cpuset.c.
-     */
-    /* 遍历备用列表的所有内存域，用最简单的方式查找一个适当的空闲内存块。
-     * 首先，解释ALLOC_*标志（cpuset_zone_allowed_softwall是另一个辅助函数，
-     * 用于检查给定内存域是否属于该进程允许运行的CPU）。
      */
     for_each_zone_zonelist_nodemask(zone, z, zonelist, ac->high_zoneidx,
                                 ac->nodemask) {
@@ -93,13 +109,18 @@ zonelist_scan:
          */
         if (consider_zone_dirty && !zone_dirty_ok(zone))
             continue;
+```
 
+### zone_watermark_ok
+
+zone_watermark_ok接下来检查所遍历到的内存域是否有足够的空闲页,并试图分配一个连续内存块。
+如果两个条件之一不能满足，即或者没有足够的空闲页，或者没有连续内存块可满足分配请求，
+则循环进行到备用列表中的下一个内存域，作同样的检查。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_watermark_ok.md
+
+```
         mark = zone->watermark[alloc_flags & ALLOC_WMARK_MASK];
-        /* zone_watermark_ok接下来检查所遍历到的内存域是否有足够的空闲页，并试图
-         * 分配一个连续内存块。如果两个条件之一不能满足，即或者没有足够的空闲页，
-         * 或者没有连续内存块可满足分配请求，则循环进行到备用列表中的下一个内存域，
-         * 作同样的检查。
-         */
         if (!zone_watermark_ok(zone, order, mark,
                        ac->classzone_idx, alloc_flags)) {
             int ret;
@@ -163,22 +184,37 @@ zonelist_scan:
                 continue;
             }
         }
+```
 
+### try_this_zone
+
+如果内存域适用于当前的分配请求，那么buffered_rmqueue试图从中分配所需数目的页,
+如果分配成功，则将页返回给调用者。否则，进入下一个循环，选择备用列表中的下一个内存域。
+
+```
 try_this_zone:
-        /* 如果内存域适用于当前的分配请求，那么buffered_rmqueue试图从中分配所需数目的页 */
         page = buffered_rmqueue(ac->preferred_zone, zone, order,
                         gfp_mask, ac->migratetype);
-        /* 如果分配成功，则将页返回给调用者。否则，进入下一个循环，选择备用列表中的下一个内存域。*/
         if (page) {
             if (prep_new_page(page, order, gfp_mask, alloc_flags))
                 goto try_this_zone;
             return page;
         }
+```
+
+### this_zone_full
+
+```
 this_zone_full:
-        if (IS_ENABLED(CONFIG_NUMA) && zlc_active)
+       if (IS_ENABLED(CONFIG_NUMA) && zlc_active)
             zlc_mark_zone_full(zonelist, z);
     }
+```
 
+Rescan zonelist
+----------------------------------------
+
+```
     /*
      * The first pass makes sure allocations are spread fairly within the
      * local node.  However, the local node might have free pages left

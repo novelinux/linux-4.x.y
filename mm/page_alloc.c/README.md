@@ -18,13 +18,11 @@ https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mmzone.h/stru
 
 https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mmzone.h/struct_free_area.md
 
-free_area[]数组中各个元素的索引也解释为阶，用于指定对应链表中的连续内存区包含多少个页帧。
-第0个链表包含的内存区为单页（20=1），第1个链表管理的内存区为两页（21=2），第3个管理的内存区
-为4页，依次类推。
-内存区是如何连接的？内存区中第1页内的链表元素，可用于将内存区维持在链表中。因此，也不必引入
-新的数据结构来管理物理上连续的页，否则这些页不可能在同一内存区中。
+#### zone_init_free_lists
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/free_area.jpg
+free_area的初始化由函数来完成:
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/page_alloc.c/zone_init_free_lists.md
 
 伙伴不必是彼此连接的,如果一个内存区在分配其间分解为两半,内核会自动将未用的一半加入到对应的链表中。
 如果在未来的某个时刻，由于内存释放的缘故，两个内存区都处于空闲状态，可通过其地址判断其是否为伙伴。
@@ -37,7 +35,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/
 在首选的内存域或节点无法满足内存分配请求时，首先尝试同一结点的另一个内存域，接下来再尝试
 另一个结点，直至满足请求。
 
-最后要注意，有关伙伴系统当前状态的信息可以在/proc/buddyinfo中获得：
+buddyinfo
+----------------------------------------
+
+有关伙伴系统当前状态的信息可以在/proc/buddyinfo中获得：
 
 ```
 root@aries:/ # cat /proc/buddyinfo
@@ -100,6 +101,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/
 在不可移动页中仍然难以找到较大的连续空闲空间，但对可回收的页，就容易多了。
 但要注意，从最初开始，内存并未划分为可移动性不同的区。这些是在运行时形成的。内核的另一种方法确实
 将内存分区，分别用于可移动页和不可移动页的分配。但这种划分对这里描述的方法是不必要的。
+
+#### pagetypeinfo
 
 在各个迁移页链表之间，当前的页面分配状态可以从/proc/pagetypeinfo获得：
 

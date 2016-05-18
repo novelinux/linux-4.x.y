@@ -276,6 +276,19 @@ free_area
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_free_area.md
 
+### MAX_ORDER
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mmzone.h/MAX_ORDER.md
+
+free_area[]数组中各个元素的索引也解释为阶，用于指定对应链表中的连续内存区包含多少个页帧。
+第0个链表包含的内存区为单页(20=1),第1个链表管理的内存区为两页(21=2),
+第3个管理的内存区为4页，依次类推...
+
+内存区是如何连接的？内存区中第1页内的链表元素，可用于将内存区维持在链表中。因此，也不必引入
+新的数据结构来管理物理上连续的页，否则这些页不可能在同一内存区中。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/free_area.jpg
+
 flags
 ----------------------------------------
 

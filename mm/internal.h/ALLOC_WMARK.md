@@ -44,7 +44,7 @@ path: mm/internal.h
 zone_watermark_ok
 ----------------------------------------
 
-设置的标志在zone_watermark_ok函数中检查，该函数根据设置的标志判断是否能从给定的内存域分配内存。
+该函数根据设置的标志判断是否能从给定的内存域分配内存.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_watermark_ok.md
 

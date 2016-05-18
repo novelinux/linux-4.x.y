@@ -89,7 +89,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfpflag
         alloc_flags |= ALLOC_CMA;
 ```
 
-Allocation
+retry_cpuset
 ----------------------------------------
 
 ```
@@ -112,13 +112,18 @@ retry_cpuset:
 
 ### get_page_from_freelist
 
+在最简单的情形中，分配空闲内存区只涉及调用一次get_page_from_freelist，然后返回所需数目的页.
+
 ```
     page = get_page_from_freelist(alloc_mask, order, alloc_flags, &ac);
 ```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/get_page_from_freelist.md
 
-### Other
+### __alloc_pages_slowpath
+
+第一次内存分配尝试不会特别积极。如果在某个内存域中无法找到空闲内存，则意味着内存没剩下多少了，
+内核需要增加较多的工作量才能找到更多内存.
 
 ```
     if (unlikely(!page)) {
@@ -136,7 +141,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/get_page_fr
         kmemcheck_pagealloc_alloc(page, order, gfp_mask);
 
     trace_mm_page_alloc(page, order, alloc_mask, ac.migratetype);
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__alloc_pages_slowpath.md
+
+retry_cpuset
+----------------------------------------
+
+```
 out:
     /*
      * When updating a task's mems_allowed, it is possible to race with
