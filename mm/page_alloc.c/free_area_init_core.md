@@ -125,10 +125,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_pcp_in
         mod_zone_page_state(zone, NR_ALLOC_BATCH, zone->managed_pages);
 ```
 
-#### init_currently_empty_zone
-
-初始化free_area列表，并将属于该内存域的所有page实例都设置为初始默认值。所有页属性起初都
-设置为MIGRATE_MOVABLE。
+#### set_pageblock_order
 
 ```
         lruvec_init(&zone->lruvec);
@@ -136,17 +133,41 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_pcp_in
             continue;
 
         set_pageblock_order();
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/set_pageblock_order.md
+
+#### setup_usemap
+
+```
         setup_usemap(pgdat, zone, zone_start_pfn, size);
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/setup_usemap.md
+
+#### init_currently_empty_zone
+
+初始化free_area列表，并将属于该内存域的所有page实例都设置为初始默认值。所有页属性起初都
+设置为MIGRATE_MOVABLE。
+
+```
         ret = init_currently_empty_zone(zone, zone_start_pfn,
                         size, MEMMAP_EARLY);
         BUG_ON(ret);
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/init_currently_empty_zone.md
+
+#### memmap_init
+
+```
         memmap_init(size, nid, j, zone_start_pfn);
         zone_start_pfn += size;
     }
 }
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/init_currently_empty_zone.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/memmap_init.md
 
 build_all_zonelists
 ----------------------------------------

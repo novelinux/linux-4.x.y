@@ -2,7 +2,10 @@ memmap_init_zone
 ========================================
 
 初始化基于可移动性的分组, 在内存子系统初始化期间，memmap_init_zone负责处理内存域的page实例。
-该函数完成了一些不怎么有趣的标准初始化工作,但其中有一件是实质性的,即所有的页最初都标记为可移动的.
+该函数完成了一些标准初始化工作.
+
+Arguments
+----------------------------------------
 
 path: mm/page_alloc.c
 ```
@@ -19,7 +22,12 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
     unsigned long pfn;
     struct zone *z;
     unsigned long nr_initialised = 0;
+```
 
+Configure
+----------------------------------------
+
+```
     if (highest_memmap_pfn < end_pfn - 1)
         highest_memmap_pfn = end_pfn - 1;
 
@@ -39,7 +47,13 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
                         &nr_initialised))
                 break;
         }
+```
 
+### set_pageblock_migratetype
+
+将所有的页最初都标记为可移动的.
+
+```
         /*
          * Mark the block movable so that blocks are reserved for
          * movable at startup. This will force kernel allocations
@@ -65,3 +79,5 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
     }
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/set_pageblock_migratetype.md

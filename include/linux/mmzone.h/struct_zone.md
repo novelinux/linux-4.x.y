@@ -122,6 +122,15 @@ pageblock_flags
 #endif /* CONFIG_SPARSEMEM */
 ```
 
+每个内存域都提供了一个特殊的字段pageblock_flags，可以跟踪包含pageblock_nr_pages个页的内存区的属性.
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/pageblock-flags.h/pageblock_order.md
+
+在初始化期间，内核自动确保对内存域中的每个不同的迁移类型分组，在pageblock_flags中都分配了足够
+存储NR_PAGEBLOCK_BITS个比特位的空间。当前，表示一个连续内存区的迁移类型需要3个比特位：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/enum_pageblock_bits.md
+
 zone_start_pfn
 ----------------------------------------
 

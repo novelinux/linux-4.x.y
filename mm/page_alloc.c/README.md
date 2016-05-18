@@ -130,37 +130,6 @@ Node 0, zone   Normal           44           10           99            1       
 Node 0, zone  HighMem            7            0          311            1            0            0
 ```
 
-#### fallbacks
-
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/fallbacks.md
-
-#### pageblock_order vs pageblock_nr_pages
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/pageblock_order.md
-
-如果各迁移类型的链表中没有一块较大的连续内存，那么页面迁移不会提供任何好处，因此在可用内存太少时
-内核会关闭该特性。这是在build_all_zonelists函数中检查的，该函数用于初始化内存域列表。如果没有足够
-的内存可用，则全局变量page_group_by_mobility设置为0，否则设置为1。
-
-#### pageblock_flags
-
-每个内存域都提供了一个特殊的字段pageblock_flags，可以跟踪包含pageblock_nr_pages个页的内存区的属性.
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
-
-在初始化期间，内核自动确保对内存域中的每个不同的迁移类型分组，在pageblock_flags中都分配了足够
-存储NR_PAGEBLOCK_BITS个比特位的空间。当前，表示一个连续内存区的迁移类型需要3个比特位：
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/enum_pageblock_bits.md
-
-#### set_pageblock_migratetype
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/set_pageblock_migratetype.md
-
-#### memmap_init_zone
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/memmap_init_zone.md
-
 在分配内存时，如果必须“盗取”不同于预定迁移类型的内存区，内核在策略上倾向于“盗取”更大的内存区。
 由于所有页最初都是可移动的，那么在内核分配不可移动的内存区时，则必须“盗取”。实际上，在启动期间
 分配可移动内存区的情况较少，那么分配器有很高的几率分配长度最大的内存区，并将其从可移动列表转换
