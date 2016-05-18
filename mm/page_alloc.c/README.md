@@ -77,37 +77,23 @@ TLB缓存失效的可能性。但分配巨型页需要连续的空闲物理内�
 避免碎片
 ----------------------------------------
 
-### 可移动分组
+### 对可移动页进行分组
 
 在内核2.6.24开发期间，防止碎片的方法最终加入内核。在讨论具体策略之前，有一点需要澄清。文件系统也有
 碎片，该领域的碎片问题主要通过碎片合并工具解决。它们分析文件系统，重新排序已分配存储块，从而建立
 较大的连续存储区。理论上，该方法对物理内存也是可能的，但由于许多物理内存页不能移动到任意位置，阻碍
 了该方法的实施。因此，内核的方法是反碎片(anti-fragmentation)，即试图从最初开始尽可能防止碎片。
 
-反碎片的工作原理如何？为理解该方法，我们必须知道内核将已分配页划分为下面3种不同类型。
+内核将已分配页划分为如下几种不同类型:
 
-* 不可移动页
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mmzone.h/MIGRATE_TYPES.md
 
-  在内存中有固定位置，不能移动到其他地方。核心内核分配的大多数内存属于该类别。
-
-* 可回收页
-
-  不能直接移动，但可以删除，其内容可以从某些源重新生成。例如，映射自文件的数据属于该类别。
-  kswapd守护进程会根据可回收页访问的频繁程度，周期性释放此类内存。这是一个复杂的过程，
-  目前，了解到内核会在可回收页占据了太多内存时进行回收，就足够了。另外，在内存短缺
-  （即分配失败）时也可以发起页面回收。
-
-* 可移动页可以随意地移动。
-
-  属于用户空间应用程序的页属于该类别。它们是通过页表映射的。如果它们复制到新位置，页表项可以
-  相应地更新，应用程序不会注意到任何事。
-
-页的可移动性，依赖该页属于3种类别的哪一种。内核使用的反碎片技术，即基于将具有相同可移动性的页分组
-的思想。为什么这种方法有助于减少碎片？回想图fragmentation2,由于页无法移动，导致在原本几乎全空的
-内存区中无法进行连续分配。根据页的可移动性，将其分配到不同的列表中，即可防止这种情形。例如，
-不可移动的页不能位于可移动内存区的中间，否则就无法从该内存区分配较大的连续内存块。想一下，
-图fragmentation2中大多数空闲页都属于可回收的类别，而分配的页则是不可移动的。如果这些页聚集到两个
-不同的列表中，如下图所示：
+页的可移动性，依赖该页属于上述种类别的哪一种。内核使用的反碎片技术，即基于将具有相同可移动性的
+页分组的思想。为什么这种方法有助于减少碎片？回想图fragmentation2,由于页无法移动，导致在原本几乎
+全空的内存区中无法进行连续分配。根据页的可移动性，将其分配到不同的列表中，即可防止这种情形。例如，
+不可移动的页不能位于可移动内存区的中间，否则就无法从该内存区分配较大的连续内存块。图fragmentation2
+中大多数空闲页都属于可回收的类别，而分配的页则是不可移动的。如果这些页聚集到两个不同的列表中，
+如下图所示：
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/fragmentation3.jpg
 
@@ -115,45 +101,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/res/
 但要注意，从最初开始，内存并未划分为可移动性不同的区。这些是在运行时形成的。内核的另一种方法确实
 将内存分区，分别用于可移动页和不可移动页的分配。但这种划分对这里描述的方法是不必要的。
 
-#### Data Structures
-
-https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mmzone.h/MIGRATE_TYPES.md
-
-宏for_each_migratetype_order(order, type)可用于迭代指定迁移类型的所有分配阶。如果内核无法满足针对
-某一给定迁移类型的分配请求，会怎么样？此前已经出现过一个类似的问题，即特定的NUMA内存域无法满足分配
-请求时。内核在这种情况下的做法是类似的，提供了一个备用列表，规定了在指定列表中无法满足分配请求时，
-接下来应使用哪一种迁移类型：
-
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/fallbacks.md
-
-#### pageblock_order vs pageblock_nr_pages
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/pageblock_order.md
-
-如果各迁移类型的链表中没有一块较大的连续内存，那么页面迁移不会提供任何好处，因此在可用内存太少时
-内核会关闭该特性。这是在build_all_zonelists函数中检查的，该函数用于初始化内存域列表。如果没有足够
-的内存可用，则全局变量page_group_by_mobility设置为0，否则设置为1。
-
-#### gfpflags_to_migratetype
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfpflags_to_migratetype.md
-
-#### pageblock_flags
-
-每个内存域都提供了一个特殊的字段pageblock_flags，可以跟踪包含pageblock_nr_pages个页的内存区的属性.
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
-
-在初始化期间，内核自动确保对内存域中的每个不同的迁移类型分组，在pageblock_flags中都分配了足够
-存储NR_PAGEBLOCK_BITS个比特位的空间。当前，表示一个连续内存区的迁移类型需要3个比特位：
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/enum_pageblock_bits.md
-
-#### set_pageblock_migratetype
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/set_pageblock_migratetype.md
-
-最后请注意，在各个迁移链表之间，当前的页面分配状态可以从/proc/pagetypeinfo获得：
+在各个迁移页链表之间，当前的页面分配状态可以从/proc/pagetypeinfo获得：
 
 ```
 root@aries:/ # cat /proc/pagetypeinfo
@@ -178,6 +126,33 @@ Number of blocks type     Unmovable  Reclaimable      Movable      Reserve      
 Node 0, zone   Normal           44           10           99            1           26            0
 Node 0, zone  HighMem            7            0          311            1            0            0
 ```
+
+#### fallbacks
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/fallbacks.md
+
+#### pageblock_order vs pageblock_nr_pages
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/pageblock_order.md
+
+如果各迁移类型的链表中没有一块较大的连续内存，那么页面迁移不会提供任何好处，因此在可用内存太少时
+内核会关闭该特性。这是在build_all_zonelists函数中检查的，该函数用于初始化内存域列表。如果没有足够
+的内存可用，则全局变量page_group_by_mobility设置为0，否则设置为1。
+
+#### pageblock_flags
+
+每个内存域都提供了一个特殊的字段pageblock_flags，可以跟踪包含pageblock_nr_pages个页的内存区的属性.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mmzone.h/struct_zone.md
+
+在初始化期间，内核自动确保对内存域中的每个不同的迁移类型分组，在pageblock_flags中都分配了足够
+存储NR_PAGEBLOCK_BITS个比特位的空间。当前，表示一个连续内存区的迁移类型需要3个比特位：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pageblock-flags.h/enum_pageblock_bits.md
+
+#### set_pageblock_migratetype
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/set_pageblock_migratetype.md
 
 #### memmap_init_zone
 
@@ -286,6 +261,8 @@ alloc_page    get_zeroed_page    __get_free_page    __get_dma_pages
                      |
            __alloc_pages_nodemask
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__alloc_pages_nodemask.md
 
 ### Free Macros
 

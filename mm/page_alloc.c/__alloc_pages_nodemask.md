@@ -19,6 +19,12 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order,
 {
 ```
 
+### gfp_mask
+
+gfp_mask用来标记需要分配的空闲页的各种属性.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/README.md
+
 Configure
 ----------------------------------------
 
@@ -46,11 +52,15 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/struct_allo
     };
 ```
 
-### gfp_zone
+#### gfp_zone
+
+使用gfp_mask寻找合适的zone type.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfp_zone.md
 
-### gfpflags_to_migratetype
+#### gfpflags_to_migratetype
+
+使用gfp_mask寻找合适的migrate type.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/gfpflags_to_migratetype.md
 
@@ -108,7 +118,7 @@ retry_cpuset:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/get_page_from_freelist.md
 
-###
+### Other
 
 ```
     if (unlikely(!page)) {

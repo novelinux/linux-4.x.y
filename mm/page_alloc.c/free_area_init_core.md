@@ -34,6 +34,8 @@ static void __paginginit free_area_init_core(struct pglist_data *pgdat)
 Initialize Zones
 ----------------------------------------
 
+逐个取出结点中各个内存域进行初始化工作.
+
 ```
     for (j = 0; j < MAX_NR_ZONES; j++) {
         struct zone *zone = pgdat->node_zones + j;
@@ -146,10 +148,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/zone_pcp_in
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/init_currently_empty_zone.md
 
-节点和管理区的关键数据已完成初始化，内核在后面为内存管理做得一个准备工作就是将所有节点的管理区
-都链入到zonelist中，便于后面内存分配工作的进行.
-
 build_all_zonelists
 ----------------------------------------
+
+节点和管理区的关键数据已完成初始化，内核在后面为内存管理做得一个准备工作就是将所有节点的管理区
+都链入到zonelist中，便于后面内存分配工作的进行.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_all_zonelists.md
