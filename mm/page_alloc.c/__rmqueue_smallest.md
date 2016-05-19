@@ -70,3 +70,5 @@ rmv_page_order是一个辅助函数，从页标志删除PG_buddy位，表示该�
     return NULL;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/page_alloc.c/expand.md

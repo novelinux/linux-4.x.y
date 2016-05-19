@@ -147,8 +147,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/setup_usema
 
 #### init_currently_empty_zone
 
-初始化free_area列表，并将属于该内存域的所有page实例都设置为初始默认值。所有页属性起初都
-设置为MIGRATE_MOVABLE。
+初始化free_area列表.
 
 ```
         ret = init_currently_empty_zone(zone, zone_start_pfn,
@@ -159,6 +158,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/setup_usema
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/init_currently_empty_zone.md
 
 #### memmap_init
+
+将属于该内存域的所有page实例都设置为初始默认值。所有页属性起初都设置为MIGRATE_MOVABLE。
 
 ```
         memmap_init(size, nid, j, zone_start_pfn);
