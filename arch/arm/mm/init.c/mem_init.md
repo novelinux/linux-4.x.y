@@ -42,6 +42,8 @@ free_all_bootmem
     free_all_bootmem();
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/nobootmem.c/free_all_bootmem.md
+
 free_highpages
 ----------------------------------------
 
@@ -53,6 +55,8 @@ free_highpages
 
     free_highpages();
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/free_highpages.md
 
 Print info
 ----------------------------------------
