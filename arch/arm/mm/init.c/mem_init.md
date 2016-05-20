@@ -1,6 +1,9 @@
 mem_init
 ========================================
 
+Arguments
+----------------------------------------
+
 path: arch/arm/mm/init.c
 ```
 /*
@@ -15,20 +18,46 @@ void __init mem_init(void)
     extern u32 dtcm_end;
     extern u32 itcm_end;
 #endif
+```
 
+set_max_mapnr
+----------------------------------------
+
+```
     set_max_mapnr(pfn_to_page(max_pfn) - mem_map);
+```
 
+free_unused_memmap
+----------------------------------------
+
+```
     /* this will put all unused low memory onto the freelists */
     free_unused_memmap();
-    free_all_bootmem();
+```
 
+free_all_bootmem
+----------------------------------------
+
+```
+    free_all_bootmem();
+```
+
+free_highpages
+----------------------------------------
+
+```
 #ifdef CONFIG_SA1111
     /* now that our DMA memory is actually so designated, we can free it */
     free_reserved_area(__va(PHYS_OFFSET), swapper_pg_dir, -1, NULL);
 #endif
 
     free_highpages();
+```
 
+Print info
+----------------------------------------
+
+```
     mem_init_print_info(NULL);
 
 #define MLK(b, t) b, t, ((t) - (b)) >> 10
