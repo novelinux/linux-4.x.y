@@ -48,6 +48,12 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/memblock.h/fo
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/nobootmem.c/__free_memory_core.md
 
+### aries
+
+```
+start=80200 end=afa00
+```
+
 Return
 ----------------------------------------
 

@@ -24,6 +24,7 @@ free_area的初始化由函数来完成:
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/page_alloc.c/zone_init_free_lists.md
 
+
 伙伴不必是彼此连接的,如果一个内存区在分配其间分解为两半,内核会自动将未用的一半加入到对应的链表中。
 如果在未来的某个时刻，由于内存释放的缘故，两个内存区都处于空闲状态，可通过其地址判断其是否为伙伴。
 管理工作较少，是伙伴系统的一个主要优点。
@@ -168,6 +169,14 @@ movablecore参数都没有指定，find_zone_movable_pfns_for_nodes会使ZONE_MO
 * 用于为虚拟内存域ZONE_MOVABLE提取内存页的物理内存域，保存在全局变量movable_zone中；
 * 对每个结点来说，zone_movable_pfn[node_id]表示ZONE_MOVABLE在movable_zone内存域中所取得内存的
   起始地址。
+
+Memblock --> Buddy
+----------------------------------------
+
+在内存启动过程期间，Linux系统采用Memblock算法来管理系统物理内存, 在初始化完成之后，需要将
+Memblock切换成Buddy来接管相应的工作.具体接管过程如下所示:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/mm_init.md
 
 APIS
 ----------------------------------------

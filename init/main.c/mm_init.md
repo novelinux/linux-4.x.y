@@ -18,8 +18,20 @@ static void __init mm_init(void)
 mem_init
 --------------------------------------
 
+在mem_init函数中Linux系统完成了Memblock切换到Buddy进行对应的物理内存管理工作.
+
 ```
      mem_init();
+```
+
+### ARM
+
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/mem_init.md
+
+
+----------------------------------------
+
+```
      kmem_cache_init();
      percpu_init_late();
      pgtable_init();
@@ -27,7 +39,3 @@ mem_init
      ioremap_huge_init();
 }
 ```
-
-### ARM
-
-https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/mem_init.md
