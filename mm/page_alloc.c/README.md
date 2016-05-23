@@ -256,7 +256,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__free_page
 
 #### free_pages(addr, order)
 
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__free_pages.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/free_pages.md
 
 这两个函数的语义类似于前两个函数，但在表示需要释放的内存区时，使用了虚拟内存地址而不是page实例
 
