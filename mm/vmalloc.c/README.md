@@ -1,9 +1,6 @@
 vmalloc
 ========================================
 
-Summary
-----------------------------------------
-
 我们知道物理上连续的映射对内核是最好的，但并不总能成功地使用。在分配一大块内存时，可能竭尽全力
 也无法找到连续的内存块。在用户空间中这不是问题，因为普通进程设计为使用处理器的分页机制，当然
 这会降低速度并占用TLB。在内核中也可以使用同样的技术。内核分配了其虚拟地址空间的一部分，用于建立
@@ -19,6 +16,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/README.md
 vmalloc区域之间的边界，不同vmalloc子区域之间的分隔也是为防止不正确的内存访问操作。这种情况只会
 因为内核故障而出现，应该通过系统错误信息报告，而不是允许内核其他部分的数据被暗中修改。因为分隔
 是在虚拟地址空间中建立的，不会浪费宝贵的物理内存页。
+
+Data Structure
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/vmalloc.h/struct_vm_struct.md
+
+vmalloc
+----------------------------------------
 
 vmalloc是一个接口函数，内核代码使用它来分配在虚拟内存中连续但在物理内存中不一定连续的内存。
 
@@ -37,5 +42,4 @@ extern void *vmalloc(unsigned long size);
 其他内存域。这使得内核可以节省更宝贵的较低端内存域，而又不会带来额外的坏处。因此，vmalloc
 是内核出于自身的目的(并非因为用户空间应用程序)使用高端内存页的少数情形之一。
 
-Data Structure
-----------------------------------------
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/vmalloc.md
