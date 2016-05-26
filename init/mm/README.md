@@ -16,17 +16,17 @@ Code Flow
 ----------------------------------------
 
 ```
-  start_kernel
-       |
-  setup_arch
-       |
-setup_per_cpu_areas
-       |
-build_all_zonelists
-       |
-    mm_init
-       |
-setup_per_cpu_pageset
+start_kernel
+     |
+     +--> setup_arch
+     |
+     +--> setup_per_cpu_areas
+     |
+     +--> build_all_zonelists
+     |
+     +--> mm_init
+     |
+     +--> setup_per_cpu_pageset
 ```
 
 ### setup_arch

@@ -1,7 +1,30 @@
 setup_arch
 ========================================
 
-参数
+Code Flow
+----------------------------------------
+
+```
+setup_arch
+     |
+     +--> setup_processor
+     |
+     +--> setup_machine_fdt
+     |
+     +--> setup_machine_tags
+     |
+     +--> parse_early_params
+     |
+     +--> early_paging_init
+     |
+     +--> sanity_check_meminfo
+     |
+     +--> arm_memblock_init
+     |
+     +--> paging_init
+```
+
+Arguments
 ----------------------------------------
 
 在我们的实验环境传递进来的cmdline如下所示:
