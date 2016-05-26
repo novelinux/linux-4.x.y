@@ -8,6 +8,29 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/__cr
 paging_init负责建立只能用于内核的页表，用户空间无法访问。这对管理普通应用程序和内核访问内存的
 方式，有深远的影响。
 
+Code Flow
+----------------------------------------
+
+```
+paging_init
+    |
+    +--> build_mem_type_table
+    |
+    +--> prepare_page_table
+    |
+    +--> map_lowmem
+    |
+    +--> dma_contiguous_remap
+    |
+    +--> devicemaps_init
+    |
+    +--> kmap_init
+    |
+    +--> tcm_init
+    |
+    +--> bootmem_init
+```
+
 build_mem_type_table
 ----------------------------------------
 

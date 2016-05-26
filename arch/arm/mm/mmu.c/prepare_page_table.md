@@ -74,5 +74,7 @@ pmd_off_k
 
 pmd_off_k查找一个虚拟地址的内核页表目录项.
 
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/mm.h/pmd_off_k.md
+
 pmd_clear
 ----------------------------------------

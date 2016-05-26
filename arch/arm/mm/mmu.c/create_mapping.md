@@ -1,6 +1,35 @@
 create_mapping
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+create_mapping
+ |
+ +-> pgd_offset_k
+ |
+ +-> alloc_init_pud
+ |
+ +-> alloc_init_pmd
+     |
+     +-> __map_init_section (aligned to a section)
+     |
+     +-> alloc_init_pte (not aligned to a seciont)
+         |
+         +-> early_pte_alloc
+         |   |
+         |   +-> early_alloc
+         |       |
+         |       +-> early_alloc_aligned
+         |           |
+         |           +-> memblock_alloc
+         |
+         +-> set_pte_ext
+             |
+             +-> cpu_set_pte_ext
+```
+
 struct map_desc
 ----------------------------------------
 
@@ -22,7 +51,7 @@ static void __init create_mapping(struct map_desc *md)
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/mach/map.h/struct_map_desc.md
 
-参数合法性检查
+Check Arguments
 ----------------------------------------
 
 ```
