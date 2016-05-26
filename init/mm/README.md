@@ -12,29 +12,41 @@ Linux内核的内存模型。例如，在IA-32系统上需要切换到保护模�
 子系统之后执行。由于内存管理是内核一个非常重要的部分，因此在特定于体系结构的设置步骤中
 检测内存并确定系统中内存的分配情况后，会立即执行内存管理的初始化。
 
-setup_arch
+Code Flow
 ----------------------------------------
 
-### ARM
+```
+  start_kernel
+       |
+  setup_arch
+       |
+setup_per_cpu_areas
+       |
+build_all_zonelists
+       |
+    mm_init
+       |
+setup_per_cpu_pageset
+```
+
+### setup_arch
+
+#### ARM
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/setup.c/setup_arch.md
 
-setup_per_cpu_areas
-----------------------------------------
+### setup_per_cpu_areas
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/percpu.c/setup_per_cpu_areas.md
 
-build_all_zonelists
-----------------------------------------
+### build_all_zonelists
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_all_zonelists.md
 
-mm_init
-----------------------------------------
+### mm_init
 
 https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/mm_init.md
 
-setup_per_cpu_pageset
-----------------------------------------
+### setup_per_cpu_pageset
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/setup_per_cpu_pageset.md
