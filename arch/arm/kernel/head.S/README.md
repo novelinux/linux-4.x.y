@@ -6,6 +6,27 @@ zImage由其头部的解压程序将真正的内核代码解压到zreladdr地址
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/boot/compressed/head.S/README.md
 
+Code Flow
+----------------------------------------
+
+```
+        stext
+          |
+__lookup_processor_type
+          |
+     __vet_atags
+          |
+  __create_page_tables
+          |
+      __v7_setup
+          |
+     __enable_mmu
+          |
+    __mmap_switched
+          |
+     start_kernel
+```
+
 内核入口
 ----------------------------------------
 
