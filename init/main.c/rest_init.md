@@ -1,6 +1,7 @@
-rest_init - init/main.c
+rest_init
 ========================================
 
+path: init/main.c
 ```
 static noinline void __init_refok rest_init(void)
 {
@@ -8,14 +9,14 @@ static noinline void __init_refok rest_init(void)
     const struct sched_param param = { .sched_priority = 1 };
 ```
 
-1.rcu_scheduler_starting
+rcu_scheduler_starting
 ----------------------------------------
 
 ```
     rcu_scheduler_starting();
 ```
 
-2.kernel_thread - kernel_init
+kernel_thread - kernel_init
 ----------------------------------------
 
 调用kernel_thread函数可启动一个内核线程。其定义是特定于体系结构的，但原型总是相同的。
@@ -37,7 +38,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/k
 
 https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/kernel_init.md
 
-3.kthreadd
+kernel_thread - kthreadd
 ----------------------------------------
 
 ```
