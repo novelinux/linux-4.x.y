@@ -6,15 +6,33 @@ bootloader加载并执行的。
 
 https://github.com/novelinux/bootloader-lk/tree/master/README.md
 
-我们先来研究下zImage的生成过程及其组成部分，如下所示:
-
 zImage编译过程
 ----------------------------------------
+
+我们先来研究下zImage的生成过程及其组成部分，如下所示:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/zImage.md
 
 zImage的执行
 ----------------------------------------
+
+在zImage的生成过程中,是把arch/arm/boot/compressed/head.S和解压代码misc.c，decompress.c加在
+压缩内核(piggy.gzip.o)的最前面最终生成vmlinux然后使用objcopy生成的原始二进制文件zImage的，
+那么它的启动过程就是从这个head.S开始的，并且如果代码从RAM运行的话，是与位置无关的，可以
+加载到内存的任何地方.
+
+* head.o是内核的头部文件，负责初始设置;
+* misc.o将主要负责内核的解压工作，它在head.o之后；
+* piggy.gzip.o是一个中间文件，其实是一个压缩的内核(kernel/vmlinux).
+
+例如在使用lk来加载内核是将kernel加载到地址0x80208000处.该地址一般由boot_img_hdr(boot.img
+的header结构体)中指定.详情参考:
+
+https://github.com/novelinux/bootloader-lk/tree/master/lk/README.md
+
+对应的内存布局如下：
+
+https://github.com/novelinux/arch-arm-msm-8960/tree/master/memory_layout.md
 
 在bootloader将kernel信息加载到内存，然后变跳转到内核执行. 根据分析zImage的编译过程
 我们得知，内核第一条指令的地址是arch/arm/boot/compressed/head.S第一条指令的地址.
@@ -61,9 +79,18 @@ path: kbuild/binary/arch/arm/boot/compressed/vmlinux.S
 ...
 ```
 
-完整的反汇编文件如下所示:
+https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/binary/arch/arm/boot/compressed/vmlinux_aries.S
 
-https://github.com/novelinux/linux-4.x.y/tree/master/kbuild/binary/arch/arm/boot/compressed/vmlinux.S
+Code Flow
+----------------------------------------
+
+```
+bootloader
+    |
+  zImage
+    |
+  head.o
+```
 
 上述反汇编出来的0地址处部分代码,即为对应head.S文件start标志处开始的代码，如下所示:
 

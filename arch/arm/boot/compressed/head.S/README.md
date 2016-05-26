@@ -37,36 +37,10 @@ https://github.com/torvalds/linux/blob/bdec41963890f8ed9ad89f8b418959ab3cdc2aa3/
 
    内核启动的初始化参数在内存上的物理地址。
 
-过程
+head.o
 ----------------------------------------
 
-在zImage的生成过程中,是把arch/arm/boot/compressed/head.S和解压代码misc.c，decompress.c加在
-压缩内核(piggy.gzip.o)的最前面最终生成vmlinux然后使用objcopy生成的原始二进制文件zImage的，
-那么它的启动过程就是从这个head.S开始的，并且如果代码从RAM运行的话，是与位置无关的，可以
-加载到内存的任何地方.
-
-* head.o是内核的头部文件，负责初始设置;
-* misc.o将主要负责内核的解压工作，它在head.o之后；
-* piggy.gzip.o是一个中间文件，其实是一个压缩的内核(kernel/vmlinux).
-
-例如在使用lk来加载内核是将kernel加载到地址0x80208000处.该地址一般由boot_img_hdr(boot.img
-的header结构体)中指定.详情参考:
-
-https://github.com/novelinux/bootloader-lk/tree/master/lk/README.md
-
-对应的内存布局如下：
-
-https://github.com/novelinux/arch-arm-msm-8960/tree/master/memory_layout.md
-
-在bootloader加载kernel映像zImage执行的过程我们知道,第一条指定即指向了head.S中start标志
-开始代码，如下所示:
-
-path: arch/arm/boot/compressed/head.S
-
-过程
-----------------------------------------
-
-head.S会做些什么工作?
+在bootloader加载kernel映像zImage执行的过程我们知道,第一条指定即指向了head.S中start标志开始执行代码:
 
 * 对于各种Arm CPU的DEBUG输出设定，通过定义宏来统一操作.
 
@@ -147,7 +121,59 @@ path: arch/arm/msm-8960/Makefile.boot
 * 另外现在解压的代码head.S和misc.c一般都会以PIC的方式来编译，这样载入RAM在任何地方都可以运行，
   这里涉及到两次冲定位的过程，基本上这个重定位的过程在ARM上都是差不多一样的。
 
-问题:
+decompress_kernel
+----------------------------------------
+
+path: arch/arm/boot/compressed/misc.c
+```
+void
+decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
+		unsigned long free_mem_ptr_end_p,
+		int arch_id)
+{
+	int ret;
+
+	output_data		= (unsigned char *)output_start;
+	free_mem_ptr		= free_mem_ptr_p;
+	free_mem_end_ptr	= free_mem_ptr_end_p;
+	__machine_arch_type	= arch_id;
+
+	arch_decomp_setup();
+
+	putstr("Uncompressing Linux...");
+	ret = do_decompress(input_data, input_data_end - input_data,
+			    output_data, error);
+	if (ret)
+		error("decompressor returned an error");
+	else
+		putstr(" done, booting the kernel.\n");
+}
+```
+
+* output_start：指解压后内核输出的起始位置，此时它的值参考上面的图表，紧接在解压缓冲区后；
+* free_mem_ptr_p：解压函数需要的内存缓冲开始地址；
+* free_mem_ptr_end_p：解压函数需要的内存缓冲结束地址，共64K；
+* arch_id ：architecture ID.
+
+call_kernel
+----------------------------------------
+
+当完成所有解压任务之后，又将跳转会head.S文件中，执行call_kernel，将启动真正的Image
+此时r4寄存器中的地址是0x80208000.也就是内核代码真正的执行地址.
+
+path: arch/arm/boot/compressed/head.S
+```
+		bl	cache_off
+		mov	r0, #0			@ must be zero
+		mov	r1, r7			@ restore architecture number
+		mov	r2, r8			@ restore atags pointer
+ ARM(		mov	pc, r4	)		@ call kernel
+ THUMB(		bx	r4	)		@ entry point is always ARM
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/README.md
+
+问题
 ----------------------------------------
 
 ### 问题1
@@ -209,49 +235,3 @@ path: arch/arm/boot/compressed/head.S
 		bl	cache_off
 ...
 ```
-
-path: arch/arm/boot/compressed/misc.c
-```
-void
-decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
-		unsigned long free_mem_ptr_end_p,
-		int arch_id)
-{
-	int ret;
-
-	output_data		= (unsigned char *)output_start;
-	free_mem_ptr		= free_mem_ptr_p;
-	free_mem_end_ptr	= free_mem_ptr_end_p;
-	__machine_arch_type	= arch_id;
-
-	arch_decomp_setup();
-
-	putstr("Uncompressing Linux...");
-	ret = do_decompress(input_data, input_data_end - input_data,
-			    output_data, error);
-	if (ret)
-		error("decompressor returned an error");
-	else
-		putstr(" done, booting the kernel.\n");
-}
-```
-
-* output_start：指解压后内核输出的起始位置，此时它的值参考上面的图表，紧接在解压缓冲区后；
-* free_mem_ptr_p：解压函数需要的内存缓冲开始地址；
-* free_mem_ptr_end_p：解压函数需要的内存缓冲结束地址，共64K；
-* arch_id ：architecture ID.
-
-当完成所有解压任务之后，又将跳转会head.S文件中，执行call_kernel，将启动真正的Image
-此时r4寄存器中的地址是0x80208000.也就是内核代码真正的执行地址.
-
-path: arch/arm/boot/compressed/head.S
-```
-		bl	cache_off
-		mov	r0, #0			@ must be zero
-		mov	r1, r7			@ restore architecture number
-		mov	r2, r8			@ restore atags pointer
- ARM(		mov	pc, r4	)		@ call kernel
- THUMB(		bx	r4	)		@ entry point is always ARM
-```
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head.S/README.md
