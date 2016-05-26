@@ -1,6 +1,25 @@
 bootmem_init
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+bootmem_init
+    |
+    +-> memblock_allow_resize
+    |
+    +-> find_limits
+    |
+    +-> arm_memory_present
+    |
+    +-> sparse_init
+    |
+    +-> zone_sizes_init
+              |
+              +-> free_area_init_node
+```
+
 memblock_allow_resize
 ----------------------------------------
 

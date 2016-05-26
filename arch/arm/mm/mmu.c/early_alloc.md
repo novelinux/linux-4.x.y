@@ -15,3 +15,8 @@ static void __init *early_alloc(unsigned long sz)
     return early_alloc_aligned(sz, sz);
 }
 ```
+
+memblock_alloc
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_alloc.md

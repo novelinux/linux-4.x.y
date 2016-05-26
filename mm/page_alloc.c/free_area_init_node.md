@@ -6,9 +6,36 @@ Node的其余数据结构.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/zone_sizes_init.md
 
-相关流程如下所示：
+Code Flow
+----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/res/free_area_init_nodes.jpg
+```
+free_area_init_node
+  |
+  +-> calculate_node_totalpages
+  |
+  +-> alloc_node_mem_map
+  |
+  +-> free_area_init_core
+      |
+      +-> zone_pcp_init
+      |
+      +-> mod_zone_page_state
+      |
+      +-> set_pageblock_order
+      |
+      +-> setup_usemap
+      |
+      +-> init_currently_empty_zone
+      |
+      +-> memmap_init
+          |
+          +-> memmap_init_zone
+              |
+              +-> __init_single_page
+              |
+              +-> set_pageblock_migratetype
+```
 
 Arguments
 ----------------------------------------

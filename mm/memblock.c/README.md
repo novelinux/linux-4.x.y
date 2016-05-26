@@ -46,14 +46,18 @@ Initialization
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock.md
 
-#### ARM - arm_memblock_init:
+### arm_memblock_init:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/init.c/arm_memblock_init.md
 
 APIS
 ----------------------------------------
 
-#### memblock_add_range
+### memblock_alloc
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_alloc.md
+
+### memblock_add_range
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/memblock.c/memblock_add_range.md
 
