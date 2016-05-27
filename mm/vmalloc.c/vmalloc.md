@@ -26,20 +26,17 @@ Code Flow
 ----------------------------------------
 
 ```
-    vmalloc
-       |
-       +
-__vmalloc_node_flags
-       |
-       +
-__vmalloc_node
-       |
-       +
-__vmalloc_node_range
-       |
-       +--> __get_vm_area_node
-       |
-       +--> __vmalloc_area_node
+vmalloc
+ |
+ +-> __vmalloc_node_flags
+     |
+     +-> __vmalloc_node
+         |
+         +-> __vmalloc_node_range
+             |
+             +-> __get_vm_area_node
+             |
+             +-> __vmalloc_area_node
 ```
 
 __vmalloc_node_flags

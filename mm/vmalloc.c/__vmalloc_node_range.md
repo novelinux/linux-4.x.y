@@ -36,12 +36,22 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
         goto fail;
 ```
 
+__get_vm_area_node
+----------------------------------------
+
 ```
     area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |
                 vm_flags, start, end, node, gfp_mask, caller);
     if (!area)
         goto fail;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/__get_vm_area_node.md
+
+__vmalloc_area_node
+----------------------------------------
+
+```
     addr = __vmalloc_area_node(area, gfp_mask, prot, node);
     if (!addr)
         return NULL;
