@@ -1,6 +1,27 @@
 mm_init
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+mm_init
+  |
+  +-> page_ext_init_flatmem
+  |
+  +-> mem_init
+  |
+  +-> kmem_cache_init
+  |
+  +-> percpu_init_late
+  |
+  +-> pgtable_init
+  |
+  +-> vmalloc_init
+  |
+  +-> ioremap_huge_init
+```
+
 path: init/main.c
 ```
 /*
@@ -8,6 +29,12 @@ path: init/main.c
  */
 static void __init mm_init(void)
 {
+```
+
+page_ext_init_flatmem
+----------------------------------------
+
+```
     /*
      * page_ext requires contiguous pages,
      * bigger than MAX_ORDER unless SPARSEMEM.
@@ -28,14 +55,38 @@ mem_init
 
 https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/mem_init.md
 
-
+kmem_cache_init
 ----------------------------------------
 
 ```
      kmem_cache_init();
+```
+
+percpu_init_late
+----------------------------------------
+
+```
      percpu_init_late();
+```
+
+pgtable_init
+----------------------------------------
+
+```
      pgtable_init();
+```
+
+vmalloc_init
+----------------------------------------
+
+```
      vmalloc_init();
+```
+
+ioremap_huge_init
+----------------------------------------
+
+```
      ioremap_huge_init();
 }
 ```
