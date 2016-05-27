@@ -1,6 +1,23 @@
 mem_init
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+mem_init
+  |
+  +-> set_max_mapnr
+  |
+  +-> free_unused_memmap
+  |
+  +-> free_all_bootmem
+  |
+  +-> free_highpages
+  |
+  +-> mem_init_print_info
+```
+
 Arguments
 ----------------------------------------
 

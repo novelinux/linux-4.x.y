@@ -6,22 +6,22 @@ Code Flow
 
 ```
 setup_arch
-     |
-     +--> setup_processor
-     |
-     +--> setup_machine_fdt
-     |
-     +--> setup_machine_tags
-     |
-     +--> parse_early_params
-     |
-     +--> early_paging_init
-     |
-     +--> sanity_check_meminfo
-     |
-     +--> arm_memblock_init
-     |
-     +--> paging_init
+ |
+ +--> setup_processor
+ |
+ +--> setup_machine_fdt
+ |
+ +--> setup_machine_tags
+ |
+ +--> parse_early_params
+ |
+ +--> early_paging_init
+ |
+ +--> sanity_check_meminfo
+ |
+ +--> arm_memblock_init
+ |
+ +--> paging_init
 ```
 
 Arguments

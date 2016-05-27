@@ -1,6 +1,27 @@
 free_all_bootmem
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+free_all_bootmem
+  |
+  +-> reset_all_zones_managed_pages
+  |
+  +-> free_low_memory_core_early
+      |
+      +-> __free_memory_core
+      |
+      +-> __free_pages_memory
+      |
+      +->  __free_pages_bootmem
+      |
+      +-> __free_pages_boot_core
+      |
+      +-> __free_pages
+```
+
 Arguments
 ----------------------------------------
 

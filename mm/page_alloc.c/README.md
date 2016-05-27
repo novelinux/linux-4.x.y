@@ -176,31 +176,6 @@ Memblock ==> Buddy
 在内存启动过程期间，Linux系统采用Memblock算法来管理系统物理内存, 在初始化完成之后，需要将
 Memblock切换成Buddy来接管相应的工作.具体接管过程如下所示:
 
-```
- mm_init
-   |
-mem_init
-   |
-   +--> free_all_bootmem
-   |          |
-   |          +--> reset_all_zones_managed_pages
-   |          |
-   |          +--> free_low_memory_core_early
-   |                         |
-   |                 __free_memory_core
-   |                         |
-   |                __free_pages_memory
-   |                         |
-   |                __free_pages_bootmem
-   |                         |
-   |               __free_pages_boot_core
-   |                         |
-   |                   __free_pages
-   +--> free_highpages
-```
-
-### mm_init
-
 https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/mm_init.md
 
 APIS
