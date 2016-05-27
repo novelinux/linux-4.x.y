@@ -34,6 +34,9 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
         size += PAGE_SIZE;
 ```
 
+alloc_vmap_area
+----------------------------------------
+
 ```
     va = alloc_vmap_area(size, align, start, end, node, gfp_mask);
     if (IS_ERR(va)) {
