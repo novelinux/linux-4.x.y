@@ -227,20 +227,20 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/gfp.h/get_dma
 
 ```
 alloc_page    get_zeroed_page    __get_free_page    __get_dma_pages
-   |                 |                  |                 |
-   |                 +------------------+-----------------+
-   |                                    |
-   |                             __get_free_pages
-   |                                    |
-   +----------->alloc_pages<------------+
-                     |
-              alloc_pages_node
-                     |
-             __alloc_pages_node
-                     |
-               __alloc_pages
-                     |
-           __alloc_pages_nodemask
+ |            |                  |                 |
+ |            |------------------+-----------------+
+ |            |                  |
+ |            |                  +-> __get_free_pages
+ |            |                      |
+ +-> alloc_pages <-------------------+
+     |
+     +-> alloc_pages_node
+         |
+         +-> __alloc_pages_node
+             |
+             +-> __alloc_pages
+                 |
+                 +-> __alloc_pages_nodemask
 ```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/__alloc_pages_nodemask.md
@@ -264,12 +264,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/free_pages.
 
 ```
 __free_page    free_page
-     |             |
-     |         free_pages
-     |             |
-     +------+------+
-            |
-      __free_pages
+ |             |
+ |             +-> free_pages
+ |                  |
+ +-> __free_pages <-+
 ```
 
 内核在各次分配之后都必须检查返回的结果。这种惯例与设计得很好的用户层应用程序没什么不同，

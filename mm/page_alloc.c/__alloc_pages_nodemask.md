@@ -5,6 +5,39 @@ __alloc_pages是伙伴系统的主函数,其最终调用函数__alloc_pages_node
 这也是内核中比较冗长的部分之一。特别是在可用内存太少或逐渐用完时，函数就会比较复杂。
 如果可用内存足够，则必要的工作会很快完成.
 
+Code Flow
+----------------------------------------
+
+```
+__alloc_pages_nodemask
+ |
+ 1----------------------------+--------+-> get_page_from_freelist
+ |                            |        |   |
+ 2-> __alloc_pages_slowpath --1        |   +-> zone_watermark_ok
+     |                                 |   |
+     2-> __alloc_pages_high_priority --+   +-> buffered_rmqueue
+     |                                 |   |
+     3-> __alloc_pages_direct_compact  |   +-> prep_new_page
+     |   |                             |       |
+     |   +-> try_to_compact_pages      |       +-> check_new_page
+     |   |                             |
+     |   +-----------------------------+
+     |                                 |
+     4-> __alloc_pages_direct_reclaim  |
+     |   |                             |
+     |   +-> __perform_reclaim         |
+     |   |   |                         |
+     |   |   +-> cond_resched          |
+     |   |   |                         |
+     |   |   +-> try_to_free_pages     |
+     |   |                             |
+     |   +-----------------------------+
+     |                                 |
+     5-> __alloc_pages_may_oom --------1
+         |
+         2-> out_of_memory
+```
+
 Arguments
 ----------------------------------------
 
