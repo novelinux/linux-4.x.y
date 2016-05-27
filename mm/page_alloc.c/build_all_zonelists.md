@@ -3,11 +3,41 @@ build_all_zonelists
 
 在体系结构相关的代码初始化好各节点和内存域相关的数据结构:
 
-https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/zone_sizes_init.md
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/mm/init.c/bootmem_init.md
 
 调用build_all_zonelists建立管理结点及其内存域所需的数据结构。有趣的是，该函数可以通过上文引入的
 宏和抽象机制实现，而不用考虑具体的NUMA或UMA系统。因为执行的函数实际上有两种形式，所以这样做
 是可能的：一种用于NUMA系统，而另一种用于UMA系统。
+
+Code Flow
+----------------------------------------
+
+```
+build_all_zonelists
+  |
+  +-> set_zonelist_order
+  |
+  +-> __build_all_zonelists
+  |   |
+  |   +-> build_zonelists
+  |   |   |
+  |   |   +-> build_zonelists_in_node_order (order == ZONELIST_ORDER_NODE)----+
+  |   |   |                                                                   |
+  |   |   |                                                                   |
+  |   |   |                                                                   |
+  |   |   +-> build_zonelists_in_zone_order (order == ZONELIST_ORDER_ZONE)    |
+  |   |   |                                                                   |
+  |   |   +-> build_thisnode_zonelist (order == ZONELIST_ORDER_NODE)----------+
+  |   |                                                                       |
+  |   +-> build_zonelist_cache                                                |
+  |   |                                                                       |
+  |   +-> setup_pageset                                                       |
+  |                                                                           |
+  +-> mminit_verify_zonelist                                                  |
+  |                                                                           |
+  +-> cpuset_init_current_mems_allowed                                        |
+                                                       build_zonelists_node <-+
+```
 
 Arguments
 ----------------------------------------
