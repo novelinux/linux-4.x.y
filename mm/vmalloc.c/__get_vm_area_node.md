@@ -2,8 +2,7 @@ __get_vm_area_node
 ========================================
 
 根据子区域的长度信息，该函数试图在虚拟的vmalloc空间中找到一个适当的位置。
-如果没有指定flags中的VM_NO_GUARD那么各个vmalloc子区域之间需要插入1页(警戒页)
-作为安全隙，内核首先适当提高需要分配的内存长度。
+
 
 Arguments
 ----------------------------------------
@@ -25,11 +24,19 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
     size = PAGE_ALIGN(size);
     if (unlikely(!size))
         return NULL;
+```
 
+kzalloc_node
+----------------------------------------
+
+```
     area = kzalloc_node(sizeof(*area), gfp_mask & GFP_RECLAIM_MASK, node);
     if (unlikely(!area))
         return NULL;
 
+    /* 如果没有指定flags中的VM_NO_GUARD那么各个vmalloc子区域之间需要
+     * 插入1页(警戒页)作为安全隙，内核首先适当提高需要分配的内存长度。
+     */
     if (!(flags & VM_NO_GUARD))
         size += PAGE_SIZE;
 ```
@@ -37,13 +44,22 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
 alloc_vmap_area
 ----------------------------------------
 
+分struct vmap_area分配内存.
+
 ```
     va = alloc_vmap_area(size, align, start, end, node, gfp_mask);
     if (IS_ERR(va)) {
         kfree(area);
         return NULL;
     }
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/alloc_vmap_area.md
+
+setup_vmalloc_vm
+----------------------------------------
+
+```
     setup_vmalloc_vm(area, va, flags, caller);
 
     return area;
