@@ -1,4 +1,4 @@
-vmalloc
+Vmalloc
 ========================================
 
 我们知道物理上连续的映射对内核是最好的，但并不总能成功地使用。在分配一大块内存时，可能竭尽全力
@@ -20,10 +20,18 @@ vmalloc区域之间的边界，不同vmalloc子区域之间的分隔也是为防
 Data Structure
 ----------------------------------------
 
+### struct vm_struct
+
 https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/vmalloc.h/struct_vm_struct.md
 
-vmalloc
+### struct vmap_area
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/vmalloc.h/struct_vmap_area.md
+
+APIS
 ----------------------------------------
+
+### vmalloc
 
 vmalloc是一个接口函数，内核代码使用它来分配在虚拟内存中连续但在物理内存中不一定连续的内存。
 

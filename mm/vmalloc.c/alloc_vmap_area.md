@@ -1,6 +1,21 @@
 alloc_vmap_area
 ========================================
 
+Variable
+----------------------------------------
+
+```
+/* Export for kexec only */
+LIST_HEAD(vmap_area_list);
+static struct rb_root vmap_area_root = RB_ROOT;
+
+/* The vmap cache globals are protected by vmap_area_lock */
+static struct rb_node *free_vmap_cache;
+static unsigned long cached_hole_size;
+static unsigned long cached_vstart;
+static unsigned long cached_align;
+```
+
 Arguments
 ----------------------------------------
 
@@ -40,10 +55,12 @@ kmalloc_node
      * to avoid false negatives.
      */
     kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask & GFP_RECLAIM_MASK);
+```
 
 retry
 ----------------------------------------
 
+```
 retry:
     spin_lock(&vmap_area_lock);
     /*
@@ -66,7 +83,13 @@ nocache:
     /* record if we encounter less permissive parameters */
     cached_vstart = vstart;
     cached_align = align;
+```
 
+### free_vmap_cache
+
+从free_vmap_cache中寻找合适的struct vmap_area结构保存到first中.
+
+```
     /* find starting point for our search */
     if (free_vmap_cache) {
         first = rb_entry(free_vmap_cache, struct vmap_area, rb_node);
@@ -75,6 +98,13 @@ nocache:
             goto nocache;
         if (addr + size < addr)
             goto overflow;
+```
+
+### vmap_area_root
+
+从vmap_area_root中寻找合适的struct vmap_area结构保存到first中.
+
+```
     } else {
         addr = ALIGN(vstart, align);
         if (addr + size < addr)
@@ -98,7 +128,11 @@ nocache:
         if (!first)
             goto found;
     }
+```
 
+### first
+
+```
     /* from the starting point, walk areas until a suitable hole is found */
     while (addr + size > first->va_start && addr + size <= vend) {
         if (addr + cached_hole_size < first->va_start)
@@ -112,7 +146,13 @@ nocache:
 
         first = list_next_entry(first, list);
     }
+```
 
+### found
+
+寻找到合适的vmap_area之后调用__insert_vmap_area插入到vmap_area_root和保存到free_vmap_cache中去.
+
+```
 found:
     if (addr + size > vend)
         goto overflow;
@@ -129,7 +169,13 @@ found:
     BUG_ON(va->va_end > vend);
 
     return va;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/__insert_vmap_area.md
+
+### overflow
+
+```
 overflow:
     spin_unlock(&vmap_area_lock);
     if (!purged) {

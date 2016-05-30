@@ -39,6 +39,8 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
 __get_vm_area_node
 ----------------------------------------
 
+首先，__get_vm_area_node在vmalloc地址空间中找到一个适当的区域。
+
 ```
     area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |
                 vm_flags, start, end, node, gfp_mask, caller);
@@ -50,6 +52,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/__get_vm_area_
 
 __vmalloc_area_node
 ----------------------------------------
+
+接下来从物理内存分配各个页，最后将这些页连续地映射到vmalloc区域中，分配虚拟内存的工作就完成了.
 
 ```
     addr = __vmalloc_area_node(area, gfp_mask, prot, node);
@@ -79,3 +83,5 @@ fail:
     return NULL;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/__vmalloc_area_node.md

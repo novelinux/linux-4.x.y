@@ -8,3 +8,8 @@ path: mm/vmalloc.c
 ```
 static struct vm_struct *vmlist __initdata;
 ```
+
+vm_area_add_early
+----------------------------------------
+
+vmlist的初始化是通过调用函数vm_area_add_early来完成的:

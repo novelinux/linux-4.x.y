@@ -44,7 +44,7 @@ kzalloc_node
 alloc_vmap_area
 ----------------------------------------
 
-分struct vmap_area分配内存.
+为struct vmap_area分配内存.
 
 ```
     va = alloc_vmap_area(size, align, start, end, node, gfp_mask);
@@ -65,3 +65,5 @@ setup_vmalloc_vm
     return area;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/setup_vmalloc_vm.md

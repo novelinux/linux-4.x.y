@@ -1,27 +1,20 @@
 dma_contiguous_remap
 ========================================
 
+Arguments
+----------------------------------------
+
 path: arch/arm/mm/dma-mapping.c
 ```
-struct dma_contig_early_reserve {
-    phys_addr_t base;
-    unsigned long size;
-};
-
-static struct dma_contig_early_reserve dma_mmu_remap[MAX_CMA_AREAS] __initdata;
-
-static int dma_mmu_remap_num __initdata;
-
-void __init dma_contiguous_early_fixup(phys_addr_t base, unsigned long size)
-{
-    dma_mmu_remap[dma_mmu_remap_num].base = base;
-    dma_mmu_remap[dma_mmu_remap_num].size = size;
-    dma_mmu_remap_num++;
-}
-
 void __init dma_contiguous_remap(void)
 {
     int i;
+```
+
+dma_mmu_remap
+----------------------------------------
+
+```
     for (i = 0; i < dma_mmu_remap_num; i++) {
         phys_addr_t start = dma_mmu_remap[i].base;
         phys_addr_t end = start + dma_mmu_remap[i].size;
@@ -32,7 +25,14 @@ void __init dma_contiguous_remap(void)
             end = arm_lowmem_limit;
         if (start >= end)
             continue;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/dma-mapping.c/dma_mmu_remap.md
+
+iotable_init
+----------------------------------------
+
+```
         map.pfn = __phys_to_pfn(start);
         map.virtual = __phys_to_virt(start);
         map.length = end - start;
@@ -58,3 +58,5 @@ void __init dma_contiguous_remap(void)
     }
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmu.c/iotable_init.md
