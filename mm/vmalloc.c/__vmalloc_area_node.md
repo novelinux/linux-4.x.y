@@ -1,6 +1,9 @@
 __vmalloc_area_node
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/vmalloc.c
 ```
 static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
@@ -11,7 +14,12 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
     unsigned int nr_pages, array_size, i;
     const gfp_t nested_gfp = (gfp_mask & GFP_RECLAIM_MASK) | __GFP_ZERO;
     const gfp_t alloc_mask = gfp_mask | __GFP_NOWARN;
+```
 
+Allocation
+----------------------------------------
+
+```
     nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
     array_size = (nr_pages * sizeof(struct page *));
 
@@ -30,7 +38,14 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
         kfree(area);
         return NULL;
     }
+```
 
+### alloc_page_xxx
+
+如果显式指定了分配页帧的结点，则内核调用alloc_pages_node。否则，使用alloc_page
+从当前结点分配页帧。
+
+```
     for (i = 0; i < area->nr_pages; i++) {
         struct page *page;
 
@@ -48,7 +63,15 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
         if (gfp_mask & __GFP_WAIT)
             cond_resched();
     }
+```
 
+map_vm_area
+----------------------------------------
+
+内核调用map_vm_area将分散的物理内存页连续映射到虚拟的vmalloc区域。该函数遍历分配的物理内存页，
+在各级页目录/页表中分配所需的目录项/表项。
+
+```
     if (map_vm_area(area, prot, pages))
         goto fail;
     return area->addr;

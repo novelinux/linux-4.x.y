@@ -31,7 +31,9 @@ https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/vmalloc.h/str
 APIS
 ----------------------------------------
 
-### vmalloc
+### Allocation
+
+#### vmalloc
 
 vmalloc是一个接口函数，内核代码使用它来分配在虚拟内存中连续但在物理内存中不一定连续的内存。
 
@@ -51,3 +53,27 @@ extern void *vmalloc(unsigned long size);
 是内核出于自身的目的(并非因为用户空间应用程序)使用高端内存页的少数情形之一。
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/vmalloc.md
+
+#### vmalloc_32
+
+工作方式与vmalloc相同，但会确保所使用的物理内存总是可以用普通32位指针寻址。如果某种体系结构的
+寻址能力超出基于字长计算的范围，那么这种保证就很重要。
+
+#### vmap
+
+使用一个page数组作为起点，来创建虚拟连续内存区。与vmalloc相比，该函数所用的物理内存位置不是
+隐式分配的，而需要先行分配好，作为参数传递。此类映射可通过vm_map实例中的VM_MAP标志辨别。
+
+#### ioremap
+
+是一个特定于处理器的函数，必须在所有体系结构上实现。它可以将取自物理地址空间、由系统总线用于
+I/O操作的一个内存块，映射到内核的地址空间中。
+
+### Free
+
+有两个函数用于向内核释放内存，vfree用于释放vmalloc和vmalloc_32分配的区域，而vunmap用于释放由
+vmap或ioremap创建的映射。这两个函数都会归结到__vunmap.
+
+#### vfree
+
+#### vunmap
