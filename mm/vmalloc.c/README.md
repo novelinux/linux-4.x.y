@@ -71,9 +71,23 @@ I/O操作的一个内存块，映射到内核的地址空间中。
 
 ### Free
 
+```
+vfree         vunmap
+ |              |
+ +-> __vunmap <-+
+     |
+     +-> remove_vm_area
+     |
+     +-> __free_page
+```
+
 有两个函数用于向内核释放内存，vfree用于释放vmalloc和vmalloc_32分配的区域，而vunmap用于释放由
 vmap或ioremap创建的映射。这两个函数都会归结到__vunmap.
 
 #### vfree
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/vfree.md
+
 #### vunmap
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/vmalloc.c/vunmap.md
