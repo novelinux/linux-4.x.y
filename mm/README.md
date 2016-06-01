@@ -44,6 +44,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/README.md
 
 分配较小块内存的slab、slub和slob分配器；
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/README.md
+
 ### Vmalloc
 
 分配非连续内存块的vmalloc机制；

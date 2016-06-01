@@ -62,6 +62,8 @@ kmem_cache_init
      kmem_cache_init();
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_init.md
+
 percpu_init_late
 ----------------------------------------
 
