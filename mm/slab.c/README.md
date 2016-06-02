@@ -122,6 +122,10 @@ APIS
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/res/slab.jpg
 
+### kmem_cache_alloc
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_alloc.md
+
 ### kmalloc(size, flags)
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab.h/kmalloc.md
