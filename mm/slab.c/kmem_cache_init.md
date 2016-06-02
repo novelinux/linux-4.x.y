@@ -11,10 +11,6 @@ kmem_cache_init函数用于初始化slab分配器。它在内核初始化阶段�
 调用。但在多处理器系统上，启动CPU此时正在运行，而其他CPU尚未初始化。kmem_cache_init采用了一个
 多步骤过程，逐步激活slab分配器。
 
-* 2.kmem_cache_init接下来初始化一般性的缓存，用作kmalloc内存的来源。为此，针对所需的各个缓存长度，
-分别调用kmem_cache_create。该函数起初只需要cache_cache缓存已经建立。但在初始化per-CPU缓存时，
-该函数必须借助于kmalloc，这尚且不可能。
-
 Arguments
 ----------------------------------------
 
@@ -43,6 +39,8 @@ kmem_cache_init创建系统中的第一个slab缓存，以便为kmem_cache的实
 主要是在编译时创建的静态数据。实际上，一个静态数据结构(initarray_cache)用作per-CPU数组。
 该缓存的名称是kmem_cache_boot。
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/kmem_cache_boot.md
+
 kmem_cache_node_init
 ----------------------------------------
 
@@ -53,6 +51,14 @@ kmem_cache_node_init
     for (i = 0; i < NUM_INIT_LISTS; i++)
         kmem_cache_node_init(&init_kmem_cache_node[i]);
 ```
+
+### init_kmem_cache_node
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/init_kmem_cache_node.md
+
+### kmem_cache_node_init
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/kmem_cache_node_init.md
 
 create_boot_cache
 ----------------------------------------
@@ -99,6 +105,10 @@ create_boot_cache
     slab_state = PARTIAL;
 ```
 
+调用create_boot_cache创建一个名为kmem_cache的缓存.并添加到slab_caches链中.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab_common.c/create_boot_cache.md
+
 create_kmalloc_cache
 ----------------------------------------
 
@@ -125,7 +135,18 @@ create_kmalloc_cache
                       &init_kmem_cache_node[SIZE_NODE + nid], nid);
         }
     }
+```
 
+创建一个kmalloc-node缓存，并添加到slab_caches中去.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab_common.c/create_kmalloc_cache.md
+
+create_kmalloc_caches
+----------------------------------------
+
+```
     create_kmalloc_caches(ARCH_KMALLOC_FLAGS);
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab_common.c/create_kmalloc_caches.md
