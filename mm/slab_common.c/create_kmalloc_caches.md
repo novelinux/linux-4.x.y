@@ -36,6 +36,8 @@ new_kmalloc_cache
     }
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab_common.c/new_kmalloc_cache.md
+
 create_kmalloc_cache
 ----------------------------------------
 
@@ -60,3 +62,5 @@ create_kmalloc_cache
 #endif
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab_common.c/create_kmalloc_cache.md
