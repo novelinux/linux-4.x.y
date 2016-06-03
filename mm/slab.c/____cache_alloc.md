@@ -24,6 +24,14 @@ cpu_cache_get
 
 ```
     ac = cpu_cache_get(cachep);
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/cpu_cache_get.md
+
+ac_get_obj
+----------------------------------------
+
+```
     if (likely(ac->avail)) {
         ac->touched = 1;
         objp = ac_get_obj(cachep, ac, flags, false);
@@ -40,6 +48,8 @@ cpu_cache_get
     }
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/ac_get_obj.md
+
 cache_alloc_refill
 ----------------------------------------
 
@@ -53,7 +63,7 @@ cache_alloc_refill
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/cache_alloc_refill.md
 
-cpu_cache_get
+Return
 ----------------------------------------
 
 ```

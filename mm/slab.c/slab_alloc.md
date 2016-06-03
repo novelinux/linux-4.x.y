@@ -35,7 +35,7 @@ __do_cache_alloc
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/__do_cache_alloc.md
 
-Return
+kmemcheck_slab_alloc
 ----------------------------------------
 
 ```

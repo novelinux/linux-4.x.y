@@ -87,8 +87,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/res/slab-principl
 每个缓存只负责一种对象类型（例如struct unix_sock实例），或提供一般性的缓冲区。各个缓存中slab
 的数目各有不同，这与已经使用的页的数目、对象长度和被管理对象的数目有关。
 
-另外，系统中所有的缓存都保存在一个双链表中。这使得内核有机会依次遍历所有的缓存。这是有必要的，
-例如在即将发生内存不足时，内核可能需要缩减分配给缓存的内存数量。
+另外，系统中所有的缓存都保存在一个双链表slab_caches中。这使得内核有机会依次遍历所有的缓存。
+这是有必要的，例如在即将发生内存不足时，内核可能需要缩减分配给缓存的内存数量。
 
 下图给出了 slab 结构的高层组织结构。在最高层是 cache_chain(slab_caches)，这是一个slab缓存的
 链接列表。这对于best-fit 算法非常有用，可以用来查找最适合所需要的分配大小的缓存（遍历列表）。
@@ -105,12 +105,30 @@ struct kmem_cache -> struct kmem_cache_node -+-> slabs_full    -> page -+-> obje
 struct kmem_cache                            +-> slabs_free    -> page -+-> object
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/res/slab.jpg
+
 Data Structure
 ----------------------------------------
+
+### slab_caches
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab_common.c/slab_caches.md
 
 ### struct kmem_cache
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab_def.h/struct_kmem_cache.md
+
+### struct array_cache
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/struct_array_cache.md
+
+### struct kmem_cache_node
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.h/struct_kmem_cache_node.md
+
+### struct page
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mm_types.h/struct_page.md
 
 Initialization
 ----------------------------------------
@@ -120,9 +138,27 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_init.m
 APIS
 ----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/res/slab.jpg
-
 ### kmem_cache_alloc
+
+```
+kmem_cache_alloc
+ |
+ +-> slab_alloc
+     |
+     +-> __do_cache_alloc
+         |
+         +-> ____cache_alloc
+             |
+             +-> cpu_cache_get -> ac_get_obj -> __ac_get_obj
+             |
+             +-> cache_alloc_refill
+                 |
+                 +-> cpu_cache_get
+                 |
+                 +-> slab_get_obj
+                 |
+                 +-> ac_put_obj
+```
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_alloc.md
 

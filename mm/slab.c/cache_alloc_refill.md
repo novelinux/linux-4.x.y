@@ -1,6 +1,9 @@
 cache_alloc_refill
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/slab.c
 ```
 static void *cache_alloc_refill(struct kmem_cache *cachep, gfp_t flags,
@@ -15,6 +18,14 @@ static void *cache_alloc_refill(struct kmem_cache *cachep, gfp_t flags,
     node = numa_mem_id();
     if (unlikely(force_refill))
         goto force_grow;
+```
+
+retry
+----------------------------------------
+
+### cpu_cache_get
+
+```
 retry:
     ac = cpu_cache_get(cachep);
     batchcount = ac->batchcount;
@@ -36,7 +47,16 @@ retry:
         n->shared->touched = 1;
         goto alloc_done;
     }
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/cpu_cache_get.md
+
+### Choose List
+
+内核现在必须找到array_cache->batchcount个未使用对象重新填充per-CPU缓存。
+选择获取对象的slab链表, 首先是slabs_partial, 然后是slabs_free.
+
+```
     while (batchcount > 0) {
         struct list_head *entry;
         struct page *page;
@@ -48,7 +68,14 @@ retry:
             if (entry == &n->slabs_free)
                 goto must_grow;
         }
+```
 
+### ac_put_obj
+
+通过slab_get_obj依次获取所有的对象，直至相应的slab中没有空闲对象为止。将获取到的object
+调用函数ac_put_obj加入array_cache的entry中去.
+
+```
         page = list_entry(entry, struct page, lru);
         check_spinlock_acquired(cachep);
 
@@ -69,13 +96,28 @@ retry:
         }
 
         /* move slabp to correct slabp list: */
+        /* 将page移动到正确的slab链表： */
         list_del(&page->lru);
         if (page->active == cachep->num)
             list_add(&page->lru, &n->slabs_full);
         else
             list_add(&page->lru, &n->slabs_partial);
     }
+```
 
+#### slab_get_obj
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/slab_get_obj.md
+
+#### ac_put_obj
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/ac_put_obj.md
+
+### cache_grow
+
+如果扫描了所有的slab仍然没有找到空闲对象，那么必须使用cache_grow扩大缓存。
+
+```
 must_grow:
     n->free_objects -= ac->avail;
 alloc_done:
@@ -98,7 +140,16 @@ force_grow:
             goto retry;
     }
     ac->touched = 1;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/cache_grow.md
+
+ac_get_obj
+----------------------------------------
+
+```
     return ac_get_obj(cachep, ac, flags, force_refill);
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/ac_get_obj.md
