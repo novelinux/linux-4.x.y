@@ -164,7 +164,25 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_alloc.
 
 ### kmem_cache_free
 
+```
+kmem_cache_free
+ |
+ +-> __cache_free
+     |
+     +-> cache_flusharray (ac->avail < ac->limit)
+     |   |
+     |   +-> free_block
+     |       |
+     |       +-> slab_put_obj -> set_free_obj
+     |
+     +-> ac_put_obj
+```
+
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_free.md
+
+### kmem_cache_destroy
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/kmem_cache_destroy.md
 
 ### kmalloc(size, flags)
 

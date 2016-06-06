@@ -54,4 +54,8 @@ CPU高速缓存中。具体的实现委托给cache_flusharray。
 
 ### cache_flusharray
 
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/cache_flusharray.md
+
 ### ac_put_obj
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/ac_put_obj.md
