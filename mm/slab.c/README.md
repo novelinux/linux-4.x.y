@@ -186,9 +186,29 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/kmem_cache
 
 ### kmalloc(size, flags)
 
+```
+kmalloc
+ |
+ +-> __kmalloc
+     |
+     +-> __do_kmalloc
+         |
+         +-> kmalloc_slab
+         |
+         +-> slab_alloc
+```
+
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab.h/kmalloc.md
 
 ### kfree(*ptr)
+
+```
+kfree
+ |
+ +-> __cache_free
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kfree.md
 
 slabinfo
 ----------------------------------------

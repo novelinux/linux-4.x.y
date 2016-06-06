@@ -96,4 +96,4 @@ __kmalloc
 }
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/__kmalloc.c
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/__kmalloc.md
