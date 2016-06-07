@@ -138,6 +138,16 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_init.m
 APIS
 ----------------------------------------
 
+### kmem_cache_create
+
+```
+kmem_cache_create
+ |
+ +-> do_kmem_cache_create
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/kmem_cache_create.md
+
 ### kmem_cache_alloc
 
 ```
