@@ -32,3 +32,5 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 
 _do_fork
 ----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/_do_fork.md

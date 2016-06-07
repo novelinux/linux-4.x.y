@@ -1,48 +1,87 @@
 dup_task_struct
 ========================================
 
+Arguments
+----------------------------------------
+
 path: kernel/fork.c
 ```
-int __attribute__((weak)) arch_dup_task_struct(struct task_struct *dst,
-                           struct task_struct *src)
-{
-    *dst = *src;
-    return 0;
-}
-
 static struct task_struct *dup_task_struct(struct task_struct *orig)
 {
+```
+
+tsk_fork_get_node
+----------------------------------------
+
+```
     struct task_struct *tsk;
     struct thread_info *ti;
-    unsigned long *stackend;
     int node = tsk_fork_get_node(orig);
     int err;
+```
 
-    prepare_to_copy(orig);
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/kthread.c/tsk_fork_get_node.md
 
+alloc_task_struct_node
+----------------------------------------
+
+```
     tsk = alloc_task_struct_node(node);
     if (!tsk)
         return NULL;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/alloc_task_struct_node.md
+
+alloc_thread_info_node
+----------------------------------------
+
+```
     ti = alloc_thread_info_node(tsk, node);
-    if (!ti) {
-        free_task_struct(tsk);
-        return NULL;
-    }
+    if (!ti)
+        goto free_tsk;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/alloc_thread_info_node.md
+
+arch_dup_task_struct
+----------------------------------------
+
+```
     err = arch_dup_task_struct(tsk, orig);
     if (err)
-        goto out;
+        goto free_ti;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/arch_dup_task_struct.md
+
+setup_thread_stack
+----------------------------------------
+
+```
     tsk->stack = ti;
+#ifdef CONFIG_SECCOMP
+    /*
+     * We must handle setting up seccomp filters once we're under
+     * the sighand lock in case orig has changed between now and
+     * then. Until then, filter must be NULL to avoid messing up
+     * the usage counts on the error path calling free_task.
+     */
+    tsk->seccomp.filter = NULL;
+#endif
 
     setup_thread_stack(tsk, orig);
+```
+
+set_task_stack_end_magic
+----------------------------------------
+
+设置栈结束标志防止栈溢出.
+
+```
     clear_user_return_notifier(tsk);
     clear_tsk_need_resched(tsk);
-    // 设置栈结束标志防止栈溢出
-    stackend = end_of_stack(tsk);
-    // #define STACK_END_MAGIC 0x57AC6E9D (include/linux/magic.h)
-    *stackend = STACK_END_MAGIC;    /* for overflow detection */
+    set_task_stack_end_magic(tsk);
 
 #ifdef CONFIG_CC_STACKPROTECTOR
     tsk->stack_canary = get_random_int();
@@ -57,34 +96,18 @@ static struct task_struct *dup_task_struct(struct task_struct *orig)
     tsk->btrace_seq = 0;
 #endif
     tsk->splice_pipe = NULL;
+    tsk->task_frag.page = NULL;
+    tsk->wake_q.next = NULL;
 
     account_kernel_stack(ti, 1);
 
     return tsk;
 
-out:
+free_ti:
     free_thread_info(ti);
+free_tsk:
     free_task_struct(tsk);
     return NULL;
-}
-```
-
-alloc_thread_info_node
-----------------------------------------
-
-path: kernel/fork.c
-```
-static struct thread_info *alloc_thread_info_node(struct task_struct *tsk,
-       int node)
-{
-#ifdef CONFIG_DEBUG_STACK_USAGE
-    gfp_t mask = GFP_KERNEL | __GFP_ZERO;
-#else
-    gfp_t mask = GFP_KERNEL;
-#endif
-    struct page *page = alloc_pages_node(node, mask, THREAD_SIZE_ORDER);
-
-    return page ? page_address(page) : NULL;
 }
 ```
 
@@ -93,8 +116,3 @@ static struct thread_info *alloc_thread_info_node(struct task_struct *tsk,
 也就是8KB空间的起始位置+sizeof(thread_info)的位置。
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/kernel_stack.jpg
-
-end_of_stack
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/end_of_stack.md

@@ -22,19 +22,6 @@ long do_fork(unsigned long clone_flags,
 
 该函数需要下列参数:
 
-* clone_flags是一个标志集合，用来指定控制复制过程的一些属性。最低字节指定了在子进程终止
-  时被发给父进程的信号号码。其余的高位字节保存了各种常数。
-
-* start_stack是用户状态下栈的起始地址。
-
-* regs是一个指向寄存器集合的指针，其中以原始形式保存了调用参数。该参数使用的数据类型是
-  特定于体系结构的struct pt_regs，其中按照系统调用执行时寄存器在内核栈上的存储顺序，
-  保存了所有的寄存器.
-
-* stack_size是用户状态下栈的大小。该参数通常是不必要的，设置为0。
-
-* parent_tidptr和child_tidptr是指向用户空间中地址的两个指针，分别指向父子进程的TID。
-  NPTL（Native PosixThreads Library）库的线程实现需要这两个参数。
 
 ```
     struct task_struct *p;
@@ -83,7 +70,7 @@ copy_process
              child_tidptr, NULL, trace);
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/copy_process.md
+
 
 do_fork以调用copy_process开始，后者执行生成新进程的实际工作，并根据指定的标志重用父进程的数据。
 在子进程生成之后，内核必须执行下列收尾操作：

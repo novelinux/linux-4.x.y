@@ -22,7 +22,28 @@ long _do_fork(unsigned long clone_flags,
     struct task_struct *p;
     int trace = 0;
     long nr;
+```
 
+* clone_flags
+是一个标志集合，用来指定控制复制过程的一些属性。最低字节指定
+了在子进程终止时被发给父进程的信号号码。其余的高位字节保存了
+各种常数。
+
+* start_stack
+是用户状态下栈的起始地址。
+
+* stack_size
+
+是用户状态下栈的大小。该参数通常是不必要的，设置为0。
+
+* parent_tidptr vs child_tidptr
+
+是指向用户空间中地址的两个指针，分别指向父子进程的TID。
+
+trace
+----------------------------------------
+
+```
     /*
      * Determine whether and which event to report to ptracer.  When
      * called from kernel_thread or CLONE_UNTRACED is explicitly
@@ -42,9 +63,20 @@ long _do_fork(unsigned long clone_flags,
     }
 ```
 
+copy_process
+----------------------------------------
+
 ```
     p = copy_process(clone_flags, stack_start, stack_size,
              child_tidptr, NULL, trace, tls);
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/copy_process.md
+
+get_task_pid
+----------------------------------------
+
+```
     /*
      * Do this prior waking up the new thread - the thread pointer
      * might get invalid after that point, if the thread exits quickly.

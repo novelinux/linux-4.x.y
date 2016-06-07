@@ -1,7 +1,7 @@
-copy_process - kernel/fork.c
+copy_process
 ========================================
 
-在do_fork中大多数工作是由copy_process函数完成的.
+do_fork中大多数工作是由copy_process函数完成的.
 
 Arguments
 ----------------------------------------
@@ -26,10 +26,9 @@ static struct task_struct *copy_process(unsigned long clone_flags,
 {
     int retval;
     struct task_struct *p;
-    void *cgrp_ss_priv[CGROUP_CANFORK_COUNT] = {};
 ```
 
-Check Flags
+clone_flags
 ----------------------------------------
 
 ```
@@ -43,6 +42,10 @@ Check Flags
      * Thread groups must share signals as well, and detached threads
      * can only be started up within the thread group.
      */
+     /* 在用CLONE_THREAD创建一个线程时，必须用CLONE_SIGHAND
+      * 激活信号共享,通常情况下,一个信号无法发送到线程组中的
+      * 各个线程。
+      */
     if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND))
         return ERR_PTR(-EINVAL);
 
@@ -51,6 +54,10 @@ Check Flags
      * thread groups also imply shared VM. Blocking this case allows
      * for various simplifications in other code.
      */
+     /* 只有在父子进程之间共享虚拟地址空间时（CLONE_VM），
+      * 才能提供共享的信号处理程序。因此类似的想法是，要想达到
+      * 同样的效果，线程也必须与父进程共享地址空间。
+      */
     if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))
         return ERR_PTR(-EINVAL);
 
@@ -74,16 +81,45 @@ Check Flags
                 current->nsproxy->pid_ns_for_children))
             return ERR_PTR(-EINVAL);
     }
+```
 
+### ERR_PTR
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/err.h/README.md
+
+security_task_create
+----------------------------------------
+
+```
     retval = security_task_create(clone_flags);
     if (retval)
         goto fork_out;
+```
 
+dup_task_struct
+----------------------------------------
+
+```
     retval = -ENOMEM;
     p = dup_task_struct(current);
     if (!p)
         goto fork_out;
+```
 
+### current
+
+current指向当前正在运行的进程，其获取方式如下:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/current.h/current.md
+
+### dup_task_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/dup_task_struct.md
+
+copy_creds
+----------------------------------------
+
+```
     ftrace_graph_init_task(p);
 
     rt_mutex_init_task(p);
@@ -104,7 +140,9 @@ Check Flags
     retval = copy_creds(p, clone_flags);
     if (retval < 0)
         goto bad_fork_free;
+```
 
+```
     /*
      * If multiple threads are within copy_process(), then this check
      * triggers too late. This doesn't hurt, the check is only there
@@ -130,9 +168,9 @@ Check Flags
     prev_cputime_init(&p->prev_cputime);
 
 #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
-    seqlock_init(&p->vtime_seqlock);
+    seqcount_init(&p->vtime_seqcount);
     p->vtime_snap = 0;
-    p->vtime_snap_whence = VTIME_SLEEPING;
+    p->vtime_snap_whence = VTIME_INACTIVE;
 #endif
 
 #if defined(SPLIT_RSS_COUNTING)
@@ -150,8 +188,7 @@ Check Flags
     p->real_start_time = ktime_get_boot_ns();
     p->io_context = NULL;
     p->audit_context = NULL;
-    if (clone_flags & CLONE_THREAD)
-        threadgroup_change_begin(current);
+    threadgroup_change_begin(current);
     cgroup_fork(p);
 #ifdef CONFIG_NUMA
     p->mempolicy = mpol_dup(p->mempolicy);
@@ -309,7 +346,7 @@ Check Flags
      * between here and cgroup_post_fork() if an organisation operation is in
      * progress.
      */
-    retval = cgroup_can_fork(p, cgrp_ss_priv);
+    retval = cgroup_can_fork(p);
     if (retval)
         goto bad_fork_free_pid;
 
@@ -391,9 +428,8 @@ Check Flags
     write_unlock_irq(&tasklist_lock);
 
     proc_fork_connector(p);
-    cgroup_post_fork(p, cgrp_ss_priv);
-    if (clone_flags & CLONE_THREAD)
-        threadgroup_change_end(current);
+    cgroup_post_fork(p);
+    threadgroup_change_end(current);
     perf_event_fork(p);
 
     trace_task_newtask(p, clone_flags);
@@ -402,7 +438,7 @@ Check Flags
     return p;
 
 bad_fork_cancel_cgroup:
-    cgroup_cancel_fork(p, cgrp_ss_priv);
+    cgroup_cancel_fork(p);
 bad_fork_free_pid:
     if (pid != &init_struct_pid)
         free_pid(pid);
@@ -434,8 +470,7 @@ bad_fork_cleanup_policy:
     mpol_put(p->mempolicy);
 bad_fork_cleanup_threadgroup_lock:
 #endif
-    if (clone_flags & CLONE_THREAD)
-        threadgroup_change_end(current);
+    threadgroup_change_end(current);
     delayacct_tsk_free(p);
 bad_fork_cleanup_count:
     atomic_dec(&p->cred->user->processes);
@@ -445,85 +480,6 @@ bad_fork_free:
 fork_out:
     return ERR_PTR(retval);
 }
-```
-
-
-1.检查标志
-----------------------------------------
-
-```
-/*
- * This creates a new process as a copy of the old one,
- * but does not actually start it yet.
- *
- * It copies the registers, and all the appropriate
- * parts of the process environment (as per the clone
- * flags). The actual kick-off is left to the caller.
- */
-static struct task_struct *copy_process(unsigned long clone_flags,
-                    unsigned long stack_start,
-                    struct pt_regs *regs,
-                    unsigned long stack_size,
-                    int __user *child_tidptr,
-                    struct pid *pid,
-                    int trace)
-{
-    int retval;
-    struct task_struct *p;
-    int cgroup_callbacks_done = 0;
-
-    if ((clone_flags & (CLONE_NEWNS|CLONE_FS)) == (CLONE_NEWNS|CLONE_FS))
-        return ERR_PTR(-EINVAL);
-
-    /*
-     * Thread groups must share signals as well, and detached threads
-     * can only be started up within the thread group.
-     */
-     /* 在用CLONE_THREAD创建一个线程时，必须用CLONE_SIGHAND激活信号共享。
-      * 通常情况下，一个信号无法发送到线程组中的各个线程。*/
-    if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND))
-        return ERR_PTR(-EINVAL);
-
-    /*
-     * Shared signal handlers imply shared VM. By way of the above,
-     * thread groups also imply shared VM. Blocking this case allows
-     * for various simplifications in other code.
-     */
-     /* 只有在父子进程之间共享虚拟地址空间时（CLONE_VM），才能提供共享的信号处理程序。
-      * 因此类似的想法是，要想达到同样的效果，线程也必须与父进程共享地址空间。
-      */
-    if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))
-        return ERR_PTR(-EINVAL);
-
-    /*
-     * Siblings of global init remain as zombies on exit since they are
-     * not reaped by their parent (swapper). To solve this and to avoid
-     * multi-rooted process trees, prevent global and container-inits
-     * from creating siblings.
-     */
-    if ((clone_flags & CLONE_PARENT) &&
-                current->signal->flags & SIGNAL_UNKILLABLE)
-        return ERR_PTR(-EINVAL);
-```
-
-### ERR_PTR
-
-Linux有时候在操作成功时需要返回指针，而在失败时则返回错误码。遗憾的是，C语言每个函数只允许一个
-直接的返回值，因此任何有关可能错误的信息都必须编码到指针中。虽然一般而言指针可以指向内存中的
-任意位置，而Linux支持的每个体系结构的虚拟地址空间中都有一个从虚拟地址0到至少4 KiB的区域，该
-区域中没有任何有意义的信息。因此内核可以重用该地址范围来编码错误码。如果fork的返回值指向前述
-的地址范围内部，那么该调用就失败了，其原因可以由指针的数值判断。ERR_PTR是一个辅助宏，用于将
-数值常数(例如EINVAL，非法操作)编码为指针:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/err.h/README.md
-
-2.security_task_create
-----------------------------------------
-
-```
-    retval = security_task_create(clone_flags);
-    if (retval)
-        goto fork_out;
 ```
 
 3.dup_task_struct
@@ -545,13 +501,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c
         goto fork_out;
 ```
 
-其中,current指向当前正在运行的进程，其获取方式如下:
+其中,
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/current.h/current.h.md
-
-dup_task_struct的具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/dup_task_struct.md
 
 4.检查当前特定用户进程数
 ----------------------------------------
