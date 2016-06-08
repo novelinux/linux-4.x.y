@@ -98,7 +98,7 @@ do_kmem_cache_create
     }
 ```
 
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/do_kmem_cache_create.md
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/do_kmem_cache_create.md
 
 out_unlock
 ----------------------------------------

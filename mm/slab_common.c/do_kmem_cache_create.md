@@ -1,6 +1,9 @@
 do_kmem_cache_create
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/slab_common.c
 ```
 static struct kmem_cache *
@@ -10,7 +13,12 @@ do_kmem_cache_create(const char *name, size_t object_size, size_t size,
 {
     struct kmem_cache *s;
     int err;
+```
 
+kmem_cache_zalloc
+----------------------------------------
+
+```
     err = -ENOMEM;
     s = kmem_cache_zalloc(kmem_cache, GFP_KERNEL);
     if (!s)
@@ -25,7 +33,12 @@ do_kmem_cache_create(const char *name, size_t object_size, size_t size,
     err = init_memcg_params(s, memcg, root_cache);
     if (err)
         goto out_free_cache;
+```
 
+__kmem_cache_create
+----------------------------------------
+
+```
     err = __kmem_cache_create(s, flags);
     if (err)
         goto out_free_cache;
@@ -43,3 +56,5 @@ out_free_cache:
     goto out;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/__kmem_cache_create.md
