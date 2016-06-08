@@ -1,6 +1,18 @@
 kfree
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+kfree
+ |
+ +-> __cache_free
+```
+
+Arguments
+----------------------------------------
+
 path: mm/slab.c
 ```
 /**
@@ -27,13 +39,16 @@ void kfree(const void *objp)
     debug_check_no_locks_freed(objp, c->object_size);
 
     debug_check_no_obj_freed(objp, c->object_size);
+```
+
+__cache_free
+----------------------------------------
+
+```
     __cache_free(c, (void *)objp, _RET_IP_);
     local_irq_restore(flags);
 }
 EXPORT_SYMBOL(kfree);
 ```
-
-__cache_free
-----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/__cache_free.md

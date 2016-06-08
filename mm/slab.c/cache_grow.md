@@ -1,6 +1,29 @@
 cache_grow
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+cache_grow
+ |
+ +-> get_node
+ |
+ +-> kmem_flagcheck
+ |
+ +-> kmem_getpages
+ |
+ +-> alloc_slabmgmt
+ |
+ +-> slab_map_pages
+ |
+ +-> cache_init_objs
+     |
+     +-> index_to_obj
+     |
+     +-> set_free_obj
+```
+
 Arguments
 ----------------------------------------
 
@@ -38,6 +61,8 @@ get_node
     n = get_node(cachep, nodeid);
     spin_lock(&n->list_lock);
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.h/get_node.md
 
 Get Colour
 ----------------------------------------
@@ -89,6 +114,8 @@ kmem_getpages
 在一个slab用于满足短期或可回收分配时，则将标志__GFP_RECLAIMABLE传递到伙伴系统。
 我们知道重要的是从适当的迁移列表分配页。
 
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_getpages.md
+
 alloc_slabmgmt
 ----------------------------------------
 
@@ -103,6 +130,8 @@ alloc_slabmgmt
 如果slab头存储在slab之外，则调用相关的alloc_slabmgmt函数分配所需空间。否则，相应的空间已经在
 slab中分配。在两种情况下，都必须用适当的值初始化slab数据结构的colouroff、s_mem和inuse成员。
 
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/alloc_slabmgmt.md
+
 slab_map_pages
 ----------------------------------------
 
@@ -112,6 +141,8 @@ slab_map_pages
 
 接下来，内核调用slab_map_pages创建slab的各页与slab或缓存之间的关联。该函数遍历新分配的所有
 page实例，分别调用page_set_cache和page_set_slab。
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/slab_map_pages.md
 
 cache_init_objs
 ----------------------------------------
@@ -144,3 +175,5 @@ cache_init_objs调用各个对象的构造器函数（假如有的话），初�
 i+1：因为slab至今完全未使用，下一个空闲的对象总是下一个对象。根据惯例，最后一个数组元素的值为
 BUFCTL_END。现在slab已经完全初始化，可以添加到缓存的slabs_free链表。新产生的对象的数目也加到
 缓存中空闲对象的数目上（cachep->free_objects）。
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/cache_init_objs.md

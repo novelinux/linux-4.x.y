@@ -4,6 +4,15 @@ kmem_cache_alloc
 kmem_cache_alloc用于从特定的缓存获取对象。类似于所有的malloc函数，其结果可能是指向分配内存区的
 指针，也可能分配失败，返回NULL指针。
 
+Code Flow
+----------------------------------------
+
+```
+kmem_cache_alloc
+ |
+ +-> slab_alloc
+```
+
 Arguments
 ----------------------------------------
 

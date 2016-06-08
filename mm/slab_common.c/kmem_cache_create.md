@@ -1,6 +1,21 @@
 kmem_cache_create
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+kmem_cache_create
+ |
+ +-> do_kmem_cache_create
+     |
+     +-> __kmem_cache_create
+         |
+         +-> setup_cpu_cache
+             |
+             +-> enable_cpucache
+```
+
 Comments
 ----------------------------------------
 

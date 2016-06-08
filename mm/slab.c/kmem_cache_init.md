@@ -11,6 +11,27 @@ kmem_cache_init函数用于初始化slab分配器。它在内核初始化阶段�
 调用。但在多处理器系统上，启动CPU此时正在运行，而其他CPU尚未初始化。kmem_cache_init采用了一个
 多步骤过程，逐步激活slab分配器。
 
+Code Flow
+----------------------------------------
+
+```
+kmem_cache_init
+ |
+ +-> kmem_cache_node_init (init_kmem_cache_node)
+ |
+ +-> create_boot_cache <-------+
+ |   |                         |
+ |   +-> __kmem_cache_create   |
+ |                             |
+ +-> create_kmalloc_cache -----+
+ |                             |
+ +-> create_kmalloc_caches     |
+     |                         |
+     +-> new_kmalloc_cache     |
+     |                         |
+     +-> create_kmalloc_cache -+
+```
+
 Arguments
 ----------------------------------------
 

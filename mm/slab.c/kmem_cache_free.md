@@ -3,6 +3,15 @@ kmem_cache_free
 
 如果一个分配的对象已经不再需要，那么必须使用kmem_cache_free返回给slab分配器。
 
+Code Flow
+----------------------------------------
+
+```
+kmem_cache_free
+ |
+ +-> __cache_free
+```
+
 Arguments
 ----------------------------------------
 

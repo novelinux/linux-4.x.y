@@ -26,6 +26,8 @@ start_kernel
  |
  +-> mm_init
  |
+ +-> kmem_cache_init_late
+ |
  +-> setup_per_cpu_pageset
 ```
 
@@ -46,6 +48,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/page_alloc.c/build_all_z
 ### mm_init
 
 https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/mm_init.md
+
+### kmem_cache_init_late
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/kmem_cache_init_late.md
 
 ### setup_per_cpu_pageset
 

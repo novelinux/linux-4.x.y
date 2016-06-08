@@ -1,6 +1,21 @@
 __cache_free
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+__cache_free
+ |
+ +-> cache_flusharray (ac->avail < ac->limit)
+ |   |
+ |   +-> free_block
+ |       |
+ |       +-> slab_put_obj -> set_free_obj
+ |
+ +-> ac_put_obj
+```
+
 Arguments
 ----------------------------------------
 

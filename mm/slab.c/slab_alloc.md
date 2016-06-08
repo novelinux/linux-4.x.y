@@ -1,6 +1,31 @@
 slab_alloc
 ========================================
 
+Code Flow
+----------------------------------------
+
+```
+slab_alloc
+ |
+ +-> __do_cache_alloc
+     |
+     +-> ____cache_alloc
+         |
+         +-> cpu_cache_get -> ac_get_obj -> __ac_get_obj
+         |
+         +-> cache_alloc_refill
+             |
+             +-> cpu_cache_get
+             |
+             +-> get_node
+             |
+             +-> slab_get_obj
+             |
+             +-> ac_put_obj
+             |
+             +-> cache_grow
+```
+
 Arugments
 ----------------------------------------
 

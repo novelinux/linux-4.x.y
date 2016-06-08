@@ -527,6 +527,8 @@ memory cache的初始化.
     kmem_cache_init_late();
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/slab.c/kmem_cache_init_late.md
+
 console_init
 ----------------------------------------
 

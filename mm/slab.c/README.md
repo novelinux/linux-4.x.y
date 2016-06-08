@@ -133,60 +133,26 @@ https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mm_types.h/st
 Initialization
 ----------------------------------------
 
+### Stage 1
+
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_init.md
+
+### Stage 2
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_init_late.md
 
 APIS
 ----------------------------------------
 
 ### kmem_cache_create
 
-```
-kmem_cache_create
- |
- +-> do_kmem_cache_create
-```
-
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/kmem_cache_create.md
 
 ### kmem_cache_alloc
 
-```
-kmem_cache_alloc
- |
- +-> slab_alloc
-     |
-     +-> __do_cache_alloc
-         |
-         +-> ____cache_alloc
-             |
-             +-> cpu_cache_get -> ac_get_obj -> __ac_get_obj
-             |
-             +-> cache_alloc_refill
-                 |
-                 +-> cpu_cache_get
-                 |
-                 +-> slab_get_obj
-                 |
-                 +-> ac_put_obj
-```
-
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_alloc.md
 
 ### kmem_cache_free
-
-```
-kmem_cache_free
- |
- +-> __cache_free
-     |
-     +-> cache_flusharray (ac->avail < ac->limit)
-     |   |
-     |   +-> free_block
-     |       |
-     |       +-> slab_put_obj -> set_free_obj
-     |
-     +-> ac_put_obj
-```
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_free.md
 
@@ -196,27 +162,9 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/kmem_cache
 
 ### kmalloc(size, flags)
 
-```
-kmalloc
- |
- +-> __kmalloc
-     |
-     +-> __do_kmalloc
-         |
-         +-> kmalloc_slab
-         |
-         +-> slab_alloc
-```
-
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab.h/kmalloc.md
 
 ### kfree(*ptr)
-
-```
-kfree
- |
- +-> __cache_free
-```
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kfree.md
 

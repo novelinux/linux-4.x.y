@@ -161,7 +161,12 @@ Set cachep
          */
         BUG_ON(ZERO_OR_NULL_PTR(cachep->freelist_cache));
     }
+```
 
+setup_cpu_cache
+----------------------------------------
+
+```
     err = setup_cpu_cache(cachep, gfp);
     if (err) {
         __kmem_cache_shutdown(cachep);
@@ -171,3 +176,5 @@ Set cachep
     return 0;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/setup_cpu_cache.md
