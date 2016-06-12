@@ -168,24 +168,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab.h/kmallo
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kfree.md
 
-slabinfo
+DEBUG
 ----------------------------------------
 
-所有活动缓存的列表保存在/proc/slabinfo中:
-
-```
-root@android:/ # cat /proc/slabinfo
-slabinfo - version: 2.1
-# name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
-ext4_groupinfo_4k     39     39    104   39    1 : tunables    0    0    0 : slabdata      1      1      0
-UDPLITEv6              0      0    768   21    4 : tunables    0    0    0 : slabdata      0      0      0
-UDPv6                  0      0    768   21    4 : tunables    0    0    0 : slabdata      0      0      0
-tw_sock_TCPv6          0      0    192   21    1 : tunables    0    0    0 : slabdata      0      0      0
-TCPv6                  0      0   1472   22    8 : tunables    0    0    0 : slabdata      0      0      0
-nf_conntrack_expect      0      0    176   23    1 : tunables    0    0    0 : slabdata      0      0      0
-nf_conntrack_c1809980      0      0    256   16    1 : tunables    0    0    0 : slabdata      0      0      0
-ashmem_area_cache      0      0    296   27    2 : tunables    0    0    0 : slabdata      0      0      0
-dm_crypt_io            0      0    104   39    1 : tunables    0    0    0 : slabdata      0      0      0
-kcopyd_job             0      0   2808   11    8 : tunables    0    0    0 : slabdata      0      0      0
-...
-```
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/DEBUG.md
