@@ -3,6 +3,11 @@ copy_process
 
 do_fork中大多数工作是由copy_process函数完成的.
 
+Code Flow
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/copy_process.jpg
+
 Arguments
 ----------------------------------------
 
@@ -395,6 +400,13 @@ https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/sched.h/copy_
 Set Pid
 ----------------------------------------
 
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/pid/README.md
+
+### alloc_pid
+
+在建立一个新进程时，进程可能在多个命名空间中是可见的。对每个
+这样的命名空间，都需要生成一个局部PID。这是在alloc_pid中处理的
+
 ```
     if (pid != &init_struct_pid) {
         pid = alloc_pid(p->nsproxy->pid_ns_for_children);
@@ -404,9 +416,18 @@ Set Pid
         }
     }
 
+    // CLONE_CHILD_SETTID首先会将另一个传递到clone的用户空间
+    // 指针（child_tidptr）保存在新进程的task_struct中。在新
+    // 进程第一次执行时，内核会调用schedule_tail函数将当前PID
+    // 复制到child_tidptr
     p->set_child_tid = (clone_flags & CLONE_CHILD_SETTID) ? child_tidptr : NULL;
+
     /*
      * Clear TID on mm_release()?
+     */
+    /* CLONE_CHILD_CLEARTID首先会在copy_process中将用户空间指针
+     * child_tidptr保存在task_struct中，这次是另一个不同的成员。
+     * 在进程终止时，将0写入clear_child_tid指定的地址。
      */
     p->clear_child_tid = (clone_flags & CLONE_CHILD_CLEARTID) ? child_tidptr : NULL;
 #ifdef CONFIG_BLOCK
@@ -436,7 +457,16 @@ Set Pid
     clear_tsk_thread_flag(p, TIF_SYSCALL_EMU);
 #endif
     clear_all_latency_tracing(p);
+```
 
+### pid_nr
+
+pid_nr函数对给定的pid实例计算全局数值PID.
+在用之前描述的机制为进程分配一个新的pid实例之后，则保存在
+task_struct中。对于线程，线程组ID与分支进程（即调用fork/clone
+的进程）pid相同.
+
+```
     /* ok, now we should be set up.. */
     p->pid = pid_nr(pid);
     if (clone_flags & CLONE_THREAD) {
@@ -451,12 +481,7 @@ Set Pid
         p->group_leader = p;
         p->tgid = p->pid;
     }
-```
 
-other
-----------------------------------------
-
-```
     p->nr_dirtied = 0;
     p->nr_dirtied_pause = 128 >> (PAGE_SHIFT - 10);
     p->dirty_paused_when = 0;
@@ -464,7 +489,11 @@ other
     p->pdeath_signal = 0;
     INIT_LIST_HEAD(&p->thread_group);
     p->task_works = NULL;
+```
 
+### cgroup_can_fork
+
+```
     /*
      * Ensure that the cgroup subsystem policies allow the new process to be
      * forked. It should be noted the the new process's css_set can be changed
@@ -474,7 +503,11 @@ other
     retval = cgroup_can_fork(p);
     if (retval)
         goto bad_fork_free_pid;
+```
 
+### copy_seccomp
+
+```
     /*
      * Make it visible to the rest of the system, but dont wake it up yet.
      * Need tasklist lock for parent etc handling!
@@ -482,6 +515,9 @@ other
     write_lock_irq(&tasklist_lock);
 
     /* CLONE_PARENT re-uses the old parent */
+    // 对普通进程，父进程是分支进程。对于线程来说有些不同：
+    // 由于线程被视为分支进程内部的第二（或第三、第四，等等）
+    // 个执行序列，其父进程应是分支进程的父进程。
     if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
         p->real_parent = current->real_parent;
         p->parent_exec_id = current->parent_exec_id;
@@ -497,7 +533,14 @@ other
      * before holding sighand lock.
      */
     copy_seccomp(p);
+```
 
+### attach_pid
+
+假如已经分配了struct pid的一个新实例，并设置用于给定的ID类型。
+它会如下附加到task_struct.
+
+```
     /*
      * Process group and session signals need to be delivered to just the
      * parent before the fork or both the parent and the child after the
@@ -518,6 +561,9 @@ other
         ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 
         init_task_pid(p, PIDTYPE_PID, pid);
+        // 非线程的普通进程可通过设置CLONE_PARENT触发同样的行为。
+        // 对线程来说还需要另一个校正，即普通进程的线程组组长是
+        // 进程本身。对线程来说，其组长是当前进程的组长.
         if (thread_group_leader(p)) {
             init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
             init_task_pid(p, PIDTYPE_SID, task_session(current));
@@ -606,191 +652,3 @@ fork_out:
     return ERR_PTR(retval);
 }
 ```
-
-### copy_thread
-
-copy_thread与这里讨论的所有其他复制操作都大不相同，这是一个特定于体系结构的函数，用于复制进程
-中特定于线程（thread-specific）的数据。这里的特定于线程并不是指某个CLONE标志，也不是指操作对
-线程而非整个进程执行。其语义无非是指复制执行上下文中特定于体系结构的所有数据（内核中名词线程
-通常用于多个含义）。重要的是填充task_struct->thread的各个成员。这是一个thread_struct类型的结构，
-其定义是体系结构相关的。它包含了所有寄存器（和其他信息），内核在进程之间切换时需要保存和恢复进程
-的内容，该结构可用于此。为理解各个thread_struct结构的布局，需要深入了解各种CPU的相关知识。
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/copy_thread.md
-
-6.设置ID
-----------------------------------------
-
-pid_nr函数对给定的pid实例计算全局数值PID。
-
-```
-    if (pid != &init_struct_pid) {
-        retval = -ENOMEM;
-        // 在建立一个新进程时，进程可能在多个命名空间中是可见的。对每个这样的命名空间，都需要
-        // 生成一个局部PID。这是在alloc_pid中处理的
-        pid = alloc_pid(p->nsproxy->pid_ns);
-        if (!pid)
-            goto bad_fork_cleanup_io;
-    }
-
-    // 在用之前描述的机制为进程分配一个新的pid实例之后，则保存在task_struct中。对于线程，
-    // 线程组ID与分支进程（即调用fork/clone的进程）pid相同：
-    p->pid = pid_nr(pid);
-    p->tgid = p->pid;
-    if (clone_flags & CLONE_THREAD)
-        p->tgid = current->tgid;
-
-    // CLONE_CHILD_SETTID首先会将另一个传递到clone的用户空间指针（child_tidptr）保存在新进程的
-    // task_struct中。在新进程第一次执行时，内核会调用schedule_tail函数将当前PID复制到child_tidptr
-    p->set_child_tid = (clone_flags & CLONE_CHILD_SETTID) ? child_tidptr : NULL;
-    /*
-     * Clear TID on mm_release()?
-     */
-    // CLONE_CHILD_CLEARTID首先会在copy_process中将用户空间指针child_tidptr保存在task_struct中，
-    // 这次是另一个不同的成员。在进程终止时，将0写入clear_child_tid指定的地址。
-    p->clear_child_tid = (clone_flags & CLONE_CHILD_CLEARTID) ? child_tidptr : NULL;
-
-#ifdef CONFIG_BLOCK
-    p->plug = NULL;
-#endif
-#ifdef CONFIG_FUTEX
-    p->robust_list = NULL;
-#ifdef CONFIG_COMPAT
-    p->compat_robust_list = NULL;
-#endif
-    INIT_LIST_HEAD(&p->pi_state_list);
-    p->pi_state_cache = NULL;
-#endif
-    /*
-     * sigaltstack should be cleared when sharing the same VM
-     */
-    if ((clone_flags & (CLONE_VM|CLONE_VFORK)) == CLONE_VM)
-        p->sas_ss_sp = p->sas_ss_size = 0;
-
-    /*
-     * Syscall tracing and stepping should be turned off in the
-     * child regardless of CLONE_PTRACE.
-     */
-    user_disable_single_step(p);
-    clear_tsk_thread_flag(p, TIF_SYSCALL_TRACE);
-#ifdef TIF_SYSCALL_EMU
-    clear_tsk_thread_flag(p, TIF_SYSCALL_EMU);
-#endif
-    clear_all_latency_tracing(p);
-
-    /* ok, now we should be set up.. */
-    if (clone_flags & CLONE_THREAD)
-        p->exit_signal = -1;
-    else if (clone_flags & CLONE_PARENT)
-        p->exit_signal = current->group_leader->exit_signal;
-    else
-        p->exit_signal = (clone_flags & CSIGNAL);
-
-    p->pdeath_signal = 0;
-    p->exit_state = 0;
-
-    p->nr_dirtied = 0;
-    p->nr_dirtied_pause = 128 >> (PAGE_SHIFT - 10);
-    p->dirty_paused_when = 0;
-
-    /*
-     * Ok, make it visible to the rest of the system.
-     * We dont wake it up yet.
-     */
-    p->group_leader = p;
-    INIT_LIST_HEAD(&p->thread_group);
-
-    /* Now that the task is set up, run cgroup callbacks if
-     * necessary. We need to run them before the task is visible
-     * on the tasklist. */
-    cgroup_fork_callbacks(p);
-    cgroup_callbacks_done = 1;
-
-    /* Need tasklist lock for parent etc handling! */
-    write_lock_irq(&tasklist_lock);
-
-    /* CLONE_PARENT re-uses the old parent */
-    // 对普通进程，父进程是分支进程。对于线程来说有些不同：由于线程被视为分支进程内部的第二
-    // （或第三、第四，等等）个执行序列，其父进程应是分支进程的父进程。
-    if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
-        p->real_parent = current->real_parent;
-        p->parent_exec_id = current->parent_exec_id;
-    } else {
-        p->real_parent = current;
-        p->parent_exec_id = current->self_exec_id;
-    }
-
-    spin_lock(&current->sighand->siglock);
-
-    /*
-     * Process group and session signals need to be delivered to just the
-     * parent before the fork or both the parent and the child after the
-     * fork. Restart if a signal comes in before we add the new process to
-     * it's process group.
-     * A fatal signal pending means that current will exit, so the new
-     * thread can't slip out of an OOM kill (or normal SIGKILL).
-    */
-    recalc_sigpending();
-    if (signal_pending(current)) {
-        spin_unlock(&current->sighand->siglock);
-        write_unlock_irq(&tasklist_lock);
-        retval = -ERESTARTNOINTR;
-        goto bad_fork_free_pid;
-    }
-
-    // 非线程的普通进程可通过设置CLONE_PARENT触发同样的行为。对线程来说还需要另一个校正，
-    // 即普通进程的线程组组长是进程本身。对线程来说，其组长是当前进程的组长.
-    if (clone_flags & CLONE_THREAD) {
-        current->signal->nr_threads++;
-        atomic_inc(&current->signal->live);
-        atomic_inc(&current->signal->sigcnt);
-        p->group_leader = current->group_leader;
-        list_add_tail_rcu(&p->thread_group, &p->group_leader->thread_group);
-    }
-
-    if (likely(p->pid)) {
-        ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
-
-        if (thread_group_leader(p)) {
-            if (is_child_reaper(pid))
-                p->nsproxy->pid_ns->child_reaper = p;
-
-            p->signal->leader_pid = pid;
-            p->signal->tty = tty_kref_get(current->signal->tty);
-            attach_pid(p, PIDTYPE_PGID, task_pgrp(current));
-            attach_pid(p, PIDTYPE_SID, task_session(current));
-            list_add_tail(&p->sibling, &p->real_parent->children);
-            list_add_tail_rcu(&p->tasks, &init_task.tasks);
-            __this_cpu_inc(process_counts);
-        }
-        // 假如已经分配了struct pid的一个新实例，并设置用于给定的ID类型。它会如下附加到task_struct
-        attach_pid(p, PIDTYPE_PID, pid);
-        nr_threads++;
-    }
-
-    total_forks++;
-    spin_unlock(&current->sighand->siglock);
-    write_unlock_irq(&tasklist_lock);
-    proc_fork_connector(p);
-    cgroup_post_fork(p);
-    if (clone_flags & CLONE_THREAD)
-        threadgroup_change_end(current);
-    perf_event_fork(p);
-
-    trace_task_newtask(p, clone_flags);
-
-    return p;
-
-    ...
-    return ERR_PTR(retval);
-}
-```
-
-有关进程id相关操作如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/id/README.md
-
-流程图
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/copy_process.jpg

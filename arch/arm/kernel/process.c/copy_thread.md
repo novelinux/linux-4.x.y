@@ -1,6 +1,16 @@
 copy_thread
 ========================================
 
+copy_thread与这里讨论的所有其他复制操作都大不相同，这是一个特定
+于体系结构的函数，用于复制进程中特定于线程（thread-specific）
+的数据。这里的特定于线程并不是指某个CLONE标志，也不是指操作对
+线程而非整个进程执行。其语义无非是指复制执行上下文中特定于体系
+结构的所有数据（内核中名词线程通常用于多个含义）。重要的是填充
+task_struct->thread的各个成员。这是一个thread_struct类型的结构，
+其定义是体系结构相关的。它包含了所有寄存器（和其他信息），内核
+在进程之间切换时需要保存和恢复进程的内容，该结构可用于此。为
+理解各个thread_struct结构的布局，需要深入了解各种CPU的相关知识。
+
 Arguments
 ----------------------------------------
 
@@ -12,8 +22,16 @@ int
 copy_thread(unsigned long clone_flags, unsigned long stack_start,
         unsigned long stk_sz, struct task_struct *p)
 {
+```
+
+task_thread_info
+----------------------------------------
+
+```
     struct thread_info *thread = task_thread_info(p);
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/task_thread_info.md
 
 task_pt_regs
 ----------------------------------------
@@ -46,7 +64,7 @@ Set context
     thread->cpu_domain = get_domain();
 #endif
 
-    // 1.如果不是内核线程则执行如下流程:
+    // 如果不是内核线程则执行如下流程.
     if (likely(!(p->flags & PF_KTHREAD))) {
         *childregs = *current_pt_regs();
         childregs->ARM_r0 = 0;   // 只修改子进程的r0和sp寄存器，其中r0保存子进程的返回值0

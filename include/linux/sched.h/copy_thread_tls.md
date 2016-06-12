@@ -24,4 +24,6 @@ static inline int copy_thread_tls(
 copy_thread
 ----------------------------------------
 
+### ARM
+
 https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/kernel/process.c/copy_thread.md

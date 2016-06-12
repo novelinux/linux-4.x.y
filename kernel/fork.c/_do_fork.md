@@ -1,6 +1,11 @@
 _do_fork
 ========================================
 
+Code Flow
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/do_fork.jpg
+
 Arguments
 ----------------------------------------
 
@@ -75,8 +80,13 @@ copy_process
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/copy_process.md
 
-get_task_pid
+start new thread
 ----------------------------------------
+
+do_fork以调用copy_process开始，后者执行生成新进程的实际工作，
+并根据指定的标志重用父进程的数据。
+
+### get_task_pid
 
 ```
     /*
@@ -90,6 +100,11 @@ get_task_pid
         trace_sched_process_fork(current, p);
 
         pid = get_task_pid(p, PIDTYPE_PID);
+```
+
+### pid_vnr
+
+```
         nr = pid_vnr(pid);
 
         if (clone_flags & CLONE_PARENT_SETTID)
@@ -100,7 +115,23 @@ get_task_pid
             init_completion(&vfork);
             get_task_struct(p);
         }
+```
 
+### wake_up_new_task
+
+在使用wake_up_new_task唤醒新进程时，则是调度器与进程创建逻辑
+交互的第二个时机,内核会调用调度类的task_new函数。这提供了一个
+时机，将新进程加入到相应类的就绪队列中。
+
+子进程使用wake_up_new_task唤醒。换言之，即将其task_struct添加到
+调度器队列。调度器也有机会对新启动的进程给予特别处理，这使得可以
+实现一种策略以便新进程有较高的几率尽快开始运行，另外也可以防止
+一再地调用fork浪费CPU时间。如果子进程在父进程之前开始运行，则
+可以大大地减少复制内存页的工作量，尤其是子进程在fork之后发出
+exec调用的情况下。但要记住，将进程排到调度器数据结构中并不意味
+着该子进程可以立即开始执行，而是调度器此时起可以选择它运行。
+
+```
         wake_up_new_task(p);
 
         /* forking complete and child started to run, tell ptracer */
@@ -111,7 +142,11 @@ get_task_pid
             if (!wait_for_vfork_done(p, &vfork))
                 ptrace_event_pid(PTRACE_EVENT_VFORK_DONE, pid);
         }
+```
 
+### put_pid
+
+```
         put_pid(pid);
     } else {
         nr = PTR_ERR(p);
@@ -119,3 +154,8 @@ get_task_pid
     return nr;
 }
 ```
+
+do_fork()函数在创建好task_struct和thread_info等数据结构，并设置
+好子进程用户态和内核态上下文后，会将这个子进程丢进调度队列里。
+当有其他线程调用schedule来进行线程切换时，这个创建出来的进程将
+有机会被执行。
