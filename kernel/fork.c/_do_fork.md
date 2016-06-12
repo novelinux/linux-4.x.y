@@ -25,11 +25,13 @@ long _do_fork(unsigned long clone_flags,
 ```
 
 * clone_flags
+
 是一个标志集合，用来指定控制复制过程的一些属性。最低字节指定
 了在子进程终止时被发给父进程的信号号码。其余的高位字节保存了
 各种常数。
 
 * start_stack
+
 是用户状态下栈的起始地址。
 
 * stack_size

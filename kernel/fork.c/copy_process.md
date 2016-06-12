@@ -116,8 +116,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/asm-generic/current
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/dup_task_struct.md
 
-copy_creds
+p->real_cred->user->processes
 ----------------------------------------
+
+在dup_task_struct成功之后,内核会检查当前的特定用户在创建新进程之后，是否超出了允许的最大进程数目:
+拥有当前进程的用户，其资源计数器保存一个user_struct实例中，可通过task_struct->real_cred->user
+访问，特定用户当前持有进程的数目保存在user_struct->processes。如果该值超出rlimit设置的限制，
+则放弃创建进程，除非当前用户是root用户或分配了特别的权限（CAP_SYS_ADMIN或CAP_SYS_RESOURCE）。
+检测root用户很有趣：每个PID命名空间都有各自的root用户。上述检测必须考虑这一点。
 
 ```
     ftrace_graph_init_task(p);
@@ -136,11 +142,36 @@ copy_creds
             goto bad_fork_free;
     }
     current->flags &= ~PF_NPROC_EXCEEDED;
+```
 
+Share Resources
+----------------------------------------
+
+接下来会调用许多形如copy_xyz的例程，以便复制或共享特定的内核子系统的资源。task_struct
+包含了一些指针，指向具体数据结构的实例，描述了可共享或可复制的资源。由于子进程的task_struct
+是从父进程的task_struct精确复制而来，因此相关的指针最初都指向同样的资源，或者说同样的具体资源
+实例，如图所示:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/share_res.jpg
+
+假定我们有两个资源：res_abc和res_def。最初父子进程的task_struct中的对应指针都指向了资源的同一个
+实例，即内存中特定的数据结构。如果CLONE_ABC置位，则两个进程会共享res_abc。此外，为防止与资源实例
+关联的内存空间释放过快，还需要对实例的引用计数器加1，只有进程不再使用内存时，才能释放。如果
+父进程或子进程修改了共享资源，则变化在两个进程中都可以看到。如果CLONE_ABC没有置位，接下来会为
+子进程创建res_abc的一份副本，新副本的资源计数器初始化为1。因此在这种情况下，如果父进程或子进程
+修改了资源，变化不会传播到另一个进程。通常，设置的CLONE标志越少，需要完成的工作越少。但多设置
+一些标志，则使得父子进程有更多机会相互操作彼此的数据结构，在编写应用程序时必须考虑到这一点。
+判断资源是共享还是复制需要通过许多辅助例程完成，每个辅助例程对应一种资源。
+
+### copy_creds
+
+```
     retval = copy_creds(p, clone_flags);
     if (retval < 0)
         goto bad_fork_free;
 ```
+
+### Initialization
 
 ```
     /*
@@ -155,6 +186,10 @@ copy_creds
     delayacct_tsk_init(p);    /* Must remain after dup_task_struct() */
     p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER);
     p->flags |= PF_FORKNOEXEC;
+    // 内核必须填好task_struct中对父子进程不同的各个成员。包含下列一些：
+    // A.task_struct中包含的各个链表元素，例如sibling和children;
+    // B.间隔定时器成员cpu_timers;
+    // C.待决信号列表（pending）;
     INIT_LIST_HEAD(&p->children);
     INIT_LIST_HEAD(&p->sibling);
     rcu_copy_process(p);
@@ -234,12 +269,22 @@ copy_creds
     p->sequential_io    = 0;
     p->sequential_io_avg    = 0;
 #endif
+```
 
+### sched_fork
+
+```
     /* Perform scheduler related setup. Assign this task to a CPU. */
     retval = sched_fork(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_policy;
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/kernel/sched/core.c/sched_fork.md
+
+### perf_event_init_task
+
+```
     retval = perf_event_init_task(p);
     if (retval)
         goto bad_fork_cleanup_policy;
@@ -248,34 +293,109 @@ copy_creds
         goto bad_fork_cleanup_perf;
     /* copy all the process information */
     shm_init_task(p);
+```
+
+### copy_semundo
+
+如果COPY_SYSVSEM置位，则copy_semundo使用父进程的System V信号量。
+
+```
     retval = copy_semundo(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_audit;
+```
+
+### copy_files
+
+如果CLONE_FILES置位，则copy_files使用父进程的文件描述符；否则创建新的files结构，
+其中包含的信息与父进程相同。该信息的修改可以独立于原结构。
+
+```
     retval = copy_files(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_semundo;
+```
+
+### copy_fs
+
+如果CLONE_FS置位，则copy_fs使用父进程的文件系统上下文（task_struct->fs）。
+这是一个fs_struct类型的结构，包含了诸如根目录、进程的当前工作目录之类的信息.
+
+```
     retval = copy_fs(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_files;
+```
+
+### copy_sighand
+
+如果CLONE_SIGHAND或CLONE_THREAD置位，则copy_sighand使用父进程的信号处理程序。
+
+```
     retval = copy_sighand(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_fs;
+```
+
+### copy_signal
+
+如果CLONE_THREAD置位，则copy_signal与父进程共同使用信号处理中不特定于处理程序的部分.
+
+```
     retval = copy_signal(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_sighand;
+```
+
+### copy_mm
+
+如果COPY_MM置位，则copy_mm让父进程和子进程共享同一地址空间。在这种情况下，两个进程
+使用同一个mm_struct实例，task_struct->mm指针即指向该实例,如果copy_mm没有置位，并不
+意味着需要复制父进程的整个地址空间。内核确实会创建页表的一份副本，但并不复制页的实际内容。
+这是使用COW机制完成的，仅当其中一个进程将数据写入页时，才会进行实际复制。
+
+```
     retval = copy_mm(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_signal;
+```
+
+### copy_namespaces
+
+copy_namespaces有特别的调用语义。它用于建立子进程的命名空间。几个控制与父进程共享何种
+命名空间的CLONE_NEWxyz标志，但其语义与所有其他标志都相反。如果没有指定CLONE_NEWxyz，
+则与父进程共享相应的命名空间，否则创建一个新的命名空间。copy_namespaces相当于调度程序，
+对每个可能的命名空间，分别执行对应的复制例程。但各个具体的复制例程就没什么趣味了，因为
+本质上就是复制数据或通过引用计数的管理来共享现存的实例.
+
+```
     retval = copy_namespaces(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_mm;
+```
+
+### copy_io
+
+```
     retval = copy_io(clone_flags, p);
     if (retval)
         goto bad_fork_cleanup_namespaces;
+```
+
+### copy_thread_tls
+
+```
     retval = copy_thread_tls(clone_flags, stack_start, stack_size, p, tls);
     if (retval)
         goto bad_fork_cleanup_io;
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/sched.h/copy_thread_tls.md
+
+Set Pid
+----------------------------------------
+
+```
     if (pid != &init_struct_pid) {
         pid = alloc_pid(p->nsproxy->pid_ns_for_children);
         if (IS_ERR(pid)) {
@@ -331,7 +451,12 @@ copy_creds
         p->group_leader = p;
         p->tgid = p->pid;
     }
+```
 
+other
+----------------------------------------
+
+```
     p->nr_dirtied = 0;
     p->nr_dirtied_pause = 128 >> (PAGE_SHIFT - 10);
     p->dirty_paused_when = 0;
@@ -480,249 +605,6 @@ bad_fork_free:
 fork_out:
     return ERR_PTR(retval);
 }
-```
-
-3.dup_task_struct
-----------------------------------------
-
-dup_task_struct来建立父进程task_struct的副本。用于子进程的新的task_struct实例可以在任何空闲的
-内核内存位置分配.父子进程的task_struct实例只有一个成员不同：新进程分配了一个新的核心态栈，
-即task_struct->stack。通常栈和thread_info一同保存在一个联合中，thread_info保存了线程所需的
-所有特定于处理器的底层信息。
-
-例如init_task的相关信息:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c
-
-```
-    retval = -ENOMEM;
-    p = dup_task_struct(current);
-    if (!p)
-        goto fork_out;
-```
-
-其中,
-
-
-4.检查当前特定用户进程数
-----------------------------------------
-
-在dup_task_struct成功之后,内核会检查当前的特定用户在创建新进程之后，是否超出了允许的最大进程数目:
-拥有当前进程的用户，其资源计数器保存一个user_struct实例中，可通过task_struct->real_cred->user
-访问，特定用户当前持有进程的数目保存在user_struct->processes。如果该值超出rlimit设置的限制，
-则放弃创建进程，除非当前用户是root用户或分配了特别的权限（CAP_SYS_ADMIN或CAP_SYS_RESOURCE）。
-检测root用户很有趣：每个PID命名空间都有各自的root用户。上述检测必须考虑这一点。
-
-```
-    ftrace_graph_init_task(p);
-
-    rt_mutex_init_task(p);
-
-#ifdef CONFIG_PROVE_LOCKING
-    DEBUG_LOCKS_WARN_ON(!p->hardirqs_enabled);
-    DEBUG_LOCKS_WARN_ON(!p->softirqs_enabled);
-#endif
-    retval = -EAGAIN;
-    if (atomic_read(&p->real_cred->user->processes) >=
-            task_rlimit(p, RLIMIT_NPROC)) {
-        if (!capable(CAP_SYS_ADMIN) && !capable(CAP_SYS_RESOURCE) &&
-            p->real_cred->user != INIT_USER)
-            goto bad_fork_free;
-    }
-```
-
-5.共享资源
-----------------------------------------
-
-接下来会调用许多形如copy_xyz的例程，以便复制或共享特定的内核子系统的资源。task_struct
-包含了一些指针，指向具体数据结构的实例，描述了可共享或可复制的资源。由于子进程的task_struct
-是从父进程的task_struct精确复制而来，因此相关的指针最初都指向同样的资源，或者说同样的具体资源
-实例，如图所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/res/share_res.jpg
-
-假定我们有两个资源：res_abc和res_def。最初父子进程的task_struct中的对应指针都指向了资源的同一个
-实例，即内存中特定的数据结构。如果CLONE_ABC置位，则两个进程会共享res_abc。此外，为防止与资源实例
-关联的内存空间释放过快，还需要对实例的引用计数器加1，只有进程不再使用内存时，才能释放。如果
-父进程或子进程修改了共享资源，则变化在两个进程中都可以看到。如果CLONE_ABC没有置位，接下来会为
-子进程创建res_abc的一份副本，新副本的资源计数器初始化为1。因此在这种情况下，如果父进程或子进程
-修改了资源，变化不会传播到另一个进程。通常，设置的CLONE标志越少，需要完成的工作越少。但多设置
-一些标志，则使得父子进程有更多机会相互操作彼此的数据结构，在编写应用程序时必须考虑到这一点。
-判断资源是共享还是复制需要通过许多辅助例程完成，每个辅助例程对应一种资源。
-
-```
-    current->flags &= ~PF_NPROC_EXCEEDED;
-
-    retval = copy_creds(p, clone_flags);
-    if (retval < 0)
-        goto bad_fork_free;
-
-    /*
-     * If multiple threads are within copy_process(), then this check
-     * triggers too late. This doesn't hurt, the check is only there
-     * to stop root fork bombs.
-     */
-    retval = -EAGAIN;
-    if (nr_threads >= max_threads)
-        goto bad_fork_cleanup_count;
-
-    if (!try_module_get(task_thread_info(p)->exec_domain->module))
-        goto bad_fork_cleanup_count;
-
-    p->did_exec = 0;
-    delayacct_tsk_init(p);    /* Must remain after dup_task_struct() */
-    copy_flags(clone_flags, p);
-
-    // 内核必须填好task_struct中对父子进程不同的各个成员。包含下列一些：
-    // A.task_struct中包含的各个链表元素，例如sibling和children；
-    // B.间隔定时器成员cpu_timers
-    // C.待决信号列表（pending），
-    INIT_LIST_HEAD(&p->children);
-    INIT_LIST_HEAD(&p->sibling);
-    rcu_copy_process(p);
-    p->vfork_done = NULL;
-    spin_lock_init(&p->alloc_lock);
-
-    init_sigpending(&p->pending);
-
-    p->utime = p->stime = p->gtime = 0;
-    p->utimescaled = p->stimescaled = 0;
-#ifndef CONFIG_VIRT_CPU_ACCOUNTING
-    p->prev_utime = p->prev_stime = 0;
-#endif
-#if defined(SPLIT_RSS_COUNTING)
-    memset(&p->rss_stat, 0, sizeof(p->rss_stat));
-#endif
-
-    p->default_timer_slack_ns = current->timer_slack_ns;
-
-    task_io_accounting_init(&p->ioac);
-    acct_clear_integrals(p);
-
-    posix_cpu_timers_init(p);
-
-    do_posix_clock_monotonic_gettime(&p->start_time);
-    p->real_start_time = p->start_time;
-    monotonic_to_bootbased(&p->real_start_time);
-    p->io_context = NULL;
-    p->audit_context = NULL;
-    if (clone_flags & CLONE_THREAD)
-        threadgroup_change_begin(current);
-    cgroup_fork(p);
-#ifdef CONFIG_NUMA
-    p->mempolicy = mpol_dup(p->mempolicy);
-    if (IS_ERR(p->mempolicy)) {
-        retval = PTR_ERR(p->mempolicy);
-        p->mempolicy = NULL;
-        goto bad_fork_cleanup_cgroup;
-    }
-    mpol_fix_fork_child_flag(p);
-#endif
-#ifdef CONFIG_CPUSETS
-    p->cpuset_mem_spread_rotor = NUMA_NO_NODE;
-    p->cpuset_slab_spread_rotor = NUMA_NO_NODE;
-    seqcount_init(&p->mems_allowed_seq);
-#endif
-#ifdef CONFIG_TRACE_IRQFLAGS
-    p->irq_events = 0;
-#ifdef __ARCH_WANT_INTERRUPTS_ON_CTXSW
-    p->hardirqs_enabled = 1;
-#else
-    p->hardirqs_enabled = 0;
-#endif
-    p->hardirq_enable_ip = 0;
-    p->hardirq_enable_event = 0;
-    p->hardirq_disable_ip = _THIS_IP_;
-    p->hardirq_disable_event = 0;
-    p->softirqs_enabled = 1;
-    p->softirq_enable_ip = _THIS_IP_;
-    p->softirq_enable_event = 0;
-    p->softirq_disable_ip = 0;
-    p->softirq_disable_event = 0;
-    p->hardirq_context = 0;
-    p->softirq_context = 0;
-#endif
-#ifdef CONFIG_LOCKDEP
-    p->lockdep_depth = 0; /* no locks held yet */
-    p->curr_chain_key = 0;
-    p->lockdep_recursion = 0;
-#endif
-
-#ifdef CONFIG_DEBUG_MUTEXES
-    p->blocked_on = NULL; /* not blocked yet */
-#endif
-#ifdef CONFIG_CGROUP_MEM_RES_CTLR
-    p->memcg_batch.do_batch = 0;
-    p->memcg_batch.memcg = NULL;
-#endif
-
-    /* Perform scheduler related setup. Assign this task to a CPU. */
-    // 每当使用fork系统调用或其变体之一建立新进程时，调度器有机会用sched_fork函数挂钩到该进程。
-    // 在单处理器系统上，该函数实质上执行3个操作：
-    // 1.初始化新进程与调度相关的字段;
-    // 2.建立数据结构（相当简单直接）;
-    // 3.确定进程的动态优先级。
-    sched_fork(p);
-
-    retval = perf_event_init_task(p);
-    if (retval)
-        goto bad_fork_cleanup_policy;
-    retval = audit_alloc(p);
-    if (retval)
-        goto bad_fork_cleanup_policy;
-
-    /* copy all the process information */
-    // 如果COPY_SYSVSEM置位，则copy_semundo使用父进程的System V信号量。
-    retval = copy_semundo(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_audit;
-
-    // 如果CLONE_FILES置位，则copy_files使用父进程的文件描述符；否则创建新的files结构，
-    // 其中包含的信息与父进程相同。该信息的修改可以独立于原结构。
-    retval = copy_files(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_semundo;
-
-    // 如果CLONE_FS置位，则copy_fs使用父进程的文件系统上下文（task_struct->fs）。这是一个
-    // fs_struct类型的结构，包含了诸如根目录、进程的当前工作目录之类的信息
-    retval = copy_fs(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_files;
-
-    // 如果CLONE_SIGHAND或CLONE_THREAD置位，则copy_sighand使用父进程的信号处理程序。
-    retval = copy_sighand(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_fs;
-
-    // 如果CLONE_THREAD置位，则copy_signal与父进程共同使用信号处理中不特定于处理程序的部分
-    retval = copy_signal(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_sighand;
-
-    // 如果COPY_MM置位，则copy_mm让父进程和子进程共享同一地址空间。在这种情况下，两个进程
-    // 使用同一个mm_struct实例，task_struct->mm指针即指向该实例,如果copy_mm没有置位，并不
-    // 意味着需要复制父进程的整个地址空间。内核确实会创建页表的一份副本，但并不复制页的实际内容。
-    // 这是使用COW机制完成的，仅当其中一个进程将数据写入页时，才会进行实际复制。
-    retval = copy_mm(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_signal;
-
-    // copy_namespaces有特别的调用语义。它用于建立子进程的命名空间。几个控制与父进程共享何种
-    // 命名空间的CLONE_NEWxyz标志，但其语义与所有其他标志都相反。如果没有指定CLONE_NEWxyz，
-    // 则与父进程共享相应的命名空间，否则创建一个新的命名空间。copy_namespaces相当于调度程序，
-    // 对每个可能的命名空间，分别执行对应的复制例程。但各个具体的复制例程就没什么趣味了，因为
-    // 本质上就是复制数据或通过引用计数的管理来共享现存的实例.
-    retval = copy_namespaces(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_mm;
-
-    retval = copy_io(clone_flags, p);
-    if (retval)
-        goto bad_fork_cleanup_namespaces;
-
-    retval = copy_thread(clone_flags, stack_start, stack_size, p, regs);
-    if (retval)
-        goto bad_fork_cleanup_io;
 ```
 
 ### copy_thread
