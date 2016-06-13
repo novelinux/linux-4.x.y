@@ -1,14 +1,51 @@
 task_struct
 ========================================
 
-Linux内核涉及进程和程序的所有算法都围绕一个名为task_struct的数据结构建立，
-该结构定义在include/sched.h中。这是系统中主要的一个结构。task_struct包含很多成员，
-将进程与各个内核子系统联系起来，下文会逐一讨论。
+Linux内核涉及进程和程序的所有算法都围绕一个名为task_struct的
+数据结构建立，该结构定义在include/sched.h中。这是系统中主要的
+一个结构。task_struct包含很多成员，将进程与各个内核子系统联系起来.
+
+state
+----------------------------------------
 
 path: include/linux/sched.h
 ```
 struct task_struct {
     volatile long state;    /* -1 unrunnable, 0 runnable, >0 stopped */
+```
+
+指定了进程的当前状态，可使用下列值:
+
+* TASK_RUNNING
+
+意味着进程处于可运行状态。这并不意味着已经实际分配了CPU。
+进程可能会一直等到调度器选中它。该状态确保进程可以立即运行，
+而无需等待外部事件。
+
+* TASK_INTERRUPTIBLE
+
+是针对等待某事件或其他资源的睡眠进程设置的。在内核发送信号给
+该进程表明事件已经发生时，进程状态变为TASK_RUNNING，它只要
+调度器选中该进程即可恢复执行。
+
+* TASK_UNINTERRUPTIBLE
+
+用于因内核指示而停用的睡眠进程。它们不能由外部信号唤醒，只能由
+内核亲自唤醒。
+
+* TASK_STOPPED
+
+表示进程特意停止运行，例如，由调试器暂停。
+
+* TASK_TRACED
+
+本来不是进程状态，用于从停止的进程中，将当前被调试的那些
+(使用ptrace机制)与常规的进程区分开来。
+
+stack
+----------------------------------------
+
+```
     void *stack;
     atomic_t usage;
     unsigned int flags;    /* per process flags, defined below */
@@ -17,9 +54,9 @@ struct task_struct {
 #ifdef CONFIG_SMP
     struct llist_node wake_entry;
     int on_cpu;
-    struct task_struct *last_wakee;
-    unsigned long wakee_flips;
+    unsigned int wakee_flips;
     unsigned long wakee_flip_decay_ts;
+    struct task_struct *last_wakee;
 
     int wake_cpu;
 #endif
@@ -52,8 +89,6 @@ struct task_struct {
     int rcu_read_lock_nesting;
     union rcu_special rcu_read_unlock_special;
     struct list_head rcu_node_entry;
-#endif /* #ifdef CONFIG_PREEMPT_RCU */
-#ifdef CONFIG_PREEMPT_RCU
     struct rcu_node *rcu_blocked_node;
 #endif /* #ifdef CONFIG_PREEMPT_RCU */
 #ifdef CONFIG_TASKS_RCU
@@ -63,7 +98,7 @@ struct task_struct {
     int rcu_tasks_idle_cpu;
 #endif /* #ifdef CONFIG_TASKS_RCU */
 
-#if defined(CONFIG_SCHEDSTATS) || defined(CONFIG_TASK_DELAY_ACCT)
+#ifdef CONFIG_SCHED_INFO
     struct sched_info sched_info;
 #endif
 
@@ -74,9 +109,6 @@ struct task_struct {
 #endif
 
     struct mm_struct *mm, *active_mm;
-#ifdef CONFIG_COMPAT_BRK
-    unsigned brk_randomized:1;
-#endif
     /* per-thread vma caching */
     u32 vmacache_seqnum;
     struct vm_area_struct *vmacache[VMACACHE_SIZE];
@@ -87,24 +119,33 @@ struct task_struct {
     int exit_state;
     int exit_code, exit_signal;
     int pdeath_signal;  /*  The signal sent when the parent dies  */
-    unsigned int jobctl;    /* JOBCTL_*, siglock protected */
+    unsigned long jobctl;    /* JOBCTL_*, siglock protected */
 
     /* Used for emulating ABI behavior of previous Linux versions */
     unsigned int personality;
 
-    unsigned in_execve:1;    /* Tell the LSMs that the process is doing an
-                 * execve */
-    unsigned in_iowait:1;
-
-    /* Revert to default priority/policy when forking */
+    /* scheduler bits, serialized by scheduler locks */
     unsigned sched_reset_on_fork:1;
     unsigned sched_contributes_to_load:1;
+    unsigned sched_migrated:1;
+    unsigned :0; /* force alignment to the next boundary */
 
-#ifdef CONFIG_MEMCG_KMEM
+    /* unserialized, strictly 'current' */
+    unsigned in_execve:1; /* bit to tell LSMs we're in execve */
+    unsigned in_iowait:1;
+#ifdef CONFIG_MEMCG
+    unsigned memcg_may_oom:1;
+#ifndef CONFIG_SLOB
     unsigned memcg_kmem_skip_account:1;
+#endif
+#endif
+#ifdef CONFIG_COMPAT_BRK
+    unsigned brk_randomized:1;
 #endif
 
     unsigned long atomic_flags; /* Flags needing atomic access. */
+
+    struct restart_block restart_block;
 
     pid_t pid;
     pid_t tgid;
@@ -146,15 +187,16 @@ struct task_struct {
 
     cputime_t utime, stime, utimescaled, stimescaled;
     cputime_t gtime;
-#ifndef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
-    struct cputime prev_cputime;
-#endif
+    struct prev_cputime prev_cputime;
 #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
-    seqlock_t vtime_seqlock;
+    seqcount_t vtime_seqcount;
     unsigned long long vtime_snap;
     enum {
-        VTIME_SLEEPING = 0,
+        /* Task is sleeping or running in a CPU with VTIME inactive */
+        VTIME_INACTIVE = 0,
+        /* Task runs in userspace in a CPU with VTIME active */
         VTIME_USER,
+        /* Task runs in kernelspace in a CPU with VTIME active */
         VTIME_SYS,
     } vtime_snap_whence;
 #endif
@@ -177,7 +219,7 @@ struct task_struct {
                        it with task_lock())
                      - initialized normally by setup_new_exec */
 /* file system info */
-    int link_count, total_link_count;
+    struct nameidata *nameidata;
 #ifdef CONFIG_SYSVIPC
 /* ipc stuff */
     struct sysv_sem sysvsem;
@@ -187,14 +229,43 @@ struct task_struct {
 /* hung task detection */
     unsigned long last_switch_count;
 #endif
-/* CPU-specific state of this task */
-    struct thread_struct thread;
 /* filesystem information */
     struct fs_struct *fs;
 /* open file information */
     struct files_struct *files;
+```
+
+nsproxy
+----------------------------------------
+
+```
 /* namespaces */
     struct nsproxy *nsproxy;
+```
+
+每个进程都关联到自身的命名空间视图:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nsproxy.h/README.md
+
+因为使用了指针，多个进程可以共享一组子命名空间。这样，修改给定
+的命名空间，对所有属于该命名空间的进程都是可见的。请注意，对
+命名空间的支持必须在编译时启用，而且必须逐一指定需要支持的命名
+空间。但对命名空间的一般性支持总是会编译到内核中。这使得内核
+不管有无命名空间，都不必使用不同的代码。除非指定不同的选项，
+否则每个进程都会关联到一个默认命名空间，这样可感知命名空间的
+代码总是可以使用。但如果内核编译时没有指定对具体命名空间的支持，
+默认命名空间的作用则类似于不启用命名空间，所有的属性都相当于
+全局的。
+命名空间的实现需要两个部分：每个子系统的命名空间结构，将此前
+所有的全局组件包装到命名空间中；将给定进程关联到所属各个命名
+空间的机制。下图说明了具体情形:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nsproxy.h/res/task_nsproxy.jpg
+
+signal
+----------------------------------------
+
+```
 /* signal handlers */
     struct signal_struct *signal;
     struct sighand_struct *sighand;
@@ -205,9 +276,7 @@ struct task_struct {
 
     unsigned long sas_ss_sp;
     size_t sas_ss_size;
-    int (*notifier)(void *priv);
-    void *notifier_data;
-    sigset_t *notifier_mask;
+
     struct callback_head *task_works;
 
     struct audit_context *audit_context;
@@ -226,6 +295,8 @@ struct task_struct {
 
     /* Protection of the PI data structures: */
     raw_spinlock_t pi_lock;
+
+    struct wake_q_node wake_q;
 
 #ifdef CONFIG_RT_MUTEXES
     /* PI waiters blocked on a rt_mutex held by this task */
@@ -261,6 +332,9 @@ struct task_struct {
     unsigned int lockdep_recursion;
     struct held_lock held_locks[MAX_LOCK_DEPTH];
     gfp_t lockdep_reclaim_gfp;
+#endif
+#ifdef CONFIG_UBSAN
+    unsigned int in_ubsan;
 #endif
 
 /* journalling filesystem info */
@@ -355,14 +429,18 @@ struct task_struct {
 
     /*
      * numa_faults_locality tracks if faults recorded during the last
-     * scan window were remote/local. The task scan period is adapted
-     * based on the locality of the faults with different weights
-     * depending on whether they were shared or private faults
+     * scan window were remote/local or failed to migrate. The task scan
+     * period is adapted based on the locality of the faults with different
+     * weights depending on whether they were shared or private faults
      */
-    unsigned long numa_faults_locality[2];
+    unsigned long numa_faults_locality[3];
 
     unsigned long numa_pages_migrated;
 #endif /* CONFIG_NUMA_BALANCING */
+
+#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+    struct tlbflush_unmap_batch tlb_ubc;
+#endif
 
     struct rcu_head rcu;
 
@@ -398,6 +476,9 @@ struct task_struct {
     unsigned long timer_slack_ns;
     unsigned long default_timer_slack_ns;
 
+#ifdef CONFIG_KASAN
+    unsigned int kasan_depth;
+#endif
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
     /* Index of current stored address in ret_stack */
     int curr_ret_stack;
@@ -420,12 +501,12 @@ struct task_struct {
     unsigned long trace_recursion;
 #endif /* CONFIG_TRACING */
 #ifdef CONFIG_MEMCG
-    struct memcg_oom_info {
-        struct mem_cgroup *memcg;
-        gfp_t gfp_mask;
-        int order;
-        unsigned int may_oom:1;
-    } memcg_oom;
+    struct mem_cgroup *memcg_in_oom;
+    gfp_t memcg_oom_gfp_mask;
+    int memcg_oom_order;
+
+    /* number of pages to reclaim on returning to userland */
+    unsigned int memcg_nr_pages_over_high;
 #endif
 #ifdef CONFIG_UPROBES
     struct uprobe_task *utask;
@@ -437,6 +518,15 @@ struct task_struct {
 #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
     unsigned long    task_state_change;
 #endif
+    int pagefault_disabled;
+/* CPU-specific state of this task */
+    struct thread_struct thread;
+/*
+ * WARNING: on x86, 'thread_struct' contains a variable-sized
+ * structure.  It *MUST* be at the end of 'task_struct'.
+ *
+ * Do not put anything below here!
+ */
 };
 ```
 
@@ -450,77 +540,6 @@ struct task_struct {
 * 线程信息记录该进程特定于CPU的运行时间数据（该结构的其余字段与所使用的硬件无关）。
 * 在与其他应用程序协作时所需的进程间通信有关的信息。
 * 该进程所用的信号处理程序，用于响应到来的信号。
-
-对进程管理的实现特别重要的一些成员
-----------------------------------------
-
-### state
-
-指定了进程的当前状态，可使用下列值(这些是预处理器常数，定义在<sched.h>中).
-
-* TASK_RUNNING意味着进程处于可运行状态。这并不意味着已经实际分配了CPU。
-  进程可能会一直等到调度器选中它。该状态确保进程可以立即运行，而无需等待外部事件。
-
-* TASK_INTERRUPTIBLE是针对等待某事件或其他资源的睡眠进程设置的。在内核发送信号给
-  该进程表明事件已经发生时，进程状态变为TASK_RUNNING，它只要调度器选中该进程即可恢复执行。
-
-* TASK_UNINTERRUPTIBLE用于因内核指示而停用的睡眠进程。它们不能由外部信号唤醒，只能由内核亲自唤醒。
-
-* TASK_STOPPED表示进程特意停止运行，例如，由调试器暂停。
-
-* TASK_TRACED本来不是进程状态，用于从停止的进程中，将当前被调试的那些（使用ptrace机制）与常规的进程区分开来。
-
-### exit_state
-
-* EXIT_ZOMBIE如上所述的僵尸状态。
-
-* EXIT_DEAD状态则是指wait系统调用已经发出，而进程完全从系统移除之前的状态。只有多个线程对同一个进程发出wait调用时，该状态才有意义。
-
-### struct rlimit
-
-Linux提供资源限制(resource limit，rlimit)机制，对进程使用系统资源施加某些限制。
-该机制利用了task_struct中的signal_struct中的rlim数组，数组类型为struct rlimit
-
-path: include/uapi/linux/resource.h
-```
-struct rlimit {
-	__kernel_ulong_t	rlim_cur;
-	__kernel_ulong_t	rlim_max;
-};
-```
-
-* rlim_cur是进程当前的资源限制，也称之为软限制（softlimit）。
-* rlim_max是该限制的最大容许值，因此也称之为硬限制（hard limit）。
-
-系统调用setrlimit来增减当前限制，但不能超出rlim_max指定的值。getrlimits用于检查当前限制。
-rlim数组中的位置标识了受限制资源的类型，这也是内核需要定义预处理器常数，将资源与位置
-关联起来的原因。下表列出了可能的常数及其含义。关于如何最佳地运用各种限制，系统程序
-设计方面的教科书提供了详细的说明，而setrlimit(2)的手册页详细描述了所有的限制。
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/res/rlimit.png
-
-内核在proc文件系统中对每个进程都包含了对应的一个文件，这样就可以查看当前的rlimit值：
-
-```
-root@cancro:/proc/1 # cat limits
-Limit                     Soft Limit           Hard Limit           Units
-Max cpu time              unlimited            unlimited            seconds
-Max file size             unlimited            unlimited            bytes
-Max data size             unlimited            unlimited            bytes
-Max stack size            8388608              unlimited            bytes
-Max core file size        0                    unlimited            bytes
-Max resident set          unlimited            unlimited            bytes
-Max processes             11668                11668                processes
-Max open files            1024                 4096                 files
-Max locked memory         67108864             67108864             bytes
-Max address space         unlimited            unlimited            bytes
-Max file locks            unlimited            unlimited            locks
-Max pending signals       11668                11668                signals
-Max msgqueue size         819200               819200               bytes
-Max nice priority         40                   40
-Max realtime priority     0                    0
-Max realtime timeout      unlimited            unlimited            us
-```
 
 ### struct nsproxy
 

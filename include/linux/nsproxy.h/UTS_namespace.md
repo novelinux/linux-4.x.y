@@ -1,48 +1,6 @@
 UTS namespace
 ========================================
 
-UTS namespace提供了主机名和域名的隔离，这样每个容器就可以拥有了独立的主机名和域名，在网络上可以
-被视作一个独立的节点而非宿主机上的一个进程。
-
-数据结构
-----------------------------------------
-
-path: include/linux/utsname.h
-
-```
-struct uts_namespace {
-	struct kref kref;
-	struct new_utsname name;
-	struct user_namespace *user_ns;
-	struct ns_common ns;
-};
-```
-
-kref是一个嵌入的引用计数器，可用于跟踪内核中有多少地方使用了struct uts_namespace的实例
-uts_namespace所提供的属性信息本身包含在struct new_utsname中：
-
-path: include/uapi/linux/utsname.h
-
-```
-struct new_utsname {
-	char sysname[__NEW_UTS_LEN + 1];
-	char nodename[__NEW_UTS_LEN + 1];
-	char release[__NEW_UTS_LEN + 1];
-	char version[__NEW_UTS_LEN + 1];
-	char machine[__NEW_UTS_LEN + 1];
-	char domainname[__NEW_UTS_LEN + 1];
-};
-```
-
-各个字符串分别存储了系统的名称（Linux...）、内核发布版本、机器名，等等。使用uname工具可以取得
-这些属性的当前值，也可以在/proc/sys/kernel/中看到：
-
-```
-root@cancro:/ # cat /proc/sys/kernel/ostype
-Linux
-root@cancro:/ # cat /proc/sys/kernel/osrelease
-3.4.0-g0c665cd-00547-g2e99435-dirty
-```
 
 初始设置保存在init_uts_ns中：
 
