@@ -50,6 +50,9 @@ __stubs_start:
     .word    vector_swi
 ```
 
-### vector_swi
+vector_swi
+----------------------------------------
+
+当使用swi触发软中断的时候将会调用vector_swi处的中断处理函数来处理对应的软件中断.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/vector_swi.md

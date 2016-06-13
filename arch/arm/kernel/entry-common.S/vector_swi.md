@@ -1,19 +1,19 @@
 vector_swi
 ========================================
 
-### swi中断
+swi中断:
 
 https://github.com/novelinux/arch-arm-common/tree/master/swi.md
 
 当使用swi触发软中断的时候将会调用vector_swi处的中断处理函数来处理对应的软件中断.
 
-vector_swi
-----------------------------------------
-
 path: arch/arm/kernel/asm-offsets.c
 ```
-  DEFINE(S_FRAME_SIZE,		sizeof(struct pt_regs));
+  DEFINE(S_FRAME_SIZE, sizeof(struct pt_regs));
 ```
+
+Push Stack
+----------------------------------------
 
 path: arch/arm/kernel/entry-common.S
 ```
@@ -41,8 +41,28 @@ ENTRY(vector_swi)
   /* Legacy ABI only. */
   ldr scno, [lr, #-4]  @ get SWI instruction
   ...
+```
+
+enable_irq
+----------------------------------------
+
+```
   enable_irq
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/assembler.h/enable_irq.md
+
+get_thread_info
+----------------------------------------
+
+```
   get_thread_info tsk
+```
+
+sys_call_table
+----------------------------------------
+
+```
   adr    tbl, sys_call_table @ load syscall table pointer
   ...
   cmp    scno, #NR_syscalls        @ check upper syscall limit
@@ -64,42 +84,6 @@ ENDPROC(vector_swi)
   分别为r0～r12、、sp、lr、pc、cpsr和r0,这里r0会存两个位置，一个代表第一个参数，另一个代表返回值。
   为什么会有两个r0？
 * 3. {sp, lr}^中的"^"表示这里的sp和lr是用户态的寄存器。
-
-### enable_irq
-
-path: arch/arm/include/asm/assembler.h
-```
-/*
- * Enable and disable interrupts
- * CPSID   CPSIE  用于快速的开关中断。
- */
-#if __LINUX_ARM_ARCH__ >= 6
-    .macro disable_irq_notrace
-    cpsid i
-    .endm
-
-    .macro enable_irq_notrace
-    @保存完上下文后才使能中断,
-    cpsie i
-    .endm
-#else
-        ...
-#endif
-        ...
-    .macro enable_irq
-    asm_trace_hardirqs_on
-    enable_irq_notrace
-    .endm
-```
-
-* CPSID I PRIMASK=1 关中断
-* CPSIE I PRIMASK=0 开中断
-* CPSID F FAULTMASK=1 关异常
-* CPSIE F FAULTMASK=0 开异常
-
-I: IRQ F: FIQ
-
-当系统调用退出时，将会调用ret_fast_syscall:
 
 ### 特殊寄存器标号定义
 
@@ -123,6 +107,8 @@ tsk    .req    r9        @ current thread_info
 
 ret_fast_syscall
 ----------------------------------------
+
+当系统调用退出时，将会调用ret_fast_syscall:
 
 path: arch/arm/kernel/entry-common.S
 ```

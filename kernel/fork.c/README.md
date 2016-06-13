@@ -3,17 +3,23 @@ fork
 
 传统的UNIX中用于复制进程的系统调用是fork。但它并不是Linux为此实现的唯一调用，实际上Linux实现了3个:
 
-* 1.fork是重量级调用，因为它建立了父进程的一个完整副本，然后作为子进程执行。
-    为减少与该调用相关的工作量，Linux使用了写时复制（copy-on-write）技术.
+* fork
 
-* 2.vfork类似于fork，但并不创建父进程数据的副本。相反，父子进程之间共享数据。
-    这节省了大量CPU时间（如果一个进程操纵共享数据，则另一个会自动注意到）。
-    vfork设计用于子进程形成后立即执行execve系统调用加载新程序的情形。在子进程
-    退出或开始新程序之前，内核保证父进程处于堵塞状态。引用手册页vfork(2)的文字，
-    “非常不幸，Linux从过去复活了这个幽灵”。由于fork使用了写时复制技术，vfork速度
-    方面不再有优势，因此应该避免使用它。
+是重量级调用，因为它建立了父进程的一个完整副本，然后作为子进程执行。
+为减少与该调用相关的工作量，Linux使用了写时复制（copy-on-write）技术.
 
-* 3.clone产生线程，可以对父子进程之间的共享、复制进行精确控制。
+* vfork
+
+类似于fork，但并不创建父进程数据的副本。相反，父子进程之间共享数据。
+这节省了大量CPU时间（如果一个进程操纵共享数据，则另一个会自动注意到）。
+vfork设计用于子进程形成后立即执行execve系统调用加载新程序的情形。在子进程
+退出或开始新程序之前，内核保证父进程处于堵塞状态。引用手册页vfork(2)的文字，
+“非常不幸，Linux从过去复活了这个幽灵”。由于fork使用了写时复制技术，vfork速度
+面不再有优势，因此应该避免使用它。
+
+* clone
+
+产生线程，可以对父子进程之间的共享、复制进行精确控制。
 
 **写时复制**:
 
@@ -21,10 +27,10 @@ fork
 该技术利用了下述事实：进程通常只使用了其内存页的一小部分。在调用fork时，内核通常对父进程的每个
 内存页，都为子进程创建一个相同的副本。这有两种很不好的负面效应。
 
-* 1.使用了大量内存。
-* 2.复制操作耗费很长时间。如果应用程序在进程复制之后使用exec立即加载新程序，那么负面效应会更严重。
-    这实际上意味着，此前进行的复制操作是完全多余的，因为进程地址空间会重新初始化，复制的数据不再
-    需要了。
+* 使用了大量内存。
+* 复制操作耗费很长时间。如果应用程序在进程复制之后使用exec立即加载新程序，那么负面效应会更严重。
+  这实际上意味着，此前进行的复制操作是完全多余的，因为进程地址空间会重新初始化，复制的数据不再
+  需要了。
 
 内核可以使用技巧规避该问题。并不复制进程的整个地址空间，而是只复制其页表。这样就建立了虚拟地址空间
 和物理内存页之间的联系，因此，fork之后父子进程的地址空间指向同样的物理内存页。当然，父子进程不能
@@ -55,7 +61,8 @@ int  fork(void)
 }
 ```
 
-### __fork
+__fork
+----------------------------------------
 
 path: bionic/libc/arch-arm/syscalls/__fork.S
 ```
@@ -95,25 +102,22 @@ path: kernel/arch/arm/include/asm/unistd.h
 * 而在老的OABI中则是执行的swi中断号的方式, 也就是说原来的调用方式(Old ABI)是通过跟随在swi
   指令中的调用号来进行的.
 
-如上面的代码，用swi #0指令即可触发软中断，并切换到内核态(管理模式)。此时CPU就做的事情就是:
-* 1.关中断
-* 2.将cpsr值写入到spsr_svc中
-* 3.将cpsr[5:0]设置成0b10011（svc模式）
-* 4.将pc值+4的地址，也就是swi指令的下一行地址写入lr_svc中
-* 5.__vectors_start+8写入pc（向量表第三项，系统调用的处理函数）
+swi
+----------------------------------------
 
-当使用swi触发软中断的时候将会调用vector_swi处的中断处理函数来处理对应的软件中断.
+如上面的代码，用swi #0指令即可触发软中断，并切换到内核态(管理模式)。
 
-https://github.com/novelinux/arch-arm-common/tree/master/swi.md
+https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
 
 在linux arm中，会查询sys_call_table跳转表,这个表中存储的是一系列的函数指针,这些
 指针就是系统调用函数的指针.
 
-### sys_call_table
+sys_call_table
+----------------------------------------
 
 path: kernel/arch/arm/kernel/entry-common.S
 ```
-	.type	sys_call_table, #object
+    .type    sys_call_table, #object
 ENTRY(sys_call_table)
 #include "calls.S"
 ```
@@ -122,24 +126,26 @@ ENTRY(sys_call_table)
 
 path: kernel/arch/arm/kernel/call.S
 ```
-/* 0 */		CALL(sys_restart_syscall)
-		CALL(sys_exit)
-		CALL(sys_fork_wrapper)
+/* 0 */ CALL(sys_restart_syscall)
+        CALL(sys_exit)
+        CALL(sys_fork_wrapper)
 ```
 
-### sys_fork_wrapper
+sys_fork_wrapper
+----------------------------------------
 
 path: kernel/arch/arm/kernel/entry-common.S
 ```
 sys_fork_wrapper:
-		add	r0, sp, #S_OFF # 指定参数.
-		b	sys_fork
+        add    r0, sp, #S_OFF # 指定参数.
+        b    sys_fork
 ENDPROC(sys_fork_wrapper)
 ```
 
 最终fork要执行的函数是sys_fork:
 
-### sys_fork
+sys_fork
+----------------------------------------
 
 path: kernel/arch/arm/kernel/sys_arm.c
 ```
@@ -149,10 +155,10 @@ path: kernel/arch/arm/kernel/sys_arm.c
 asmlinkage int sys_fork(struct pt_regs *regs)
 {
 #ifdef CONFIG_MMU
-	return do_fork(SIGCHLD, regs->ARM_sp, regs, 0, NULL, NULL);
+    return do_fork(SIGCHLD, regs->ARM_sp, regs, 0, NULL, NULL);
 #else
-	/* can not support in nommu mode */
-	return(-EINVAL);
+    /* can not support in nommu mode */
+    return(-EINVAL);
 #endif
 }
 ```
@@ -167,69 +173,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common
 
 sys_fork函数最终是调用do_fork来实现一个进程的创建:
 
-### do_fork
+do_fork
+----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/do_fork.md
 
 Sample
 ----------------------------------------
-
-path: sample/dac/helloworld.c
-```
-#include <stdio.h>
-
-int main(int argc, char* argv[])
-{
-    printf("hello world\n");
-    return 0;
-}
-```
-
-path: sample/fork_exec_helloworld.c
-```
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-
-#include <fcntl.h>
-#include <unistd.h>
-
-int main(int argc, char* argv[])
-{
-    int pid = fork();
-
-    if (pid < 0) {
-        fprintf(stderr, "fork a subprocess error: %d, %s",
-                errno, strerror(errno));
-        return EXIT_FAILURE;
-    } else if (pid == 0) { /* child process */
-        printf("execute child process: %d\n", getpid());
-        execl("./helloworld", "helloworld", NULL);
-        fprintf(stderr, "exec a subprocess error: %d, %s",
-                errno, strerror(errno));
-    }
-
-    printf("execute parent process: %d\n", getpid());
-    /* parent process */
-    if (waitpid(pid, NULL, 0) < 0) {
-        fprintf(stderr, "wait a subprocess error: %d, %s",
-                errno, strerror(errno));
-    }
-
-    return EXIT_SUCCESS;
-}
-```
-
-编译运行:
-
-```
-$ gcc helloworld.c -o helloworld
-$ ./helloworld
-hello world
-$ gcc fork_exec_helloworld.c -o fork
-$ ./fork
-execute parent process: 22355
-execute child process: 22356
-hello world
-```

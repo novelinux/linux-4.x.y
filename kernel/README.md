@@ -1,4 +1,4 @@
-Linux进程管理
+Process
 ========================================
 
 传统上，UNIX操作系统下运行的应用程序、服务器及其他程序都称为进程。每个进程都在CPU的虚拟内存中分配
@@ -137,44 +137,34 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/res/task_state.png
 有时候（例如，如果父进程编程极其糟糕，没有发出wait调用），僵尸进程可能稳定地寄身于进程表中，直至下一次系统重启。
 从进程工具（如ps或top）的输出，可以看到僵尸进程。因为残余的数据在内核中占据的空间极少，所有这几乎不是一个问题。
 
-进程表示
+Data Structure
 ----------------------------------------
 
 Linux内核涉及进程和程序的所有算法都围绕一个名为task_struct的数据结构建立，该结构定义如下所示:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/task_struct.md
 
-进程类型
-----------------------------------------
-
-典型的UNIX进程包括：由二进制代码组成的应用程序、单线程（计算机沿单一路径通过代码，不会有其他路径
-同时运行）、分配给应用程序的一组资源（如内存、文件等）。新进程是使用fork和exec系统调用产生的。
-
-* fork生成当前进程的一个相同副本，该副本称之为子进程。原进程的所有资源都以适当的方式复制到子进程，
-  因此该系统调用之后，原来的进程就有了两个独立的实例。这两个实例的联系包括：同一组打开文件、同样
-  的工作目录、内存中同样的数据（两个进程各有一份副本），等等。此外二者别无关联。
-
-* exec从一个可执行的二进制文件加载另一个应用程序，来代替当前运行的进程。换句话说，加载了一个新程序。
-  因为exec并不创建新进程，所以必须首先使用fork复制一个旧的程序，然后调用exec在系统上创建另一个应用
-  程序。
-
-除此之外Linux还提供了clone系统调用。clone的工作原理基本上与fork相同，但新进程不是独立于父进程的，
-而可以与其共享某些资源。可以指定需要共享和复制的资源种类，例如，父进程的内存数据、打开文件或
-安装的信号处理程序。
-
 init_task
 ----------------------------------------
 
 init_task在Linux系统中，只有这个进程是静态分配的:
 
+### ARM
+
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c/README.md
 
-进程创建
+Create
 ----------------------------------------
+
+### fork
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/README.md
 
-进程调度
+### kernel_thread
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/kernel_thread.md
+
+Schedule
 ----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/__schedule.md
