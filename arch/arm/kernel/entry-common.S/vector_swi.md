@@ -7,11 +7,6 @@ https://github.com/novelinux/arch-arm-common/tree/master/swi.md
 
 当使用swi触发软中断的时候将会调用vector_swi处的中断处理函数来处理对应的软件中断.
 
-path: arch/arm/kernel/asm-offsets.c
-```
-  DEFINE(S_FRAME_SIZE, sizeof(struct pt_regs));
-```
-
 Push Stack
 ----------------------------------------
 
@@ -42,6 +37,10 @@ ENTRY(vector_swi)
   ldr scno, [lr, #-4]  @ get SWI instruction
   ...
 ```
+
+### S_FRAME_SIZE
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/asm-offsets.c/S_FRAME_SIZE.md
 
 enable_irq
 ----------------------------------------
