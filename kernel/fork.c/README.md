@@ -109,11 +109,11 @@ swi
 
 https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
 
-在linux arm中，会查询sys_call_table跳转表,这个表中存储的是一系列的函数指针,这些
-指针就是系统调用函数的指针.
-
 sys_call_table
 ----------------------------------------
+
+在linux arm中，会查询sys_call_table跳转表,这个表中存储的是一系列的函数指针,这些
+指针就是系统调用函数的指针.
 
 path: kernel/arch/arm/kernel/entry-common.S
 ```

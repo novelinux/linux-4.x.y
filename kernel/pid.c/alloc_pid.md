@@ -4,6 +4,11 @@ alloc_pid
 在建立一个新进程时，进程可能在多个命名空间中是可见的。对每个这样的命名空间，都需要生成一个局部
 PID。这是在alloc_pid中处理的.
 
+Arguments
+----------------------------------------
+
+path: kernel/pid.c
+```
 struct pid *alloc_pid(struct pid_namespace *ns)
 {
     struct pid *pid;
@@ -11,7 +16,12 @@ struct pid *alloc_pid(struct pid_namespace *ns)
     int i, nr;
     struct pid_namespace *tmp;
     struct upid *upid;
+```
 
+Alloc
+----------------------------------------
+
+```
     pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
     if (!pid)
         goto out;
@@ -58,3 +68,4 @@ out_free:
     pid = NULL;
     goto out;
 }
+```
