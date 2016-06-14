@@ -38,9 +38,7 @@ ENTRY(vector_swi)
   ...
 ```
 
-### S_FRAME_SIZE
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/asm-offsets.c/S_FRAME_SIZE.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/asm-offsets.c/pt_regs_offsets.md
 
 enable_irq
 ----------------------------------------
