@@ -44,8 +44,7 @@ uts_ns
     struct uts_namespace *uts_ns;
 ```
 
-UTS命名空间包含了运行内核的名称、版本、底层体系结构类型等信息。
-UTS是UNIX Timesharing System的简称。
+UTS命名空间包含了运行内核的名称、版本、底层体系结构类型等信息,UTS是UNIX Timesharing System的简称。
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/utsname.h/README.md
 
@@ -58,6 +57,8 @@ ipc_ns
 
 保存在struct ipc_namespace中的所有与进程间通信(IPC)有关的信息。
 
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/ipc_namespace.h/README.md
+
 mnt_ns
 ----------------------------------------
 
@@ -66,6 +67,8 @@ mnt_ns
 ```
 
 已经装载的文件系统的视图，在struct mnt_namespace中给出。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mnt_namespace.h/README.md
 
 pid_ns_for_children
 ----------------------------------------
@@ -76,6 +79,8 @@ pid_ns_for_children
 
 有关进程ID的信息，由struct pid_namespace提供。
 
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/pid_namespace.h/README.md
+
 net_ns
 ----------------------------------------
 
@@ -85,3 +90,5 @@ net_ns
 ```
 
 struct net_ns包含所有网络相关的命名空间参数.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/net/net_namespace.h/README.md

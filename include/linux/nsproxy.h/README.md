@@ -1,4 +1,4 @@
-命名空间
+Namespace
 ========================================
 
 传统上，在Linux以及其他衍生的UNIX变体中，许多资源是全局管理的。
@@ -51,7 +51,7 @@ PID为0，其他进程的PID以递增次序分配。两个子命名空间都有P
   在进程已经使用上述的两种机制之一从父进程命名空间分离后，从该进程
   的角度来看，改变全局属性不会传播到父进程命名空间，而父进程的修改
   也不会传播到子进程，至少对于简单的量是这样。而对于文件系统来说，
- 情况就比较复杂，其中的共享机制非常强大，带来了大量的可能性.
+  情况就比较复杂，其中的共享机制非常强大，带来了大量的可能性.
 
 实际上，Linux内核实现namespace的主要目的就是为了实现轻量级虚拟化（容器）服务。
 在同一个namespace下的进程可以感知彼此的变化，而对外界的进程一无所知。
@@ -65,6 +65,32 @@ Data Structure
 ----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nsproxy.h/struct_nsproxy.md
+
+init_nsproxy
+----------------------------------------
+
+init_nsproxy定义了初始的全局命名空间，其中维护了指向各子系统初始的命名空间对象的指针：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/nsproxy.c/init_nsproxy.md
+
+Flags
+----------------------------------------
+
+由于在创建新进程时可使用fork建立一个新的命名空间，因此必须提供控制该行为的适当的标志。
+每个命名空间都有一个对应的标志：
+
+path: include/uapi/linux/sched.h
+```
+#define CLONE_NEWNS    0x00020000    /* New mount namespace group */
+...
+/* 0x02000000 was previously the unused CLONE_STOPPED (Start in stopped state)
+   and is now available for re-use. */
+#define CLONE_NEWUTS        0x04000000    /* New utsname namespace */
+#define CLONE_NEWIPC        0x08000000    /* New ipc namespace */
+#define CLONE_NEWUSER        0x10000000    /* New user namespace */
+#define CLONE_NEWPID        0x20000000    /* New pid namespace */
+#define CLONE_NEWNET        0x40000000    /* New network namespace */
+```
 
 APIS
 ----------------------------------------
@@ -158,69 +184,3 @@ int unshare(int flags);
 调用unshare()的主要作用就是不启动一个新进程就可以起到隔离的效果，相当于跳出原先的namespace进行
 操作。这样，你就可以在原进程进行一些需要隔离的操作。Linux中自带的unshare命令，就是通过unshare()
 系统调用实现的.
-
-实现
-----------------------------------------
-
-当前内核的以下范围可以感知到命名空间:
-
-由于在创建新进程时可
-使用fork建立一个新的命名空间，因此必须提供控制该行为的适当的标志。
-
-每个命名空间都有一个对应的标志：
-path: include/uapi/linux/sched.h
-```
-#define CLONE_NEWNS	0x00020000	/* New mount namespace group */
-...
-/* 0x02000000 was previously the unused CLONE_STOPPED (Start in stopped state)
-   and is now available for re-use. */
-#define CLONE_NEWUTS		0x04000000	/* New utsname namespace */
-#define CLONE_NEWIPC		0x08000000	/* New ipc namespace */
-#define CLONE_NEWUSER		0x10000000	/* New user namespace */
-#define CLONE_NEWPID		0x20000000	/* New pid namespace */
-#define CLONE_NEWNET		0x40000000	/* New network namespace */
-```
-
-init_nsproxy定义了初始的全局命名空间，
-其中维护了指向各子系统初始的命名空间对象的指针：
-
-path: kernel/nsproxy.c
-
-```
-struct nsproxy init_nsproxy = {
-	.count			= ATOMIC_INIT(1),
-	.uts_ns			= &init_uts_ns,
-#if defined(CONFIG_POSIX_MQUEUE) || defined(CONFIG_SYSVIPC)
-	.ipc_ns			= &init_ipc_ns,
-#endif
-	.mnt_ns			= NULL,
-	.pid_ns_for_children	= &init_pid_ns,
-#ifdef CONFIG_NET
-	.net_ns			= &init_net,
-#endif
-};
-```
-
-### UTS namespace
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/UTS_namespace.md
-
-### IPC namespace
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/IPC_namespace.md
-
-### MNT namespace
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/MNT_namespace.md
-
-### PID namespace
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/PID_namespace.md
-
-### USER namespace
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/USER_namespace.md
-
-### NET namespace
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/nsproxy/NET_namespace.md

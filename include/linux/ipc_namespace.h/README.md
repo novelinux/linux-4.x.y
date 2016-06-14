@@ -1,11 +1,24 @@
-IPC namespace
+IPC Namespace
 ========================================
 
-容器中进程间通信采用的方法包括常见的信号量、消息队列和共享内存。然而与虚拟机不同的是，容器内部进程
-间通信对宿主机来说，实际上是具有相同PID namespace中的进程间通信，因此需要一个唯一的标识符来进行
-区别。申请IPC资源就申请了这样一个全局唯一的32位ID，所以IPC namespace中实际上包含了系统IPC标识符
-以及实现POSIX消息队列的文件系统。在同一个IPC namespace下的进程彼此可见，而与其他的IPC namespace
-下的进程则互相不可见。
+容器中进程间通信采用的方法包括常见的信号量、消息队列和共享内存。然而与虚拟机不同的是，
+容器内部进程间通信对宿主机来说，实际上是具有相同PID namespace中的进程间通信，因此需要
+一个唯一的标识符来进行区别。申请IPC资源就申请了这样一个全局唯一的32位ID，所以IPC namespace
+中实际上包含了系统IPC标识符以及实现POSIX消息队列的文件系统。在同一个IPC namespace下的进程
+彼此可见，而与其他的IPC namespace下的进程则互相不可见。
+
+Data Structure
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/ipc_namespace.h/struct_ipc_namespace.md
+
+init_ipc_ns
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/ipc/msgutil.c/init_ipc_ns.md
+
+Sample
+----------------------------------------
 
 IPC namespace在代码上的变化与UTS namespace相似，只是标识位有所变化，需要加上CLONE_NEWIPC参数。
 主要改动如下，其他部位不变，程序名称改为ipc.c

@@ -1,4 +1,4 @@
-User namespaces
+User Namespace
 ========================================
 
 User namespace主要隔离了安全相关的标识符（identifiers）和属性（attributes），包括用户ID、
@@ -17,9 +17,20 @@ Linux中，特权用户的user ID就是0，演示的最终我们将看到user ID
 后user ID可以变为0。使用user namespace的方法跟别的namespace相同，即调用clone()或unshare()时加入
 CLONE_NEWUSER标识位。
 
-实例
+Data Structure
 ----------------------------------------
 
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/struct_user_namespace.md
+
+init_user_ns
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/user.c/init_user_ns.md
+
+Sample
+----------------------------------------
+
+path: user.c
 ```
 #define _GNU_SOURCE
 #include <sys/types.h>

@@ -1,4 +1,4 @@
-PID namespace
+PID Namespace
 ========================================
 
 PID namespace隔离非常实用，它对进程PID重新标号，即两个不同namespace下的进程可以有同一个PID。
@@ -16,7 +16,17 @@ PID在这个namespace中没有任何意义。如果你在新的PID namespace中�
 子节点中的进程。到这里，可能你已经联想到一种在外部监控Docker中运行程序的方法了，就是监控
 Docker Daemon所在的PID namespace下的所有进程即其子进程，再进行删选即可。
 
-实例
+Data Structure
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/struct_pid_namespace.md
+
+init_pid_ns
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/kernel/pid.c/init_pid_ns.md
+
+Sample
 ----------------------------------------
 
 下面我们通过运行代码来感受一下PID namespace的隔离效果。修改上文的代码，加入PID namespace的标识位，
@@ -55,9 +65,6 @@ $ echo $$
 看到所有父进程的PID，那是因为我们还没有对文件系统进行隔离，ps/top之类的命令调用的是真实系统下
 的/proc文件内容，看到的自然是所有的进程。
 
-PID namespace中的init进程
-----------------------------------------
-
 当我们新建一个PID namespace时，默认启动的进程PID为1。我们知道，在传统的UNIX系统中，PID为1的
 进程是init，地位非常特殊。他作为所有进程的父进程，维护一张进程表，不断检查进程的状态，一旦有
 某个子进程因为程序错误成为了“孤儿”进程，init就会负责回收资源并结束这个子进程。所以在你要实现
@@ -65,9 +72,6 @@ PID namespace中的init进程
 
 PID namespace维护这样一个树状结构，非常有利于系统的资源监控与回收。Docker启动时，第一个进程
 也是这样，实现了进程监控和资源回收，它就是dockerinit。
-
-信号与init进程
-----------------------------------------
 
 PID namespace中的init进程如此特殊，自然内核也为他赋予了特权——信号屏蔽。如果init中没有写处理
 某个信号的代码逻辑，那么与init在同一个PID namespace下的进程（即使有超级权限）发送给它的该信号
@@ -83,9 +87,6 @@ namespace就会被保留下来。然而，保留下来的namespace无法通过se
 所以实际上并没有什么作用。
 
 我们常说，Docker一旦启动就有进程在运行，不存在不包含任何进程的Docker，也就是这个道理。
-
-挂载proc文件系统
-----------------------------------------
 
 如果你在新的PID namespace中使用ps命令查看，看到的还是所有的进程，因为与PID直接相关的/proc
 文件系统（procfs）没有挂载到与原/proc不同的位置。所以如果你只想看到PID namespace本身应该
@@ -104,12 +105,6 @@ root        14  0.0  0.0  22656  1304 pts/22   R+   15:26   0:00 ps -aux
 **注意**: 因为此时我们没有进行mount namespace的隔离，所以这一步操作实际上已经影响了root namespace
 的文件系统，当你退出新建的PID namespace以后再执行ps a就会发现出错，再次执行
 mount -t proc proc /proc可以修复错误。
-
-unshare()和setns()
-----------------------------------------
-
-在开篇我们就讲到了unshare()和setns()这两个API，而这两个API在PID namespace中使用时，也有一些特别
-之处需要注意。
 
 unshare()允许用户在原有进程中建立namespace进行隔离。但是创建了PID namespace后，原先unshare()
 调用者进程并不进入新的PID namespace，接下来创建的子进程才会进入新的namespace，这个子进程也就
