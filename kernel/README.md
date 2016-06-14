@@ -150,7 +150,7 @@ Create
 
 ### fork
 
-https://github.com/novelinux/system_calls/tree/master/kernel/fork.md
+https://github.com/novelinux/system_calls/blob/master/fork.md
 
 ### kernel_thread
 
