@@ -28,7 +28,7 @@ Namespace
 二元组仍然是全局唯一的。虽然在给定容器内部资源是自足的，但无法
 提供在容器外部具有唯一性的ID。下图给出了此情况的一个概述。
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nsproxy.h/res/nsproxy.png
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nsproxy.h/res/nsproxy.jpg
 
 考虑系统上有3个不同命名空间的情况。命名空间可以组织为层次，我会在这里讨论这种情况。
 一个命名空间是父命名空间，衍生了两个子命名空间。假定容器用于虚拟主机配置中，
