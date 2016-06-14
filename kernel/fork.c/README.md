@@ -79,7 +79,7 @@ ENTRY(__fork)
 END(__fork)
 ```
 
-path: kernel/arch/arm/include/asm/unistd.h
+path: arch/arm/include/asm/unistd.h
 ```
 #define __NR_OABI_SYSCALL_BASE  0x900000
 
@@ -109,74 +109,17 @@ swi
 
 https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
 
+vector_swi
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/vector_swi.md
+
 sys_call_table
 ----------------------------------------
 
-在linux arm中，会查询sys_call_table跳转表,这个表中存储的是一系列的函数指针,这些
-指针就是系统调用函数的指针.
-
-path: kernel/arch/arm/kernel/entry-common.S
-```
-    .type    sys_call_table, #object
-ENTRY(sys_call_table)
-#include "calls.S"
-```
-
-将会从sys_call_table表中取出fork对应在内核态要执行的函数.
-
-path: kernel/arch/arm/kernel/call.S
-```
-/* 0 */ CALL(sys_restart_syscall)
-        CALL(sys_exit)
-        CALL(sys_fork_wrapper)
-```
-
-sys_fork_wrapper
-----------------------------------------
-
-path: kernel/arch/arm/kernel/entry-common.S
-```
-sys_fork_wrapper:
-        add    r0, sp, #S_OFF # 指定参数.
-        b    sys_fork
-ENDPROC(sys_fork_wrapper)
-```
-
-最终fork要执行的函数是sys_fork:
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/sys_call_table.md
 
 sys_fork
 ----------------------------------------
 
-path: kernel/arch/arm/kernel/sys_arm.c
-```
-/* Fork a new task - this creates a new program thread.
- * This is called indirectly via a small wrapper
- */
-asmlinkage int sys_fork(struct pt_regs *regs)
-{
-#ifdef CONFIG_MMU
-    return do_fork(SIGCHLD, regs->ARM_sp, regs, 0, NULL, NULL);
-#else
-    /* can not support in nommu mode */
-    return(-EINVAL);
-#endif
-}
-```
-
-唯一使用的标志是SIGCHLD。这意味着在子进程终止后发送SIGCHLD信号通知父进程。最初，父子进程的
-栈地址相同。但如果操作栈地址并写入数据，则COW机制会为每个进程分别创建一个栈副本。如果do_fork成功，
-则新建进程的PID作为系统调用的结果返回，否则返回错误码(负值)。
-
-**注意**: 在系统刚启动时sp是在__mmap_switched函数中指定的:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/head-common.S/__mmap_switched.md
-
-sys_fork函数最终是调用do_fork来实现一个进程的创建:
-
-do_fork
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/do_fork.md
-
-Sample
-----------------------------------------
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/sys_fork.md

@@ -23,8 +23,8 @@ ENTRY(vector_swi)
   sub    sp, sp, #S_FRAME_SIZE
   @ 将r0-r12寄存器压入内核栈中
   stmia  sp, {r0 - r12}            @ Calling r0 - r12
-  ARM(   add    r8, sp, #S_PC    )
   @ 将用户态的sp、lr压入内核栈中
+  ARM(   add    r8, sp, #S_PC    )
   ARM(   stmdb    r8, {sp, lr}^  )    @ Calling sp, lr
   THUMB( mov    r8, sp           )
   THUMB( store_user_sp_lr r8, r10, S_SP )    @ calling sp, lr
@@ -62,6 +62,9 @@ get_thread_info
 sys_call_table
 ----------------------------------------
 
+在linux arm中，会查询sys_call_table跳转表,这个表中存储的是一系列的函数指针,这些
+指针就是系统调用函数的指针.
+
 ```
   adr    tbl, sys_call_table @ load syscall table pointer
   ...
@@ -85,62 +88,13 @@ ENDPROC(vector_swi)
   为什么会有两个r0？
 * 3. {sp, lr}^中的"^"表示这里的sp和lr是用户态的寄存器。
 
-### 特殊寄存器标号定义
+### tbl, scno
 
-path: arch/arm/kernel/entry-header.S
-```
-/*
- * These are the registers used in the syscall handler, and allow us to
- * have in theory up to 7 arguments to a function - r0 to r6.
- *
- * r7 is reserved for the system call number for thumb mode.
- *
- * Note that tbl == why is intentional.
- *
- * We must set at least "tsk" and "why" when calling ret_with_reschedule.
- */
-scno   .req    r7        @ syscall number
-tbl    .req    r8        @ syscall table pointer
-why    .req    r8        @ Linux syscall (!= 0)
-tsk    .req    r9        @ current thread_info
-```
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-header.S/scno_tbl_why_tsk.md
 
 ret_fast_syscall
 ----------------------------------------
 
 当系统调用退出时，将会调用ret_fast_syscall:
 
-path: arch/arm/kernel/entry-common.S
-```
-/*
- * This is the fast syscall return path.  We do as little as
- * possible here, and this includes saving r0 back into the SVC
- * stack.
- */
-ret_fast_syscall:
-    ...
-    disable_irq                @ disable interrupts
-    ldr    r1, [tsk, #TI_FLAGS]
-    tst    r1, #_TIF_WORK_MASK
-    bne    fast_work_pending
-
-    ...
-
-    /* perform architecture specific actions before user return */
-    arch_ret_to_user r1, lr
-
-    restore_user_regs fast = 1, offset = S_OFF
-```
-
-restore_user_regs
-----------------------------------------
-
-restore_user_regs基本上是vector_swi的逆过程了。注意restore_user_regs最后一句代码，mov后面带s，
-且目标寄存器是pc。这是一种特殊的用法，CPU会将当前spsr中的值写入cpsr中，这样就回到了用户态。
-以上就是系统调用时的CPU寄存器的保护和还原过程。
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-header.S/restore_user_regs.md
-
-系统调用刚进入到内核态，就会将当前的寄存器组保存在内核态的栈中；
-当系统调用执行完内核态时，会将内核态栈中的寄存器组重新装载进来。
-其他的模式切换也是相同的原理。
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/ret_fast_syscall.md
