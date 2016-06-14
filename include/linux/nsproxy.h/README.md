@@ -97,36 +97,23 @@ APIS
 
 namespace的API包括:
 
-### clone()
+### clone
 
-使用clone()来创建一个独立namespace的进程是最常见做法，它的调用
-方式如下。
+https://github.com/novelinux/linux-4.x.y/blob/master/kernel/fork.c/clone.md
 
-```
-int clone(int (*child_func)(void *), void *child_stack, int flags, void *arg);
-```
+### setns
 
-clone()实际上是传统UNIX系统调用fork()的一种更通用的实现方式，
-它可以通过flags来控制使用多少功能。一共有二十多种CLONE_*的
-flag（标志位）参数用来控制clone进程的方方面面（如是否与父进程
-共享虚拟内存等等），下面外面逐一讲解clone函数传入的参数。
+https://github.com/novelinux/linux-4.x.y/blob/master/kernel/nsproxy.c/setns.md
 
-* 参数child_func传入子进程运行的程序主函数。
-* 参数child_stack传入子进程使用的栈空间
-* 参数flags表示使用哪些CLONE_*标志位
-* 参数args则可用于传入用户参数
+### unshare
 
-### setns()
+https://github.com/novelinux/linux-4.x.y/blob/master/kernel/fork.c/unshare.md
 
-### unshare()
-
-### /proc下的部分文件
+### /proc
 
 为了确定隔离的到底是哪种namespace，在使用这些API时，通常需要指定以下六个常数的一个或多个，
 通过|（位或）操作来实现。你可能已经在上面的表格中注意到，这六个参数分别是CLONE_NEWIPC、
-CLONE_NEWNS、CLONE_NEWNET、CLONE_NEWPID、CLONE_NEWUSER和CLONE_NEWUTS。
-
-### /proc/[pid]/ns
+CLONE_NEWNS、CLONE_NEWNET、CLONE_NEWPID、CLONE_NEWUSER和CLONE_NEWUTS.
 
 用户就可以在/proc/[pid]/ns文件下看到指向不同namespace号的文件，效果如下所示:
 
@@ -139,48 +126,3 @@ lrwxrwxrwx root     root              2016-02-18 15:44 net -> net:[4026533493]
 如果两个进程指向的namespace编号相同，就说明他们在同一个namespace下，否则则在不同namespace里面。
 /proc/[pid]/ns的另外一个作用是，一旦文件被打开，只要打开的文件描述符（fd）存在，那么就算PID所属
 的所有进程都已经结束，创建的namespace就会一直存在。
-
-### setns
-
-在进程都结束的情况下，也可以通过挂载的形式把namespace保留下来，保留namespace的目的自然是为以后
-有进程加入做准备。通过setns()系统调用，你的进程从原先的namespace加入我们准备好的新namespace，
-使用方法如下。
-
-```
-int setns(int fd, int nstype);
-```
-
-* 参数fd表示我们要加入的namespace的文件描述符。上文已经提到，它是一个指向/proc/[pid]/ns目录的
-文件描述符，可以通过直接打开该目录下的链接或者打开一个挂载了该目录下链接的文件得到。
-
-* 参数nstype让调用者可以去检查fd指向的namespace类型是否符合我们实际的要求。如果填0表示不检查。
-
-为了把我们创建的namespace利用起来，我们需要引入execve()系列函数，这个函数可以执行用户命令，
-最常用的就是调用/bin/bash并接受参数，运行起一个shell，用法如下。
-
-```
-fd = open(argv[1], O_RDONLY);   /* 获取namespace文件描述符 */
-setns(fd, 0);                   /* 加入新的namespace */
-execvp(argv[2], &argv[2]);      /* 执行程序 */
-```
-
-假设编译后的程序名称为setns。
-
-```
-# ./setns ~/uts /bin/bash   # ~/uts 是绑定的/proc/27514/ns/uts
-```
-
-至此，你就可以在新的命名空间中执行shell命令了，在下文中会多次使用这种方式来演示隔离的效果。
-
-### unshare
-
-通过unshare()在原先进程上进行namespace隔离, 最后要提的系统调用是unshare()，它跟clone()很像，不同的是，
-unshare()运行在原先的进程上，不需要启动一个新进程，使用方法如下。
-
-```
-int unshare(int flags);
-```
-
-调用unshare()的主要作用就是不启动一个新进程就可以起到隔离的效果，相当于跳出原先的namespace进行
-操作。这样，你就可以在原进程进行一些需要隔离的操作。Linux中自带的unshare命令，就是通过unshare()
-系统调用实现的.
