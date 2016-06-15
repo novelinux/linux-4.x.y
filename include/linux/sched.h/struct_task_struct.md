@@ -1,4 +1,4 @@
-task_struct
+struct task_struct
 ========================================
 
 Linux内核涉及进程和程序的所有算法都围绕一个名为task_struct的
@@ -308,11 +308,29 @@ thread_group
 /* hung task detection */
     unsigned long last_switch_count;
 #endif
+```
+
+fs
+----------------------------------------
+
+```
 /* filesystem information */
     struct fs_struct *fs;
+```
+
+进程的文件系统相关数据保存在fs中.
+
+files
+----------------------------------------
+
+```
 /* open file information */
     struct files_struct *files;
 ```
+
+files包含当前进程的各个文件描述符.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fdtable.h/struct_files_struct.md
 
 nsproxy
 ----------------------------------------

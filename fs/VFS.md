@@ -64,3 +64,22 @@ Data Structure
 ----------------------------------------
 
 ### struct inode
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_inode.md
+
+### struct task_struct
+
+文件描述符（就是整数）用于在一个进程内唯一地标识打开的文件。这假定了内核能够在用户进程中
+的描述符和内核内部使用的结构之间，建立一种关联。每个进程的task_struct中包含了用于完成该
+工作的成员。
+
+```
+/* filesystem information */
+    struct fs_struct *fs;
+/* open file information */
+    struct files_struct *files;
+/* namespaces */
+    struct nsproxy *nsproxy;
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/struct_task_struct.md
