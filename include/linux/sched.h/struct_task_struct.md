@@ -320,6 +320,8 @@ fs
 
 进程的文件系统相关数据保存在fs中.
 
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs_struct.h/struct_fs_struct.md
+
 files
 ----------------------------------------
 
