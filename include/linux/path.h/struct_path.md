@@ -21,3 +21,5 @@ dentry
 ```
 
 struct dentry提供了文件名和inode之间的关联.
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/dcache.h/struct_dentry.md
