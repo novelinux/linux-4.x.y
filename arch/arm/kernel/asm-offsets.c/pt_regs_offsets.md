@@ -29,9 +29,9 @@ path: arch/arm/kernel/asm-offsets.c
 struct pt_regs
 ----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/ptrace.h/struct_pt_regs.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/uapi/asm/ptrace.h/struct_pt_regs.md
 
 ARM_reg
 ----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/ptrace.h/ARM_reg.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/uapi/asm/ptrace.h/ARM_reg.md
