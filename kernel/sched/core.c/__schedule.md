@@ -1,4 +1,4 @@
-__schedule - kernel/sched/core.c
+__schedule
 ========================================
 
 在内核中的许多地方，如果要将CPU分配给与当前活动进程不同的另一个进程，都会直接调用主调度器函数
@@ -6,7 +6,7 @@ __schedule - kernel/sched/core.c
 例如，前述的scheduler_tick就会设置该标志。如果是这样，则内核会调用schedule。该函数假定当前活动
 进程一定会被另一个进程取代。
 
-1.__sched前缀
+__sched
 ----------------------------------------
 
 该前缀用于可能调用schedule的函数，包括schedule自身。
@@ -14,6 +14,7 @@ __schedule - kernel/sched/core.c
 该信息使得内核在显示栈转储或类似信息时，忽略所有与调度有关的调用。由于调度器函数调用不是
 普通代码流程的一部分，因此在这种情况下是没有意义的。
 
+path: kernel/sched/core.c
 ```
 /*
  * __schedule() is the main scheduler function.
@@ -22,7 +23,7 @@ static void __sched __schedule(void)
 {
 ```
 
-2.确定当前就绪队列
+确定当前就绪队列
 ----------------------------------------
 
 该函数首先确定当前就绪队列，并在prev中保存一个指向（仍然）活动进程的task_struct的指针。
@@ -41,7 +42,7 @@ need_resched:
     prev = rq->curr;
 ```
 
-3.选择调度进程
+选择调度进程
 ----------------------------------------
 
 ```
@@ -96,7 +97,7 @@ need_resched:
     rq->skip_clock_update = 0;
 ```
 
-4.context_switch
+context_switch
 ----------------------------------------
 
 ```
