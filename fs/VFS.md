@@ -63,9 +63,25 @@ task_struct包含一个成员，其中保存了所有打开的文件（通过一
 Data Structure
 ----------------------------------------
 
+### struct file_system_type
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_file_system_type.md
+
+### struct vfsmount
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mount.h/struct_vfsmount.md
+
+### struct super_block
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_super_block.md
+
 ### struct inode
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_inode.md
+
+### struct file
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_file.md
 
 ### struct task_struct
 
@@ -83,3 +99,18 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_i
 ```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/struct_task_struct.md
+
+#### struct fs_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs_struct.h/struct_fs_struct.md
+
+#### struct files_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fdtable.h/struct_files_struct.md
+
+#### struct nsproxy
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/nsproxy.h/README.md
+
+APIS
+----------------------------------------

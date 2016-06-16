@@ -104,6 +104,8 @@ d_op
 d_op指向一个结构，其中包含了各种函数指针，提供对dentry对象的
 各种操作。这些操作必须由底层文件系统实现。
 
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/dcache.h/struct_dentry_operations.md
+
 d_sb
 ----------------------------------------
 
