@@ -176,3 +176,5 @@ f_mapping
 
 f_mapping指向属于文件相关的inode实例的地址空间映射。通常它
 设置为inode->i_mapping，但文件系统或其他内核子系统可能会修改它.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
