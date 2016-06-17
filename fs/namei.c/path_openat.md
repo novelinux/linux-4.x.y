@@ -46,7 +46,9 @@ path_init
     }
 ```
 
-link_path_walk
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_init.md
+
+walk
 ----------------------------------------
 
 ```
@@ -59,7 +61,28 @@ link_path_walk
             break;
         }
     }
+```
+
+### link_path_walk
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/link_path_walk.md
+
+### do_last
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/do_last.md
+
+### trailing_symlink
+
+### terminate_walk
+
+```
     terminate_walk(nd);
+```
+
+out2
+----------------------------------------
+
+```
 out2:
     if (!(opened & FILE_OPENED)) {
         BUG_ON(!error);
