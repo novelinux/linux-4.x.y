@@ -31,15 +31,20 @@ get_empty_filp
         error = do_tmpfile(nd, flags, op, file, &opened);
         goto out2;
     }
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/file_table.c/get_empty_filp.md
+
+path_init
+----------------------------------------
+
+```
     s = path_init(nd, flags);
     if (IS_ERR(s)) {
         put_filp(file);
         return ERR_CAST(s);
     }
 ```
-
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/file_table.c/get_empty_filp.md
 
 link_path_walk
 ----------------------------------------

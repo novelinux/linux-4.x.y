@@ -32,6 +32,8 @@ getname
         return PTR_ERR(tmp);
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/getname.md
+
 get_unused_fd_flags
 ----------------------------------------
 
@@ -51,9 +53,6 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/do_filp_open.md
 
 fd_install
 ----------------------------------------
-
-在控制权转回用户进程、返回文件描述符之前，fd_install必须将file
-实例放置到进程task_struct的files->fd数组中。
 
 ```
         if (IS_ERR(f)) {

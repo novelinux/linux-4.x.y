@@ -297,13 +297,33 @@ thread_group
                      - access with [gs]et_task_comm (which lock
                        it with task_lock())
                      - initialized normally by setup_new_exec */
+```
+
+nameidata
+----------------------------------------
+
+```
 /* file system info */
     struct nameidata *nameidata;
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/struct_nameidata.md
+
+CONFIG_SYSVIPC
+----------------------------------------
+
+```
 #ifdef CONFIG_SYSVIPC
 /* ipc stuff */
     struct sysv_sem sysvsem;
     struct sysv_shm sysvshm;
 #endif
+```
+
+CONFIG_DETECT_HUNG_TASK
+----------------------------------------
+
+```
 #ifdef CONFIG_DETECT_HUNG_TASK
 /* hung task detection */
     unsigned long last_switch_count;
