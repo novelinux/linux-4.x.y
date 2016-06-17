@@ -1,6 +1,11 @@
 do_last
 ========================================
 
+do_last用于处理从link_path_walk扫描处理回来的路径分量.
+
+Arguments
+----------------------------------------
+
 path: fs/namei.c
 ```
 /*
@@ -24,14 +29,24 @@ static int do_last(struct nameidata *nd,
 
     nd->flags &= ~LOOKUP_PARENT;
     nd->flags |= op->intent;
+```
 
+handle_dots
+----------------------------------------
+
+```
     if (nd->last_type != LAST_NORM) {
         error = handle_dots(nd, nd->last_type);
         if (unlikely(error))
             return error;
         goto finish_open;
     }
+```
 
+lookup_fast
+----------------------------------------
+
+```
     if (!(open_flag & O_CREAT)) {
         if (nd->last.name[nd->last.len])
             nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
@@ -44,6 +59,12 @@ static int do_last(struct nameidata *nd,
             return error;
 
         BUG_ON(nd->inode != dir->d_inode);
+```
+
+audit_inode
+----------------------------------------
+
+```
     } else {
         /* create side of things */
         /*
@@ -60,7 +81,14 @@ static int do_last(struct nameidata *nd,
         if (unlikely(nd->last.name[nd->last.len]))
             return -EISDIR;
     }
+```
 
+retry_lookup
+----------------------------------------
+
+### mnt_want_write
+
+```
 retry_lookup:
     if (op->open_flag & (O_CREAT | O_TRUNC | O_WRONLY | O_RDWR)) {
         error = mnt_want_write(nd->path.mnt);
@@ -73,9 +101,18 @@ retry_lookup:
          */
     }
     mutex_lock(&dir->d_inode->i_mutex);
+```
+
+### lookup_open
+
+```
     error = lookup_open(nd, &path, file, op, got_write, opened);
     mutex_unlock(&dir->d_inode->i_mutex);
+```
 
+### other
+
+```
     if (error <= 0) {
         if (error)
             goto out;
@@ -129,6 +166,12 @@ retry_lookup:
         path_to_nameidata(&path, nd);
         return -ENOENT;
     }
+```
+
+finish_lookup
+----------------------------------------
+
+```
 finish_lookup:
     if (nd->depth)
         put_link(nd);
@@ -153,6 +196,12 @@ finish_lookup:
     nd->inode = inode;
     nd->seq = seq;
     /* Why this, you ask?  _Now_ we might have grown LOOKUP_JUMPED... */
+```
+
+finish_open
+----------------------------------------
+
+```
 finish_open:
     error = complete_walk(nd);
     if (error) {
@@ -175,6 +224,12 @@ finish_open:
             goto out;
         got_write = true;
     }
+```
+
+finish_open_created
+----------------------------------------
+
+```
 finish_open_created:
     error = may_open(&nd->path, acc_mode, open_flag);
     if (error)
@@ -189,6 +244,12 @@ finish_open_created:
             goto stale_open;
         goto out;
     }
+```
+
+opened
+----------------------------------------
+
+```
 opened:
     error = open_check_o_direct(file);
     if (error)
@@ -202,16 +263,32 @@ opened:
         if (error)
             goto exit_fput;
     }
+```
+
+out
+----------------------------------------
+
+```
 out:
     if (got_write)
         mnt_drop_write(nd->path.mnt);
     path_put(&save_parent);
     return error;
+```
 
+exit_fput
+----------------------------------------
+
+```
 exit_fput:
     fput(file);
     goto out;
+```
 
+stale_open
+----------------------------------------
+
+```
 stale_open:
     /* If no saved parent or already retried then can't retry */
     if (!save_parent.dentry || retried)

@@ -53,6 +53,12 @@ seq, m_seq
     int        last_type;
     unsigned    depth;
     int        total_link_count;
+```
+
+stack, internal
+----------------------------------------
+
+```
     struct saved {
         struct path link;
         void *cookie;
