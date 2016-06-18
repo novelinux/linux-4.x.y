@@ -6,16 +6,26 @@ do_last用于处理从link_path_walk扫描处理回来的路径分量.
 Code Flow
 ----------------------------------------
 
-```flow
-st=>start: Start
-e=>end: End
-op1=>operation: My Operation
-sub1=>subroutine: My Subroutine
-cond=>condition: Yes or No?
-io=>inputoutput: catch something...
-st->op1->cond
-cond(yes)->io->e
-cond(no)->sub1(right)->op1
+```
+do_last
+ |
+ +-> handle_dots (nd->last_type != LAST_NORM)
+ |
+ +-> lookup_fast (!(open_flag & O_CREAT))
+ |
+ +-> mnt_want_write (op->open_flag & (O_CREAT | O_TRUNC | O_WRONLY | O_RDWR))
+ |
+ +-> lookup_open
+ |   |
+ |   +-> lookup_dcache
+ |   |
+ |   +-> lookup_real
+ |   |
+ |   +-> vfs_create
+ |
+ +-> may_open
+ |
+ +-> vfs_open
 ```
 
 Arguments
