@@ -1,6 +1,9 @@
 ext4_create
 ========================================
 
+Arguments
+----------------------------------------
+
 path: fs/ext4/namei.c
 ```
 /*
@@ -24,9 +27,21 @@ static int ext4_create(struct inode *dir, struct dentry *dentry, umode_t mode,
 
     credits = (EXT4_DATA_TRANS_BLOCKS(dir->i_sb) +
            EXT4_INDEX_EXTRA_TRANS_BLOCKS + 3);
+```
+
+ext4_new_inode_start_handle
+----------------------------------------
+
+```
 retry:
     inode = ext4_new_inode_start_handle(dir, mode, &dentry->d_name, 0,
                         NULL, EXT4_HT_DIR, credits);
+```
+
+ext4_journal_current_handle
+----------------------------------------
+
+```
     handle = ext4_journal_current_handle();
     err = PTR_ERR(inode);
     if (!IS_ERR(inode)) {
