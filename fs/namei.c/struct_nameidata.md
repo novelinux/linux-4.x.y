@@ -16,7 +16,7 @@ struct nameidata {
 
 查找完成后，path包含了找到的文件系统项的数据。
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/path.h/struct_path.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/path.h/struct_path.md
 
 last
 ----------------------------------------

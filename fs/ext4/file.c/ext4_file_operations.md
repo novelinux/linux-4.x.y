@@ -12,7 +12,21 @@ const struct file_operations ext4_file_operations = {
     .compat_ioctl    = ext4_compat_ioctl,
 #endif
     .mmap        = ext4_file_mmap,
+```
+
+open
+----------------------------------------
+
+```
     .open        = ext4_file_open,
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/file.c/ext4_file_open.md
+
+release
+----------------------------------------
+
+```
     .release    = ext4_release_file,
     .fsync        = ext4_sync_file,
     .splice_read    = generic_file_splice_read,

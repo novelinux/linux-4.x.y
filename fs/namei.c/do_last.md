@@ -59,12 +59,6 @@ lookup_fast
             return error;
 
         BUG_ON(nd->inode != dir->d_inode);
-```
-
-audit_inode
-----------------------------------------
-
-```
     } else {
         /* create side of things */
         /*
@@ -82,6 +76,8 @@ audit_inode
             return -EISDIR;
     }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/lookup_fast.md
 
 retry_lookup
 ----------------------------------------
@@ -103,16 +99,14 @@ retry_lookup:
     mutex_lock(&dir->d_inode->i_mutex);
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namespace.c/mnt_want_write.md
+
 ### lookup_open
 
 ```
     error = lookup_open(nd, &path, file, op, got_write, opened);
     mutex_unlock(&dir->d_inode->i_mutex);
-```
 
-### other
-
-```
     if (error <= 0) {
         if (error)
             goto out;
@@ -124,7 +118,13 @@ retry_lookup:
         audit_inode(nd->name, file->f_path.dentry, 0);
         goto opened;
     }
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/lookup_open.md
+
+### goto finish_open_created
+
+```
     if (*opened & FILE_CREATED) {
         /* Don't check for write permission, don't truncate */
         open_flag &= ~O_TRUNC;
@@ -133,7 +133,11 @@ retry_lookup:
         path_to_nameidata(&path, nd);
         goto finish_open_created;
     }
+```
 
+### other
+
+```
     /*
      * create/update audit record if it already exists.
      */
@@ -229,6 +233,8 @@ finish_open:
 finish_open_created
 ----------------------------------------
 
+### may_open
+
 ```
 finish_open_created:
     error = may_open(&nd->path, acc_mode, open_flag);
@@ -236,6 +242,13 @@ finish_open_created:
         goto out;
 
     BUG_ON(*opened & FILE_OPENED); /* once it's opened, it's opened */
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/may_open.md
+
+### vfs_open
+
+```
     error = vfs_open(&nd->path, file, current_cred());
     if (!error) {
         *opened |= FILE_OPENED;
@@ -245,6 +258,8 @@ finish_open_created:
         goto out;
     }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/open.c/vfs_open.md
 
 opened
 ----------------------------------------

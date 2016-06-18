@@ -7,13 +7,21 @@ task_struct获得当前工作目录的数据。
 
 首先将nameidata实例path的mnt和dentry成员设置为根目录或工作目录对应的数据项。
 
+Arguments
+----------------------------------------
+
 path: fs/namei.c
 ```
 static const char *path_init(struct nameidata *nd, unsigned flags)
 {
     int retval = 0;
     const char *s = nd->name->name;
+```
 
+Absolute Path
+----------------------------------------
+
+```
     nd->last_type = LAST_ROOT; /* if there are only slashes... */
     nd->flags = flags | LOOKUP_JUMPED | LOOKUP_PARENT;
     nd->depth = 0;
@@ -54,6 +62,16 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
             path_get(&nd->root);
         }
         nd->path = nd->root;
+```
+
+### set_root
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/set_root.md
+
+Relative Path
+----------------------------------------
+
+```
     } else if (nd->dfd == AT_FDCWD) {
         if (flags & LOOKUP_RCU) {
             struct fs_struct *fs = current->fs;
