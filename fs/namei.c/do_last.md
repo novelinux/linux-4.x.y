@@ -3,6 +3,21 @@ do_last
 
 do_last用于处理从link_path_walk扫描处理回来的路径分量.
 
+Code Flow
+----------------------------------------
+
+```flow
+st=>start: Start
+e=>end: End
+op1=>operation: My Operation
+sub1=>subroutine: My Subroutine
+cond=>condition: Yes or No?
+io=>inputoutput: catch something...
+st->op1->cond
+cond(yes)->io->e
+cond(no)->sub1(right)->op1
+```
+
 Arguments
 ----------------------------------------
 

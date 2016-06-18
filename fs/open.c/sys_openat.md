@@ -24,6 +24,8 @@ sys_openat
      |   |   +-> path_init
      |   |   |
      |   |   +-> link_path_walk
+     |   |   |
+     |   |   +-> do_last
      |   |
      |   +-> restore_nameidata
      |
