@@ -171,11 +171,11 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_flex_
 
 ### Super Block
 
-#### On Disk
+#### struct ext4_super_block (disk)
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_super_block.md
 
-#### On Memory
+#### struct ext4_sb_info (memory)
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_sb_info.md
 
@@ -185,21 +185,82 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_
 
 ### Inode
 
-#### On Disk
+#### struct ext4_inode (disk)
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_inode.md
 
-#### On Memory
+#### struct ext4_inode_info (memory)
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_inode_info.md
 
-### Dir vs File
-
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_dir_entry_2.md
-
-**Notes**:
+**注意**:
 
 为避免经常从低速的硬盘读取管理数据结构，Linux将这些结构包含的最重要的信息保存在特别的数据结构，
 持久驻留在物理内存中。这样访问速度就快了很多，也减少了与硬盘的交互。那么为什么不将所有的文件
 系统管理数据保存在物理内存中（定期将修改写回磁盘）？尽管这在理论上是可能的，但在实际上行不通，
 因为对以吉字节计算的大硬盘来说（现在很常见），需要大量内存来保存所有的块位图和inode位图。
+
+### Dir vs File
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_dir_entry_2.md
+
+### Extents
+
+EXT4使用了48位的块地址。EXT4与EXT2、EXT3等传统Unix文件系统最大的区别在于
+使用了extents而不是间接块（inefficient indirect block）来标记文件内容。
+extent相似于NTFS文件系统中的运行(run)，本质上他们指示了组成extent的一系列文件块
+的起始地址、数量。一个文件可能由多段extent组成，但是EXT4尽可能保证文件连续存放。
+这种新的块地址机制是造成绝大部分现存文件系统工具异常的原因。例如，当我在EXT4文件
+系统上创建一个新的文件，再用Sleuthkit工具包里的istat来查看，就会发现istat不能完全解析。
+
+```
+$ mount
+/dev/sda5 on /home type ext4 (rw)
+$ echo "Here is a new file" > testfile
+$ ls -li testfile
+3539051 -rw-rw-r-- 1 liminghao liminghao 19 Jun 20 21:18 testfile
+$ sudo istat /dev/sda5 3539051
+inode: 3539051
+Allocated
+Group: 432
+Generation Id: 797626854
+uid / gid: 1000 / 1000
+mode: rrw-rw-r--
+Flags:
+size: 19
+num of links: 1
+
+Inode Times:
+Accessed:       Mon Jun 20 21:18:25 2016
+File Modified:  Mon Jun 20 21:18:25 2016
+Inode Modified: Mon Jun 20 21:18:25 2016
+
+Direct Blocks:
+127754
+```
+
+istat完全不能解析新的文件inode中的extent结构，所以没有能够显示出块地址。
+如果你仔细观察以上的输出，你也可以发现显示的文件大小为0字节，这是完全错误的。
+从另一个角度来看，inode元数据中许多其他的信息看起来是正确的，比如owner、group owner、
+MAC times等等。实际上，EXT4开发者费了很大功夫来保证EXT4的inode能够最大限度地向下
+兼容EXT2、EXT3的inode结构。但是有些变化，比如extent、新的时间戳等，不能保证完全兼容。
+
+#### struct ext4_extent_header
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_extents.h/struct_ext4_extent_header.md
+
+#### struct ext4_extent_tail
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_extents.h/struct_ext4_extent_tail.md
+
+#### struct ext4_extent_idx
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_extents.h/struct_ext4_extent_idx.md
+
+#### struct ext4_extent
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_extents.h/struct_ext4_extent.md
+
+Ext4文件系统管理数据块各数据结构关系如下图所示:
+
+![extents.jpg](https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/res/extents.jpg)
