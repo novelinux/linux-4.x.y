@@ -150,8 +150,6 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/inode.c/ext4_begin_
                 inode->i_mtime = ext4_current_time(inode);
                 inode->i_ctime = inode->i_mtime;
             }
-            down_write(&EXT4_I(inode)->i_data_sem);
-            EXT4_I(inode)->i_disksize = attr->ia_size;
 ```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/ext4_jbd2.h/ext4_journal_start.md
@@ -159,6 +157,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/ext4_jbd2.h/ext4_jo
 ### ext4_mark_inode_dirty
 
 ```
+            down_write(&EXT4_I(inode)->i_data_sem);
+            EXT4_I(inode)->i_disksize = attr->ia_size;
             rc = ext4_mark_inode_dirty(handle, inode);
             if (!error)
                 error = rc;
@@ -170,6 +170,11 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/ext4_jbd2.h/ext4_jo
             if (!error)
                 i_size_write(inode, attr->ia_size);
             up_write(&EXT4_I(inode)->i_data_sem);
+```
+
+### ext4_journal_stop
+
+```
             ext4_journal_stop(handle);
             if (error) {
                 if (orphan)
@@ -178,6 +183,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/ext4_jbd2.h/ext4_jo
             }
         }
 ```
+
+### ext4_truncate
 
 ```
         if (!shrink)
@@ -205,6 +212,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/ext4_jbd2.h/ext4_jo
             ext4_truncate(inode);
     }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/inode.c/ext4_truncate.md
 
 mark_inode_dirty
 ----------------------------------------
