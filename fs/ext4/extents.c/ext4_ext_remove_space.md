@@ -32,6 +32,8 @@ ext4_journal_start
 again
 ----------------------------------------
 
+### (end < EXT_MAX_BLOCKS - 1)
+
 ```
 again:
     trace_ext4_ext_remove_space(inode, start, end, depth);
@@ -119,6 +121,9 @@ again:
                     -(long long) EXT4_B2C(sbi, pblk);
         }
     }
+```
+
+```
     /*
      * We start scanning from right side, freeing all the blocks
      * after i_size and walking into the tree depth-wise.
@@ -146,7 +151,9 @@ again:
         }
     }
     err = 0;
+```
 
+```
     while (i >= 0 && err == 0) {
         if (i == depth) {
             /* this is leaf block */
