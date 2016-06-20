@@ -54,14 +54,21 @@ lookup_dcache
     /* Cached positive dentry: will open in f_op->open */
     if (!need_lookup && dentry->d_inode)
         goto out_no_open;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/lookup_dcache.md
+
+atomic_open
+----------------------------------------
+
+```
     if ((nd->flags & LOOKUP_OPEN) && dir_inode->i_op->atomic_open) {
         return atomic_open(nd, dentry, path, file, op, got_write,
                    need_lookup, opened);
     }
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/lookup_dcache.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/atomic_open.md
 
 lookup_real
 ----------------------------------------

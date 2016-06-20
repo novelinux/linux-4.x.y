@@ -128,6 +128,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/namespace.c/mnt_want_wri
 
 ### lookup_open
 
+调用lookup_open来查找对应文件是否已经打开.如果已经已经打开则直接掉转到
+
 ```
     error = lookup_open(nd, &path, file, op, got_write, opened);
     mutex_unlock(&dir->d_inode->i_mutex);
@@ -297,13 +299,19 @@ opened:
     error = ima_file_check(file, op->acc_mode, *opened);
     if (error)
         goto exit_fput;
+```
 
+### handle_truncate
+
+```
     if (will_truncate) {
         error = handle_truncate(file);
         if (error)
             goto exit_fput;
     }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/handle_truncate.md
 
 out
 ----------------------------------------
