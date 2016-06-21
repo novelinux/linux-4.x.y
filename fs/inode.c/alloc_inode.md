@@ -1,6 +1,9 @@
 alloc_inode
 ========================================
 
+Arguments
+----------------------------------------
+
 path: fs/inode.c
 ```
 static struct inode *alloc_inode(struct super_block *sb)
@@ -14,7 +17,12 @@ static struct inode *alloc_inode(struct super_block *sb)
 
     if (!inode)
         return NULL;
+```
 
+inode_init_always
+----------------------------------------
+
+```
     if (unlikely(inode_init_always(sb, inode))) {
         if (inode->i_sb->s_op->destroy_inode)
             inode->i_sb->s_op->destroy_inode(inode);
@@ -26,3 +34,5 @@ static struct inode *alloc_inode(struct super_block *sb)
     return inode;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/inode.c/inode_init_always.md

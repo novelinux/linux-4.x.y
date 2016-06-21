@@ -38,11 +38,19 @@ retry:
                         NULL, EXT4_HT_DIR, credits);
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/ext4_new_inode_start_handle.md
+
 ext4_journal_current_handle
 ----------------------------------------
 
 ```
     handle = ext4_journal_current_handle();
+```
+
+i_op, i_fop, i_aops
+----------------------------------------
+
+```
     err = PTR_ERR(inode);
     if (!IS_ERR(inode)) {
         inode->i_op = &ext4_file_inode_operations;
@@ -52,6 +60,24 @@ ext4_journal_current_handle
         if (!err && IS_DIRSYNC(dir))
             ext4_handle_sync(handle);
     }
+```
+
+### ext4_file_inode_operations
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file.c/ext4_file_inode_operations.md
+
+### ext4_file_operations
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file.c/ext4_file_operations.md
+
+### ext4_set_aops
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/inode.c/ext4_set_aops.md
+
+ext4_journal_stop
+----------------------------------------
+
+```
     if (handle)
         ext4_journal_stop(handle);
     if (err == -ENOSPC && ext4_should_retry_alloc(dir->i_sb, &retries))

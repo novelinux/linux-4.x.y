@@ -6,7 +6,21 @@ path: fs/ext4/file.c
 const struct file_operations ext4_file_operations = {
     .llseek        = ext4_llseek,
     .read_iter    = generic_file_read_iter,
+```
+
+write_iter
+----------------------------------------
+
+```
     .write_iter    = ext4_file_write_iter,
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/file.c/ext4_file_write_iter.md
+
+unlocked_ioctl
+----------------------------------------
+
+```
     .unlocked_ioctl = ext4_ioctl,
 #ifdef CONFIG_COMPAT
     .compat_ioctl    = ext4_compat_ioctl,

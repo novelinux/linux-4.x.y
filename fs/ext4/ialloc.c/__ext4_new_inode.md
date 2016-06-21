@@ -88,6 +88,9 @@ new_inode
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/inode.c/new_inode.md
 
+Initialize to inode
+----------------------------------------
+
 ```
     ei = EXT4_I(inode);
     sbi = EXT4_SB(sb);

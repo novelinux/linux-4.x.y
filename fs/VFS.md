@@ -87,6 +87,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_i
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_file.md
 
+### struct fd
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/file.h/struct_fd.md
+
+### struct address_space
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
+
 ### struct task_struct
 
 文件描述符（就是整数）用于在一个进程内唯一地标识打开的文件。这假定了内核能够在用户进程中

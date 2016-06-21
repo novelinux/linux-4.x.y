@@ -30,4 +30,4 @@ struct inode *new_inode_pseudo(struct super_block *sb)
 alloc_inode
 ----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/inode.c
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/inode.c/alloc_inode.md

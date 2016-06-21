@@ -14,7 +14,21 @@ struct address_space {
     unsigned long        nrpages;    /* number of total pages */
     unsigned long        nrshadows;    /* number of shadow entries */
     pgoff_t            writeback_index;/* writeback starts here */
+```
+
+a_ops
+----------------------------------------
+
+```
     const struct address_space_operations *a_ops;    /* methods */
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space_operations.md
+
+flags
+----------------------------------------
+
+```
     unsigned long        flags;        /* error bits/gfp mask */
     spinlock_t        private_lock;    /* for use by the address_space */
     struct list_head    private_list;    /* ditto */
