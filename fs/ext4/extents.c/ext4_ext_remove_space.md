@@ -9,8 +9,19 @@ path: fs/ext4/extents.c
 int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
               ext4_lblk_t end)
 {
+```
+
+Variable
+----------------------------------------
+
+```
     struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
     int depth = ext_depth(inode);
+```
+
+### struct ext4_ext_path
+
+```
     struct ext4_ext_path *path = NULL;
     long long partial_cluster = 0;
     handle_t *handle;
@@ -18,6 +29,8 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
 
     ext_debug("truncate since %u to %u\n", start, end);
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_extents.h/struct_ext4_ext_path.md
 
 ext4_journal_start
 ----------------------------------------
@@ -123,6 +136,8 @@ again:
     }
 ```
 
+### Build path
+
 ```
     /*
      * We start scanning from right side, freeing all the blocks
@@ -153,6 +168,10 @@ again:
     err = 0;
 ```
 
+### Travers depth
+
+#### ext4_ext_rm_leaf
+
 ```
     while (i >= 0 && err == 0) {
         if (i == depth) {
@@ -166,7 +185,11 @@ again:
             i--;
             continue;
         }
+```
 
+#### (i != depth)
+
+```
         /* this is index block */
         if (!path[i].p_hdr) {
             ext_debug("initialize header\n");
@@ -188,6 +211,7 @@ again:
         ext_debug("level %d - index, first 0x%p, cur 0x%p\n",
                 i, EXT_FIRST_INDEX(path[i].p_hdr),
                 path[i].p_idx);
+
         if (ext4_ext_more_to_rm(path + i)) {
             struct buffer_head *bh;
             /* go to the next level */
@@ -233,7 +257,12 @@ again:
 
     trace_ext4_ext_remove_space_done(inode, start, end, depth,
             partial_cluster, path->p_hdr->eh_entries);
+```
 
+ext4_free_blocks
+----------------------------------------
+
+```
     /*
      * If we still have something in the partial cluster and we have removed
      * even the first extent, then we should free the blocks in the partial
@@ -247,7 +276,12 @@ again:
                  sbi->s_cluster_ratio,
                  get_default_free_blocks_flags(inode));
     }
+```
 
+ext4_ext_get_access
+----------------------------------------
+
+```
     /* TODO: flexible tree reduction should be here */
     if (path->p_hdr->eh_entries == 0) {
         /*
@@ -262,6 +296,12 @@ again:
             err = ext4_ext_dirty(handle, inode, path);
         }
     }
+```
+
+out
+----------------------------------------
+
+```
 out:
     ext4_ext_drop_refs(path);
     kfree(path);

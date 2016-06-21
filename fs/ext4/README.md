@@ -49,6 +49,8 @@ Disk Layout
 
 包含了块组中所有的inode，inode用于保存文件系统中与各个文件和目录相关的所有元数据。
 
+![special_inodes.png](https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/res/special_inodes.png)
+
 * 数据块
 
 包含了文件系统中的文件的有用数据。
