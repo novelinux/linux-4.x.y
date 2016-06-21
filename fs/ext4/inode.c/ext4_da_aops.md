@@ -8,8 +8,26 @@ static const struct address_space_operations ext4_da_aops = {
     .readpages        = ext4_readpages,
     .writepage        = ext4_writepage,
     .writepages        = ext4_writepages,
+```
+
+write_begin
+----------------------------------------
+
+```
     .write_begin        = ext4_da_write_begin,
+```
+
+write_end
+----------------------------------------
+
+```
     .write_end        = ext4_da_write_end,
+```
+
+bmap
+----------------------------------------
+
+```
     .bmap            = ext4_bmap,
     .invalidatepage        = ext4_da_invalidatepage,
     .releasepage        = ext4_releasepage,

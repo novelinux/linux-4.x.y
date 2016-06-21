@@ -1,6 +1,17 @@
 ext4_set_aops
 ========================================
 
+如果对应的超级块指定了DELALLOC标志则对应的address_space_operations
+指针指定为ext4_da_aops，否则指定为ext4_aops.
+
+```
+delalloc
+      Deferring block allocation until write-out time.
+
+nodelalloc
+      Disable delayed allocation. Blocks are allocated when data is copied from user to page cache.
+```
+
 path: fs/ext4/inode.c
 ```
 void ext4_set_aops(struct inode *inode)
@@ -24,6 +35,8 @@ void ext4_set_aops(struct inode *inode)
         inode->i_mapping->a_ops = &ext4_aops;
 }
 ```
+
+
 
 ext4_journalled_aops
 ----------------------------------------

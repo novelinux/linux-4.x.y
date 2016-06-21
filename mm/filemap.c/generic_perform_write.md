@@ -1,6 +1,9 @@
 generic_perform_write
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/filemap.c
 ```
 ssize_t generic_perform_write(struct file *file,
@@ -17,11 +20,16 @@ ssize_t generic_perform_write(struct file *file,
      */
     if (!iter_is_iovec(i))
         flags |= AOP_FLAG_UNINTERRUPTIBLE;
+```
 
+Do Write
+----------------------------------------
+
+```
     do {
         struct page *page;
-        unsigned long offset;    /* Offset into pagecache page */
-        unsigned long bytes;    /* Bytes to write to page */
+        unsigned long offset; /* Offset into pagecache page */
+        unsigned long bytes;  /* Bytes to write to page */
         size_t copied;        /* Bytes copied from user */
         void *fsdata;
 
@@ -49,7 +57,11 @@ again:
             status = -EINTR;
             break;
         }
+```
 
+### a_ops->write_begin
+
+```
         status = a_ops->write_begin(file, mapping, pos, bytes, flags,
                         &page, &fsdata);
         if (unlikely(status < 0))
@@ -60,7 +72,17 @@ again:
 
         copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
         flush_dcache_page(page);
+```
 
+#### EXT4
+
+* super block指定DELALLOC标志.
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_aops.md
+
+### a_ops->write_end
+
+```
         status = a_ops->write_end(file, mapping, pos, bytes, copied,
                         page, fsdata);
         if (unlikely(status < 0))
@@ -68,7 +90,17 @@ again:
         copied = status;
 
         cond_resched();
+```
 
+#### EXT4
+
+* super block指定DELALLOC标志.
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_aops.md
+
+### iov_iter_advance
+
+```
         iov_iter_advance(i, copied);
         if (unlikely(copied == 0)) {
             /*
@@ -87,9 +119,16 @@ again:
         written += copied;
 
         balance_dirty_pages_ratelimited(mapping);
+```
+
+### iov_iter_count
+
+```
     } while (iov_iter_count(i));
 
     return written ? written : status;
 }
 EXPORT_SYMBOL(generic_perform_write);
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/uio.h/iov_iter_count.md
