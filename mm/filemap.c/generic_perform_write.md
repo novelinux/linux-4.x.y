@@ -69,9 +69,6 @@ again:
 
         if (mapping_writably_mapped(mapping))
             flush_dcache_page(page);
-
-        copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
-        flush_dcache_page(page);
 ```
 
 #### EXT4
@@ -79,6 +76,15 @@ again:
 * super block指定DELALLOC标志.
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_aops.md
+
+### iov_iter_copy_from_user_atomic
+
+```
+        copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
+        flush_dcache_page(page);
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/lib/iov_iter.c/iov_iter_copy_from_user_atomic.md
 
 ### a_ops->write_end
 
@@ -120,6 +126,8 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_aop
 
         balance_dirty_pages_ratelimited(mapping);
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/lib/iov_iter.c/iov_iter_advance.md
 
 ### iov_iter_count
 

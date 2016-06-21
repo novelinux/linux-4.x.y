@@ -17,12 +17,16 @@ write_begin
     .write_begin        = ext4_da_write_begin,
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_write_begin.md
+
 write_end
 ----------------------------------------
 
 ```
     .write_end        = ext4_da_write_end,
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_write_end.md
 
 bmap
 ----------------------------------------
