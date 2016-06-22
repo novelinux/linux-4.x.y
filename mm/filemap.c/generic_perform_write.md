@@ -1,6 +1,11 @@
 generic_perform_write
 ========================================
 
+generic_perform_write函数是把数据写入磁盘的主要处理函数。它先调用address_space_operations的
+write_begin,其中会调用__block_write_begin函数，接下来把数据拷贝到上一步分配出来的page中，
+最后调用address_space_operations.write_end。上面所说的write_begin和write_end会具体根据不同的
+file system调用不同的函数.
+
 Arguments
 ----------------------------------------
 

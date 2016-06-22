@@ -78,9 +78,22 @@ struct ext4_inode_info {
     /* mballoc */
     struct list_head i_prealloc_list;
     spinlock_t i_prealloc_lock;
+```
 
+i_es_tree
+----------------------------------------
+
+```
     /* extents status tree */
     struct ext4_es_tree i_es_tree;
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/extents_status.h/struct_ext4_es_tree.md
+
+i_es_lock
+----------------------------------------
+
+```
     rwlock_t i_es_lock;
     struct list_head i_es_list;
     unsigned int i_es_all_nr;    /* protected by i_es_lock */

@@ -9,7 +9,12 @@ path: fs/inode.c
 static struct inode *alloc_inode(struct super_block *sb)
 {
     struct inode *inode;
+```
 
+sb->s_op->alloc_inode
+----------------------------------------
+
+```
     if (sb->s_op->alloc_inode)
         inode = sb->s_op->alloc_inode(sb);
     else
@@ -18,6 +23,10 @@ static struct inode *alloc_inode(struct super_block *sb)
     if (!inode)
         return NULL;
 ```
+
+### EXT4
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/super.c/ext4_sops.md
 
 inode_init_always
 ----------------------------------------
