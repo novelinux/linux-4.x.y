@@ -128,6 +128,8 @@ add_delayed:
         }
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_reserve_space.md
+
 #### ext4_es_insert_extent
 
 ```

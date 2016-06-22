@@ -101,6 +101,20 @@ retry_journal:
 #else
     ret = __block_write_begin(page, pos, len, ext4_da_get_block_prep);
 #endif
+```
+
+#### ext4_da_get_block_prep
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_get_block_prep.md
+
+#### __block_write_begin
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/buffer.c/__block_write_begin.md
+
+failed
+----------------------------------------
+
+```
     if (ret < 0) {
         unlock_page(page);
         ext4_journal_stop(handle);
@@ -119,16 +133,13 @@ retry_journal:
         page_cache_release(page);
         return ret;
     }
+```
 
+successful
+----------------------------------------
+
+```
     *pagep = page;
     return ret;
 }
 ```
-
-#### ext4_da_get_block_prep
-
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/inode.c/ext4_da_get_block_prep.md
-
-#### __block_write_begin
-
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/buffer.c/__block_write_begin.md
