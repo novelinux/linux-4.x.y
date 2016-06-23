@@ -1,6 +1,9 @@
 ext4_ext_map_blocks
 ========================================
 
+Comments
+----------------------------------------
+
 path: fs/ext4/extents.c
 ```
 /*
@@ -21,6 +24,12 @@ path: fs/ext4/extents.c
  *
  * return < 0, error case.
  */
+```
+
+Arguments
+----------------------------------------
+
+```
 int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
             struct ext4_map_blocks *map, int flags)
 {
@@ -40,7 +49,12 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
     ext_debug("blocks %u/%u requested for inode %lu\n",
           map->m_lblk, map->m_len, inode->i_ino);
     trace_ext4_ext_map_blocks_enter(inode, map->m_lblk, map->m_len, flags);
+```
 
+ext4_find_extent
+----------------------------------------
+
+```
     /* find extent for this block */
     path = ext4_find_extent(inode, map->m_lblk, NULL, 0);
     if (IS_ERR(path)) {
