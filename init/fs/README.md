@@ -18,8 +18,8 @@ start_kernel
 
 ### vfs_caches_init_early
 
-https://github.com/novelinux/linux-4.x.y/fs/dcache.c/vfs_caches_init_early.md
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/dcache.c/vfs_caches_init_early.md
 
 ### vfs_caches_init
 
-https://github.com/novelinux/linux-4.x.y/fs/dcache.c/vfs_caches_init.md
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/dcache.c/vfs_caches_init.md

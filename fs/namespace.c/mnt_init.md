@@ -57,3 +57,5 @@ init_mount_tree
     init_mount_tree();
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/namespace.c/init_mount_tree.md
