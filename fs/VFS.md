@@ -69,6 +69,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_f
 
 ### struct vfsmount
 
+每个装载的文件系统都对应于一个vfsmount结构的实例，其定义如下：
+
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mount.h/struct_vfsmount.md
 
 ### struct super_block
