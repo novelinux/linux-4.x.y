@@ -266,3 +266,16 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_extents.h/stru
 Ext4文件系统管理数据块各数据结构关系如下图所示:
 
 ![extents.jpg](https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/res/extents.jpg)
+
+
+Initialization
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_init_fs.md
+
+APIS
+----------------------------------------
+
+### About File System
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/super.c/ext4_fs_type.md
