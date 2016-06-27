@@ -31,7 +31,12 @@ void __init mnt_init(void)
         INIT_HLIST_HEAD(&mountpoint_hashtable[u]);
 
     kernfs_init();
+```
 
+sysfs_init
+----------------------------------------
+
+```
     err = sysfs_init();
     if (err)
         printk(KERN_WARNING "%s: sysfs_init error: %d\n",
@@ -59,3 +64,18 @@ init_mount_tree
 ```
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/namespace.c/init_mount_tree.md
+
+在挂载完成rootfs之后，接下来会在如下调用流程中最终调用populate_rootfs函数来将initramfs中
+数据解压到rootfs文件系统.
+
+```
+kernel_init_freeable
+ |
+ +-> do_basic_setup
+     |
+     +-> do_initcalls
+         |
+         +..-> populate_rootfs
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/initramfs.c/populate_rootfs.md

@@ -58,18 +58,15 @@ Linux version 3.10.84-perf-g2012411-00286-g92366e0 (liminghao@liminghao) (gcc ve
 重要信息。它必须也提供函数，使得用户进程能够执行通常的文件相关操作，如打开、读、删除等。由于
 VFS抽象层的存在，用户空间进程不会看到本地文件系统与网络文件系统之间的区别。
 
-Initialization
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/init/fs/README.md
-
-ROOTFS
-----------------------------------------
-
 VFS
 ----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/VFS.md
+
+ROOTFS
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/do_mounts.c/README.md
 
 EXT4
 ----------------------------------------

@@ -129,6 +129,11 @@ register_filesystem
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/filesystems.c/register_filesystem.md
 
+Initialization
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/fs/README.md
+
 APIS
 ----------------------------------------
 

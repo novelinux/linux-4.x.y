@@ -31,9 +31,21 @@ static noinline void __init kernel_init_freeable(void)
 
     smp_init();
     sched_init_smp();
+```
 
+do_basic_setup
+----------------------------------------
+
+```
     do_basic_setup();
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/do_basic_setup.md
+
+console
+----------------------------------------
+
+```
     /* Open the /dev/console on the rootfs, this should never fail */
     if (sys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
         pr_err("Warning: unable to open an initial console.\n");

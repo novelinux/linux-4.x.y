@@ -17,4 +17,4 @@ fs_initcall(init_ramfs_fs);
 ramfs_fs_type
 ----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/ramfs/ramfs_fs_type.md
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ramfs/inode.c/ramfs_fs_type.md
