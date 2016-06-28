@@ -199,6 +199,8 @@ context_switch一个接口，供访问特定于体系结构的方法，后者负
     }
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/context_switch.md
+
 balance_callback
 ----------------------------------------
 
@@ -213,5 +215,3 @@ test_thread_flag找到当前线程。
     balance_callback(rq);
 }
 ```
-
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/context_switch.md

@@ -63,7 +63,7 @@ sp = init_thread_union + THREAD_START_SP(8K-8)，设置栈指针，为接下来�
 对于arm-linux来说，start_kernel之前全部都是汇编代码。init_thread_union代表的是
 内核第一个进程，pid = 0，该进程是内核人为造出来的，而不是fork出来的.
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/init_task.c/README.md
 
 __mmap_switched最后跳转到start_kernel开始进入C函数运行环境，这时整个kernel image
 已经运行在虚拟地址之上，运行地址和链接地址保持了一致.

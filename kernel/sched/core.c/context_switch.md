@@ -4,7 +4,6 @@ context_switch
 内核选择新进程之后，必须处理与多任务相关的技术细节.这些细节总称为上下文切换（context switching）。
 辅助函数context_switch是个分配器，它会调用所需的特定于体系结构的方法。
 
-
 Arguments
 ----------------------------------------
 
@@ -94,9 +93,8 @@ switch_to切换处理器寄存器内容和内核栈（虚拟地址空间的用�
      * of the scheduler it's an obvious special-case), so we
      * do an early lockdep release here:
      */
-#ifndef __ARCH_WANT_UNLOCKED_CTXSW
-    spin_release(&rq->lock.dep_map, 1, _THIS_IP_);
-#endif
+     lockdep_unpin_lock(&rq->lock);
+     spin_release(&rq->lock.dep_map, 1, _THIS_IP_);
 
     /* Here we just switch the register state and the stack. */
 
@@ -123,6 +121,6 @@ finish_task_switch语句的执行顺序不会因为任何可能的优化而改�
      * CPUs since it called schedule(), thus the 'rq' on its stack
      * frame will be invalid.
      */
-    finish_task_switch(this_rq(), prev);
+    return finish_task_switch(prev);
 }
 ```

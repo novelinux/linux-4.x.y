@@ -132,18 +132,32 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/res/task_state.png
 Data Structure
 ----------------------------------------
 
+### struct task_struct
+
 Linux内核涉及进程和程序的所有算法都围绕一个名为task_struct的数据结构建立，该结构定义如下所示:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/struct_task_struct.md
+
+### struct thread_info
+
+#### ARM
+
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/include/asm/thread_info.h/struct_thread_info.md
+
+### union thread_union
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/union_thread_union.md
+
+task_struct, thread_info和kernel stack之间关系:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/sched.h/res/task_struct-thread_info-stack.jpg
 
 init_task
 ----------------------------------------
 
 init_task在Linux系统中，只有这个进程是静态分配的:
 
-### ARM
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/init_task.c/README.md
+https://github.com/novelinux/linux-4.x.y/tree/master/init/init_task.c/README.md
 
 Create
 ----------------------------------------
