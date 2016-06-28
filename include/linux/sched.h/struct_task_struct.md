@@ -124,8 +124,21 @@ stack
     struct plist_node pushable_tasks;
     struct rb_node pushable_dl_tasks;
 #endif
+```
 
+mm, active_mm
+----------------------------------------
+
+```
     struct mm_struct *mm, *active_mm;
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_mm_struct.md
+
+vmacache_seqnum
+----------------------------------------
+
+```
     /* per-thread vma caching */
     u32 vmacache_seqnum;
     struct vm_area_struct *vmacache[VMACACHE_SIZE];

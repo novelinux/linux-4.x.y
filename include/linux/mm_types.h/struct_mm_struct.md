@@ -5,8 +5,6 @@ struct mm_struct
 一个区域使用vm_area_struct来表示，所有的区域使用两种数据结构来
 共同表示，一种是单链表，另外一种是红黑树. 具体表示如下所示：
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/res/list_rb.png
-
 mmap
 ----------------------------------------
 
@@ -21,7 +19,7 @@ struct mm_struct {
 
 每个区域表示为vm_area_struct的一个实例，如下所示:
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/vm_area_struct.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_vm_area_struct.md
 
 mm_rb
 ----------------------------------------

@@ -59,11 +59,6 @@ Layout
 * 环境变量和命令行参数的段;
 * 将文件内容映射到虚拟地址空间中的虚拟内存映射;
 
-系统中的各个进程都具有一个struct mm_struct的实例，可以通过
-task_struct访问。这个实例保存了进程的内存管理信息:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/mm_struct.md
-
 下图说明了前述的各个部分在大多数体系结构的虚拟地址空间中的分布
 情况:
 
@@ -94,3 +89,21 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/res/new_layout.jp
 增长，因此mmap区域和堆区域可以相对扩展，直至耗尽虚拟地址空间中
 剩余的区域。为确保栈和mmap区域不发生冲突，在两者之间设置一个
 安全间隙.
+
+Data Structure
+----------------------------------------
+
+### struct task_struct
+
+```
+    struct mm_struct *mm, *active_mm;
+```
+
+系统中的各个进程都具有一个struct mm_struct的实例，可以通过
+task_struct访问。这个实例保存了进程的内存管理信息:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/res/task_mm.jpg
+
+#### struct mm_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_mm_struct.md

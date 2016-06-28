@@ -11,12 +11,18 @@ path: include/linux/mm.h
 struct vm_operations_struct {
     void (*open)(struct vm_area_struct * area);
     void (*close)(struct vm_area_struct * area);
+    int (*mremap)(struct vm_area_struct * area);
     int (*fault)(struct vm_area_struct *vma, struct vm_fault *vmf);
+    int (*pmd_fault)(struct vm_area_struct *, unsigned long address,
+                        pmd_t *, unsigned int flags);
     void (*map_pages)(struct vm_area_struct *vma, struct vm_fault *vmf);
 
     /* notification that a previously read-only page is about to become
      * writable, if an error is returned it will cause a SIGBUS */
     int (*page_mkwrite)(struct vm_area_struct *vma, struct vm_fault *vmf);
+
+    /* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
+    int (*pfn_mkwrite)(struct vm_area_struct *vma, struct vm_fault *vmf);
 
     /* called by access_process_vm when get_user_pages() fails, typically
      * for use by special VMAs that can switch between memory and hardware
@@ -52,9 +58,13 @@ struct vm_operations_struct {
     struct mempolicy *(*get_policy)(struct vm_area_struct *vma,
                     unsigned long addr);
 #endif
-    /* called by sys_remap_file_pages() to populate non-linear mapping */
-    int (*remap_pages)(struct vm_area_struct *vma, unsigned long addr,
-               unsigned long size, pgoff_t pgoff);
+    /*
+     * Called by vm_normal_page() for special PTEs to find the
+     * page for @addr.  This is useful if the default behavior
+     * (using pte_page()) would not find the correct page.
+     */
+    struct page *(*find_special_page)(struct vm_area_struct *vma,
+                      unsigned long addr);
 };
 ```
 
