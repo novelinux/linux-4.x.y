@@ -44,7 +44,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-commo
 
 而子进程则是调用ret_from_fork，再调用ret_slow_syscall来返回到用户态:
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/copy_thread.md
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/ret_from_fork.md
 
 两者的区别就是参数fast，而参数fast只是控制要不要把内核栈中保存的r0值写入到CPU r0寄存器里。
 

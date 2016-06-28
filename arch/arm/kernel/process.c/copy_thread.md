@@ -97,8 +97,4 @@ Set context
 struct thread_info
 ----------------------------------------
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/thread_info.md
-
-在内核栈中struct cpu_context_save同struct pt_regs位置如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/res/threadinfo.png
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/thread_info.h/struct_thread_info.md
