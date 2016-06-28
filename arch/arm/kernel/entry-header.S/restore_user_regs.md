@@ -5,33 +5,59 @@ restore_user_regs是vector_swi的逆过程.
 
 path: arch/arm/kernel/entry-header.S
 ```
-    .macro    restore_user_regs, fast = 0, offset = 0
-    ldr    r1, [sp, #\offset + S_PSR]    @ get calling cpsr
-    @ 获取sp_svc中保存的PC指针,也就是系统调用用户态返回地址.
-    @ 注意:如果是内核线程，该值为kernel_thread_helper函数地址.
-    ldr    lr, [sp, #\offset + S_PC]!    @ get pc
-    msr    spsr_cxsf, r1            @ save in spsr_svc
-#if defined(CONFIG_CPU_V6)
-    strex    r1, r2, [sp]            @ clear the exclusive monitor
-#elif defined(CONFIG_CPU_32v6K)
-    clrex                    @ clear the exclusive monitor
+	.macro	restore_user_regs, fast = 0, offset = 0
+	uaccess_enable r1, isb=0
+#ifndef CONFIG_THUMB2_KERNEL
+	@ ARM mode restore
+	mov	r2, sp
+       @ 获取sp_svc中保存的PC指针,也就是系统调用用户态返回地址.
+       @ 注意:如果是内核线程，该值为kernel_thread_helper函数地址.
+	ldr	r1, [r2, #\offset + S_PSR]	@ get calling cpsr
+	ldr	lr, [r2, #\offset + S_PC]!	@ get pc
+	msr	spsr_cxsf, r1			@ save in spsr_svc
+#if defined(CONFIG_CPU_V6) || defined(CONFIG_CPU_32v6K)
+	@ We must avoid clrex due to Cortex-A15 erratum #830321
+	strex	r1, r2, [r2]			@ clear the exclusive monitor
 #endif
-    .if    \fast
-    @ 这里的^标志表示将pt_regs中保存的模式上下文恢复到用户态模式.
-    ldmdb    sp, {r1 - lr}^            @ get calling r1 - lr
-    .else
-    ldmdb    sp, {r0 - lr}^            @ get calling r0 - lr
-    .endif
-    mov    r0, r0                @ ARMv5T and earlier require a nop
-                        @ after ldm {}^
-    add    sp, sp, #S_FRAME_SIZE - S_PC
-    movs    pc, lr                @ return & move spsr_svc into cpsr
-    .endm
+	.if	\fast
+        @ 这里的^标志表示将pt_regs中保存的模式上下文恢复到用户态模式.
+	ldmdb	r2, {r1 - lr}^			@ get calling r1 - lr
+	.else
+	ldmdb	r2, {r0 - lr}^			@ get calling r0 - lr
+	.endif
+	mov	r0, r0				@ ARMv5T and earlier require a nop
+						@ after ldm {}^
+	add	sp, sp, #\offset + S_FRAME_SIZE
+	movs	pc, lr				@ return & move spsr_svc into cpsr
+#elif defined(CONFIG_CPU_V7M)
+	@ V7M restore.
+	@ Note that we don't need to do clrex here as clearing the local
+	@ monitor is part of the exception entry and exit sequence.
+	.if	\offset
+	add	sp, #\offset
+	.endif
+	v7m_exception_slow_exit ret_r0 = \fast
+#else
+	@ Thumb mode restore
+	mov	r2, sp
+	load_user_sp_lr r2, r3, \offset + S_SP	@ calling sp, lr
+	ldr	r1, [sp, #\offset + S_PSR]	@ get calling cpsr
+	ldr	lr, [sp, #\offset + S_PC]	@ get pc
+	add	sp, sp, #\offset + S_SP
+	msr	spsr_cxsf, r1			@ save in spsr_svc
 
-    .macro    get_thread_info, rd
-    mov    \rd, sp, lsr #13
-    mov    \rd, \rd, lsl #13
-    .endm
+	@ We must avoid clrex due to Cortex-A15 erratum #830321
+	strex	r1, r2, [sp]			@ clear the exclusive monitor
+
+	.if	\fast
+	ldmdb	sp, {r1 - r12}			@ get calling r1 - r12
+	.else
+	ldmdb	sp, {r0 - r12}			@ get calling r0 - r12
+	.endif
+	add	sp, sp, #S_FRAME_SIZE - S_SP
+	movs	pc, lr				@ return & move spsr_svc into cpsr
+#endif	/* !CONFIG_THUMB2_KERNEL */
+	.endm
 ```
 
 ret_slow_syscall和ret_fast_syscall差不多，都在调用restore_user_regs，不一样的是参数fast。
