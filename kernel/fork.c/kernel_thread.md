@@ -42,11 +42,10 @@ Notes
 
 * 1.它们在CPU的管态(supervisor mode)执行，而不是用户状态;
 * 2.它们只可以访问虚拟地址空间的内核部分（高于TASK_SIZE的所有地址），但不能访问用户空间。
+* 3.当通过_do_fork创建一个内核线程之后，通过调度函数__switch_to来恢复新创建的线程的线程上下文
+之后，接下来调用ret_from_fork恢复了模式上下文(struct pt_regs). 也就是跳转到regs.ARM_r5所保存
+的函数指针中去执行.
 
-3.当通过do_fork创建一个内核线程之后，通过调度函数__switch_to来恢复新创建的线程的线程上下文
-之后，接下来调用ret_from_fork恢复了模式上下文(struct pt_regs). 也就是跳转到regs.ARM_pc所保存
-的pc寄存器中的函数指针kernel_thread_helper中去执行.
+### ret_from_fork
 
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/process.c/kernel_thread_helper.md
-
-在kernel_thread_helper函数中最后会调用到对应子线程的入口函数去执行.
+https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm/kernel/entry-common.S/ret_from_fork.md
