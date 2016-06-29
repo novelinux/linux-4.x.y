@@ -160,11 +160,15 @@ https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kmem_cache_free.m
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab_common.c/kmem_cache_destroy.md
 
-### kmalloc(size, flags)
+### kzalloc
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab.h/kzalloc.md
+
+### kmalloc
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/slab.h/kmalloc.md
 
-### kfree(*ptr)
+### kfree
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/slab.c/kfree.md
 
