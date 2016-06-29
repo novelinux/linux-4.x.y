@@ -1,6 +1,8 @@
 struct address_space
 ========================================
 
+每个文件映射都有一个相关的address_space实例。
+
 path: include/linux/fs.h
 ```
 struct address_space {
