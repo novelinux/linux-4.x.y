@@ -95,6 +95,8 @@ Data Structure
 
 ### struct task_struct
 
+
+
 ```
     struct mm_struct *mm, *active_mm;
 ```
@@ -104,6 +106,25 @@ task_struct访问。这个实例保存了进程的内存管理信息:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/res/task_mm.jpg
 
-#### struct mm_struct
+### struct mm_struct
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_mm_struct.md
+
+### struct vm_area_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_vm_area_struct.md
+
+### struct address_space
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
+
+尽管只讨论文件区间的映射，但实际上也可以映射不同的东西。例如，直接映射裸（raw）块设备上的区间，
+而不通过文件系统迂回。在打开文件时，内核将file->f_mapping设置到inode->i_mapping。这使得多个进程
+可以访问同一个文件，而不会直接干扰到其他进程：inode是一个特定于文件的数据结构，而file则是特定于
+给定进程的。这些数据结构彼此关联:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/res/file-inode-address_space.jpg
+
+地址空间是优先树的基本要素，而优先树包含了所有相关的vm_area_struct实例，描述了与inode关联的
+文件区间到一些虚拟地址空间的映射。由于每个struct vm_area的实例都包含了一个指向所属进程的
+mm_struct的指针，关联就已经建立起来了.

@@ -1,6 +1,9 @@
 vm_operations_struct
 ========================================
 
+open, close
+----------------------------------------
+
 path: include/linux/mm.h
 ```
 /*
@@ -11,10 +14,39 @@ path: include/linux/mm.h
 struct vm_operations_struct {
     void (*open)(struct vm_area_struct * area);
     void (*close)(struct vm_area_struct * area);
+```
+
+在创建和删除区域时，分别调用open和close. 这两个接口通常不使用，设置为NULL指针.
+
+mremap
+----------------------------------------
+
+```
     int (*mremap)(struct vm_area_struct * area);
+```
+
+fault
+----------------------------------------
+
+```
     int (*fault)(struct vm_area_struct *vma, struct vm_fault *vmf);
+```
+
+这是一个非常重要的函数，如果地址空间中的某个虚拟内存页没有映射物理页帧，则自动触发
+的缺页异常处理程序会调用该函数，将对应的数据读取到一个映射在用户地址空间的物理页中.
+
+pmd_fault
+----------------------------------------
+
+```
     int (*pmd_fault)(struct vm_area_struct *, unsigned long address,
                         pmd_t *, unsigned int flags);
+```
+
+map_pages
+----------------------------------------
+
+```
     void (*map_pages)(struct vm_area_struct *vma, struct vm_fault *vmf);
 
     /* notification that a previously read-only page is about to become
@@ -67,14 +99,3 @@ struct vm_operations_struct {
                       unsigned long addr);
 };
 ```
-
-open and close
-----------------------------------------
-
-在创建和删除区域时，分别调用open和close. 这两个接口通常不使用，设置为NULL指针.
-
-fault
-----------------------------------------
-
-这是一个非常重要的函数，如果地址空间中的某个虚拟内存页没有映射物理页帧，则自动触发
-的缺页异常处理程序会调用该函数，将对应的数据读取到一个映射在用户地址空间的物理页中.

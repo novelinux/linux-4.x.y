@@ -169,6 +169,13 @@ CONFIG_EPOLL
 f_mapping
 ----------------------------------------
 
+每个打开文件（和每个块设备，因为这些也可以通过设备文件进行内存映射）都表示为struct file
+的一个实例。该结构包含了一个指向地址空间对象struct address_space的指针。该对象是优先查
+找树（prio tree）的基础，而文件区间与其映射到的地址空间之间的关联即通过优先树建立。
+
+**Note**: 优先查找树（priority search tree）用于建立文件中的一个区域与该区域映射到的
+所有虚拟地址空间之间的关联。
+
 ```
     struct address_space    *f_mapping;
 } __attribute__((aligned(4)));    /* lest something weird decides that 2 is OK */

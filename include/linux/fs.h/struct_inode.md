@@ -75,8 +75,21 @@ i_sb
 
 ```
     struct super_block    *i_sb;
-    struct address_space    *i_mapping;
+```
 
+i_mapping
+----------------------------------------
+
+```
+    struct address_space    *i_mapping;
+```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
+
+i_security
+----------------------------------------
+
+```
 #ifdef CONFIG_SECURITY
     void            *i_security;
 #endif

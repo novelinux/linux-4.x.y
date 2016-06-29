@@ -62,7 +62,6 @@ vm_mm是一个反向指针，指向改区域所属的mm_struct实例
 vm_page_prot
 ----------------------------------------
 
-
 ```
     pgprot_t vm_page_prot;        /* Access permissions of this VMA. */
 ```
