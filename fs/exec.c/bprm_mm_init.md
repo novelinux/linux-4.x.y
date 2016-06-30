@@ -1,7 +1,7 @@
 bprm_mm_init
 ========================================
 
-bprm_mm_init
+Arguments
 ----------------------------------------
 
 path: fs/exec.c
@@ -16,19 +16,35 @@ static int bprm_mm_init(struct linux_binprm *bprm)
 {
     int err;
     struct mm_struct *mm = NULL;
+```
 
-    /* 创建一个mm_struct实例管理新进程的进程地址空间 */
+mm_alloc
+----------------------------------------
+
+```
     bprm->mm = mm = mm_alloc();
     err = -ENOMEM;
     if (!mm)
         goto err;
+```
 
+创建一个mm_struct实例管理新进程的进程地址空间.
+
+__bprm_mm_init
+----------------------------------------
+
+```
     err = __bprm_mm_init(bprm);
     if (err)
         goto err;
 
     return 0;
+```
 
+err
+----------------------------------------
+
+```
 err:
     if (mm) {
         bprm->mm = NULL;
@@ -39,26 +55,7 @@ err:
 }
 ```
 
-__bprm_mm_init
-----------------------------------------
-
-__bprm_mm_init主要在新进程的虚拟地址空间中分配一块新的区域使用vm_area_struct来描述
-
-path: fs/exec.c
 ```
-static int __bprm_mm_init(struct linux_binprm *bprm)
-{
-    int err;
-    struct vm_area_struct *vma = NULL;
-    struct mm_struct *mm = bprm->mm;
-
-    /* 1.创建一个vm_area_struct实例保存到bprm->vma用来描述虚拟地址空间中一块区域 */
-    bprm->vma = vma = kmem_cache_zalloc(vm_area_cachep, GFP_KERNEL);
-    if (!vma)
-        return -ENOMEM;
-
-    down_write(&mm->mmap_sem);
-    /* 2.将该区域vm_mm反向指向mm(描述进程的地址空间) */
     vma->vm_mm = mm;
 
     /*
@@ -67,7 +64,7 @@ static int __bprm_mm_init(struct linux_binprm *bprm)
      * use STACK_TOP because that can depend on attributes which aren't
      * configured yet.
      */
-    /* 3.初始化新建区域. */
+
     BUILD_BUG_ON(VM_STACK_FLAGS & VM_STACK_INCOMPLETE_SETUP);
     // 设置该区域的结束地址为STACK_TOP_MAX
     vma->vm_end = STACK_TOP_MAX;
