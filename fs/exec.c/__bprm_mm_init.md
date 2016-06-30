@@ -38,21 +38,50 @@ Initialize vma
      * configured yet.
      */
     BUILD_BUG_ON(VM_STACK_FLAGS & VM_STACK_INCOMPLETE_SETUP);
+    // 设置该区域的结束地址为STACK_TOP_MAX
     vma->vm_end = STACK_TOP_MAX;
+    // 设置该区域的起始地址为结束地址减去一页大小，说明该区域大小为1页
     vma->vm_start = vma->vm_end - PAGE_SIZE;
+    // 设置区域的标志
     vma->vm_flags = VM_SOFTDIRTY | VM_STACK_FLAGS | VM_STACK_INCOMPLETE_SETUP;
+    // 设置区域的权限
     vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+    // 初始化匿名链
     INIT_LIST_HEAD(&vma->anon_vma_chain);
+```
 
+### STACK_TOP_MAX
+
+#### ARM
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/processor.h/STACK_TOP_MAX.md
+
+insert_vm_struct
+----------------------------------------
+
+```
     err = insert_vm_struct(mm, vma);
     if (err)
         goto err;
 
+    // 设置用户态堆栈页数和进程虚拟地址空间的页数为1页.
     mm->stack_vm = mm->total_vm = 1;
+    // 与体系结构相关的进程虚拟地址空间初始化.
     arch_bprm_mm_init(mm, vma);
     up_write(&mm->mmap_sem);
+    // 设置当前二进制文件描述符的p位置为距离新建区域结束地址sizeof (void*)处. */
     bprm->p = vma->vm_end - sizeof(void *);
     return 0;
+```
+
+insert_vm_struct用于将新分配的区域插入到进程虚拟地址空间的管理数据结构mm_struct中.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/insert_vm_struct.md
+
+err
+----------------------------------------
+
+```
 err:
     up_write(&mm->mmap_sem);
     bprm->vma = NULL;
