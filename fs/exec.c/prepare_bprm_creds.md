@@ -1,6 +1,8 @@
 prepare_bprm_creds
 ========================================
 
+prepare_bprm_creds用于准备可执行credential. 具体实现如下:
+
 path: fs/exec.c
 ```
 /*
