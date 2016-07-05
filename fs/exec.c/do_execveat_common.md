@@ -97,7 +97,7 @@ sched_exec
 
 选择最小负载的CPU，以执行新程序.
 
-Set bprm
+Set bprm (file, filename, interp)
 ----------------------------------------
 
 ```
@@ -139,7 +139,7 @@ bprm_mm_init函数调用mm_alloc来生成一个新的mm_struct实例来管理进
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/bprm_mm_init.md
 
-Set bprm
+Set bprm (argc, envc)
 ----------------------------------------
 
 ```
@@ -165,7 +165,7 @@ prepare_binprm用于提供一些父进程相关的值(特别数有效UID和GID).
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/prepare_binprm.md
 
-Set bprm
+Set bprm (exec, envp, argv)
 ----------------------------------------
 
 ```

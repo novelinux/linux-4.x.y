@@ -95,8 +95,6 @@ Data Structure
 
 ### struct task_struct
 
-
-
 ```
     struct mm_struct *mm, *active_mm;
 ```
@@ -128,3 +126,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/res/file
 地址空间是优先树的基本要素，而优先树包含了所有相关的vm_area_struct实例，描述了与inode关联的
 文件区间到一些虚拟地址空间的映射。由于每个struct vm_area的实例都包含了一个指向所属进程的
 mm_struct的指针，关联就已经建立起来了.
+
+APIS
+----------------------------------------
+
+### insert_vm_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/insert_vm_struct.md
