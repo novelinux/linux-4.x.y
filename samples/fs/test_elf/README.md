@@ -57,7 +57,7 @@ ELF Header:
   Section header string table index: 32
 ```
 
-Program HEADER
+Program Header Table
 ----------------------------------------
 
 ```
@@ -124,3 +124,113 @@ Program Headers:
 #define EXSTACK_DISABLE_X 1    /* Disable executable stacks */
 #define EXSTACK_ENABLE_X  2    /* Enable executable stacks */
 ```
+
+Sections
+----------------------------------------
+
+```
+$ arm-linux-androideabi-readelf -S elf
+There are 33 section headers, starting at offset 0x1b18:
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .interp           PROGBITS        00000134 000134 000013 00   A  0   0  1
+  [ 2] .dynsym           DYNSYM          00000148 000148 0000a0 10   A  3   1  4
+  [ 3] .dynstr           STRTAB          000001e8 0001e8 000089 00   A  0   0  1
+  [ 4] .hash             HASH            00000274 000274 00003c 04   A  2   0  4
+  [ 5] .rel.dyn          REL             000002b0 0002b0 000020 08   A  2   0  4
+  [ 6] .rel.plt          REL             000002d0 0002d0 000020 08   A  2   0  4
+  [ 7] .plt              PROGBITS        000002f0 0002f0 000044 00  AX  0   0  4
+  [ 8] .text             PROGBITS        00000334 000334 0000d4 00  AX  0   0  4
+  [ 9] .note.android.ide PROGBITS        00000408 000408 000018 00   A  0   0  4
+  [10] .ARM.extab        PROGBITS        00000420 000420 00000c 00   A  0   0  4
+  [11] .ARM.exidx        ARM_EXIDX       0000042c 00042c 000010 08  AL  8   0  4
+  [12] .rodata           PROGBITS        0000043c 00043c 000028 01 AMS  0   0  1
+  [13] .preinit_array    PREINIT_ARRAY   00001ec4 000ec4 000008 00  WA  0   0  4
+  [14] .init_array       INIT_ARRAY      00001ecc 000ecc 000008 00  WA  0   0  4
+  [15] .fini_array       FINI_ARRAY      00001ed4 000ed4 000008 00  WA  0   0  4
+  [16] .dynamic          DYNAMIC         00001edc 000edc 0000f8 08  WA  3   0  4
+  [17] .got              PROGBITS        00001fd4 000fd4 00002c 00  WA  0   0  4
+  [18] .bss              NOBITS          00002000 001000 000004 00  WA  0   0  4
+  [19] .comment          PROGBITS        00000000 001000 000010 01  MS  0   0  1
+  [20] .debug_info       PROGBITS        00000000 001010 0001bf 00      0   0  1
+  [21] .debug_abbrev     PROGBITS        00000000 0011cf 000133 00      0   0  1
+  [22] .debug_loc        PROGBITS        00000000 001302 0000be 00      0   0  1
+  [23] .debug_aranges    PROGBITS        00000000 0013c0 000028 00      0   0  1
+  [24] .debug_ranges     PROGBITS        00000000 0013e8 000030 00      0   0  1
+  [25] .debug_line       PROGBITS        00000000 001418 000094 00      0   0  1
+  [26] .debug_str        PROGBITS        00000000 0014ac 000126 01  MS  0   0  1
+  [27] .debug_frame      PROGBITS        00000000 0015d4 000044 00      0   0  4
+  [28] .note.gnu.gold-ve NOTE            00000000 001618 00001c 00      0   0  4
+  [29] .ARM.attributes   ARM_ATTRIBUTES  00000000 001634 000036 00      0   0  1
+  [30] .symtab           SYMTAB          00000000 00166c 000250 10     31  24  4
+  [31] .strtab           STRTAB          00000000 0018bc 000107 00      0   0  1
+  [32] .shstrtab         STRTAB          00000000 0019c3 000153 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings)
+  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)
+  O (extra OS processing required) o (OS specific), p (processor specific)
+```
+
+ELF标准定义了若干固定名称的节。这些用于执行大多数目标文件所需的标准任务。
+所有名称都从点开始，以便与用户定义节或非标准节相区分。最重要的标准节如下所示。
+* .bss保存程序未初始化的数据节，在程序开始运行前填充0字节。
+* .data包含已经初始化的程序数据。例如，预先初始化的结构，
+  其中在编译时填充了静态数据。这些数据可以在程序运行期间更改。
+* .rodata保存了程序使用的只读数据，不能修改，例如字符串。
+* .dynamic和.dynstr保存了动态信息。
+* .interp保存了程序解释器的名称，形式为字符串。
+* .shstrtab包含了一个字符串表，定义了节名称。
+* .strtab保存了一个字符串表，主要包含了符号表需要的各个字符串。
+
+**Notes**:
+.strtab不是默认情况下ELF文件中唯一的字符串表。
+.shstrtab用于存放文件中各个节的文本名称
+
+* .symtab保存了二进制文件的符号表。
+* .init和.fini保存了程序初始化和结束时执行的机器指令。
+  这两个节的内容通常是由编译器及其辅助工具自动创建的，
+  主要是为程序建立一个适当的运行时环境。
+* .text保存了主要的机器指令。
+
+Symbol Table
+----------------------------------------
+
+符号表是每个ELF文件的一个重要部分，因为它保存了程序实现或使用的
+所有（全局）变量和函数。如果程序引用了一个自身代码未定义的符号，
+则称之为未定义符号（例如，例子中的printf函数，就是定义在C标准库中）。
+此类引用必须在静态链接期间用其他目标模块或库解决，或在加载时间通过
+动态链接（使用linker）解决。
+
+nm工具可生成程序定义和使用的所有符号列表，如下所示：
+
+```
+$ arm-linux-androideabi-nm elf
+00000408 r abitag
+         U __aeabi_unwind_cpp_pr0
+         U __aeabi_unwind_cpp_pr1
+000003ac t atexit
+00002000 A __bss_start
+         U __cxa_atexit
+00002000 b __dso_handle
+00001edc d _DYNAMIC
+00002000 A _edata
+00002004 A _end
+00001ed4 T __FINI_ARRAY__
+00001fe4 d _GLOBAL_OFFSET_TABLE_
+00001ecc T __INIT_ARRAY__
+         U __libc_init
+000003e8 T main
+00001ec4 D __PREINIT_ARRAY__
+         U printf
+         U puts
+00000334 t _start
+```
+
+ELF是如何实现符号表机制的？以下3个节用于容纳相关的数据。
+* .symtab确定符号的名称与其值之间的关联。但符号的名称不是
+  直接以字符串形式出现的，而是表示为某个字符串数组的索引。
+* .strtab保存了字符串数组。
+* .hash保存了一个散列表，以帮助快速查找符号。
+* .symtab节中的每一项由两个元素组成，符号名在字符串表中的位置和符号的值。

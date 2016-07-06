@@ -77,3 +77,21 @@ https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/st
 #### struct elf64_phdr
 
 https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf64_phdr.md
+
+### Section Header
+
+节头表通过数组实现，每个数组项包含一节的信息。各个节构成了
+程序头表中定义的各段的内容。下列数据结构表示一个节：
+
+#### struct elf32_shdr
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf32_shdr.md
+
+#### struct elf64_shdr
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf64_shdr.md
+
+Samples
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/blob/master/samples/fs/test_elf/README.md
