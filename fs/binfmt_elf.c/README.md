@@ -52,9 +52,13 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_format.
 Data Structure
 ----------------------------------------
 
-对ELF格式中的各种头部结构，32位和64位系统需要分别定义数据结构。
+### Data Types
 
-### elf header
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/elf_base_types.md
+
+### ELF Header
+
+对ELF格式中的各种头部结构，32位和64位系统需要分别定义数据结构。
 
 #### struct elf32_hdr
 
@@ -63,3 +67,13 @@ https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/st
 #### struct elf64_hdr
 
 https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf64_hdr.md
+
+### Program Header
+
+#### struct elf32_phdr
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf32_phdr.md
+
+#### struct elf64_phdr
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf64_phdr.md
