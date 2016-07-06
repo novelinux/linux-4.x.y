@@ -57,3 +57,9 @@ Data Structure
 ### elf header
 
 #### struct elf32_hdr
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf32_hdr.md
+
+#### struct elf64_hdr
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/uapi/linux/elf.h/struct_elf64_hdr.md
