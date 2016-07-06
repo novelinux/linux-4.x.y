@@ -1,11 +1,7 @@
 load_elf_phdrs
 ========================================
 
-程序头定义如下所示：
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_format/program_header.md
-
-Sources
+Arguments
 ----------------------------------------
 
 path: fs/binfmt_elf.c
@@ -24,34 +20,42 @@ static struct elf_phdr *load_elf_phdrs(struct elfhdr *elf_ex,
 {
     struct elf_phdr *elf_phdata = NULL;
     int retval, size, err = -1;
+```
 
+Check
+----------------------------------------
+
+```
     /*
      * If the size of this structure has changed, then punt, since
      * we will be doing the wrong thing.
      */
-    /* 1.检查elf header 中e_phentsize 大小是否同struct elf_phdr大小相同. */
+    /* 检查elf header 中e_phentsize 大小是否同struct elf_phdr大小相同. */
     if (elf_ex->e_phentsize != sizeof(struct elf_phdr))
         goto out;
 
     /* Sanity check the number of program headers... */
-    /* 2.检查程序头表中的项的数目是否合法.*/
+    /* 检查Program Header中的项的数目是否合法. */
     if (elf_ex->e_phnum < 1 ||
         elf_ex->e_phnum > 65536U / sizeof(struct elf_phdr))
         goto out;
 
     /* ...and their total size. */
-    /* 3.计算二进制文件中所有程序头大小. */
+    /* 计算二进制文件中所有Program Header大小. */
     size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
     if (size > ELF_MIN_ALIGN)
         goto out;
+```
 
-    /* 4.为二进制文件中所有程序头分配空间. */
+Read
+----------------------------------------
+
+```
     elf_phdata = kmalloc(size, GFP_KERNEL);
     if (!elf_phdata)
         goto out;
 
     /* Read in the program headers */
-    /* 5.读入程序头数据. */
     retval = kernel_read(elf_file, elf_ex->e_phoff,
                  (char *)elf_phdata, size);
     if (retval != size) {
