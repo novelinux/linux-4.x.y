@@ -268,6 +268,8 @@ flush_old_exec函数的作用就是用来替换当前进程地址空间的.具�
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/flush_old_exec.md
 
+Set current (personality, flags)
+----------------------------------------
 
 ```
     /* Do this immediately, since STACK_TOP as used in setup_arg_pages
@@ -276,11 +278,34 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/flush_old_exec.md
     if (elf_read_implies_exec(loc->elf_ex, executable_stack))
         current->personality |= READ_IMPLIES_EXEC;
 
+    /* 检查是否需要设置进程的PF_RANDOMIZE标志，如果设置了改标志，
+     * 则内核不会为栈和内存映射的起点选择固定位置，而是每次新进程
+     * 启动的时候随机改变这些值的设置. 引入这项的目的是使得攻击因
+     * 缓冲区移除导致安全漏洞更加困难.
+     */
     if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
         current->flags |= PF_RANDOMIZE;
+```
 
+randomize_va_space的描述如下所示:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm.h/randomize_va_space.md
+
+setup_new_exec
+----------------------------------------
+
+```
     setup_new_exec(bprm);
+```
 
+setup_new_exec函数用来设置进程虚拟地址空间的布局.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_new_exec.md
+
+setup_arg_pages
+----------------------------------------
+
+```
     /* Do this so that we can load the interpreter, if need be.  We will
        change some of these later */
     retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
@@ -289,7 +314,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/flush_old_exec.md
         goto out_free_dentry;
 
     current->mm->start_stack = bprm->p;
+```
 
+setup_arg_pages函数用来重新调整当前进程的栈区域位置，权限，大小.
+并将命令行参数的起始位置设置为栈的起始位置.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.md
+
+```
     /* Now we do a little grungy work by mmapping the ELF image into
        the correct location in memory. */
     for(i = 0, elf_ppnt = elf_phdata;
@@ -534,101 +566,6 @@ out_free_ph:
     goto out;
 }
 ```
-
-
-6.校验其它程序段
-----------------------------------------
-
-```
-    ...
-    int executable_stack = EXSTACK_DEFAULT;
-    ...
-    elf_ppnt = elf_phdata;
-    for (i = 0; i < loc->elf_ex.e_phnum; i++, elf_ppnt++)
-        switch (elf_ppnt->p_type) {
-        /* 读取堆栈段权限并设置堆栈段权限位. */
-        case PT_GNU_STACK:
-            if (elf_ppnt->p_flags & PF_X)
-                executable_stack = EXSTACK_ENABLE_X;
-            else
-                executable_stack = EXSTACK_DISABLE_X;
-            break;
-        /* 处理器专用段检测. */
-        case PT_LOPROC ... PT_HIPROC:
-            retval = arch_elf_pt_proc(&loc->elf_ex, elf_ppnt,
-                          bprm->file, false,
-                          &arch_state);
-            if (retval)
-                goto out_free_dentry;
-            break;
-        }
-    ...
-```
-
-10.设置与体系结构相关特性
-----------------------------------------
-
-```
-    ...
-    struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
-    ...
-    /* Do this immediately, since STACK_TOP as used in setup_arg_pages
-       may depend on the personality.  */
-    SET_PERSONALITY2(loc->elf_ex, &arch_state);
-    if (elf_read_implies_exec(loc->elf_ex, executable_stack))
-        current->personality |= READ_IMPLIES_EXEC;
-
-    /* 检查是否需要设置进程的PF_RANDOMIZE标志，如果设置了改标志，则内核不会为栈和内存
-     * 映射的起点选择固定位置，而是每次新进程启动的时候随机改变这些值的设置. 引入这项
-     * 的目的是使得攻击因缓冲区移除导致安全漏洞更加困难.
-     */
-    if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
-        current->flags |= PF_RANDOMIZE;
-    ...
-```
-
-randomize_va_space的描述如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_h/randomize_va_space.md
-
-11.设置进程虚拟地址空间的布局
-----------------------------------------
-
-setup_new_exec函数用来设置进程虚拟地址空间的布局.
-
-```
-    ...
-    setup_new_exec(bprm);
-    ...
-```
-
-setup_new_exec函数具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/setup_new_exec.md
-
-12.设置进程栈空间布局
-----------------------------------------
-
-setup_arg_pages函数用来重新调整当前进程的栈区域位置，权限，大小.
-并将命令行参数的起始位置设置为栈的起始位置.
-
-```
-    ...
-    /* Do this so that we can load the interpreter, if need be.  We will
-       change some of these later */
-    retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
-                 executable_stack);
-    ...
-    current->mm->start_stack = bprm->p;
-```
-
-STACK_TOP值在arm体系结构定义如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/memory_h/memory.md
-
-setup_arg_pages具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/setup_arg_pages.md
 
 13.映射PT_LOAD段
 ----------------------------------------

@@ -1,7 +1,7 @@
 acct_arg_size
 ========================================
 
-Source
+Arguments
 ----------------------------------------
 
 path: fs/exec.c
@@ -24,5 +24,4 @@ static void acct_arg_size(struct linux_binprm *bprm, unsigned long pages)
     bprm->vma_pages = pages;
     add_mm_counter(mm, MM_ANONPAGES, diff);
 }
-...
 ```

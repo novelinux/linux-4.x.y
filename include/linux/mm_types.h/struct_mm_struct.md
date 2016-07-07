@@ -222,9 +222,17 @@ saved_auxv
      */
     struct task_struct __rcu *owner;
 #endif
+```
 
+exe_file
+----------------------------------------
+
+```
     /* store ref to file /proc/<pid>/exe symlink points to */
     struct file *exe_file;
+```
+
+```
 #ifdef CONFIG_MMU_NOTIFIER
     struct mmu_notifier_mm *mmu_notifier_mm;
 #endif
