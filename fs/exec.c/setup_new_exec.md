@@ -1,15 +1,35 @@
 setup_new_exec
 ========================================
 
-Source
+Arguments
 ----------------------------------------
 
 path: fs/exec.c
 ```
 void setup_new_exec(struct linux_binprm * bprm)
 {
-    arch_pick_mmap_layout(current->mm);
+```
 
+arch_pick_mmap_layout
+----------------------------------------
+
+```
+    arch_pick_mmap_layout(current->mm);
+```
+
+current->mm经过函数flush_old_exec以后已经被替换成了新程序在bprm_mm_init
+函数中创建的进程虚拟地址空间. arch_pick_mmap_layout函数的作用是选择新进程
+的虚拟地址空间布局,如果对应的体系结构没有提供一个具体的函数，则使用内核默认
+的历程.
+
+### ARM
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmap.c/arch_pick_mmap_layout.md
+
+Set task
+----------------------------------------
+
+```
     /* This is the point of no return */
     current->sas_ss_sp = current->sas_ss_size = 0;
 
@@ -48,20 +68,13 @@ EXPORT_SYMBOL(setup_new_exec);
 
 setup_new_exec具体工作如下所示:
 
-1.arch_pick_mmap_layout
-----------------------------------------
+
 
 ```
     ...
     arch_pick_mmap_layout(current->mm);
     ...
 ```
-
-current->mm经过函数flush_old_exec以后已经被替换成了新程序在bprm_mm_init函数中创建的进程
-虚拟地址空间. arch_pick_mmap_layout函数的作用是选择新进程的虚拟地址空间布局,如果对应的
-体系结构没有提供一个具体的函数，则使用内核默认的历程.
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/mm/mmap_c/arch_pick_mmap_layout.md
 
 2.__set_task_common
 ----------------------------------------
