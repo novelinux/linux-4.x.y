@@ -352,9 +352,16 @@ Program Headers (PT_LOAD)
         unsigned long k, vaddr;
         unsigned long total_size = 0;
 
+        /* 还是从目标映像的程序头表中搜索，这一次是寻找类型为PT_LOAD
+         * 的段。在二进制映像中，只有类型为PT_LOAD的部才是需要装入的。
+         */
         if (elf_ppnt->p_type != PT_LOAD)
             continue;
+```
 
+### set_brk
+
+```
         if (unlikely (elf_brk > elf_bss)) {
             unsigned long nbyte;
 
@@ -384,6 +391,8 @@ Program Headers (PT_LOAD)
 
 ### elf_ppnt
 
+设置程序段(PT_LOAD)的权限.
+
 ```
         if (elf_ppnt->p_flags & PF_R)
             elf_prot |= PROT_READ;
@@ -395,10 +404,31 @@ Program Headers (PT_LOAD)
 
 ### elf_flags
 
+MAP_PRIVATE创建一个与数据源分离的私有映射，对映射区域的写入操作不影响文件中的数据.
+
 ```
+
         elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
+```
+
+### vaddr
+
+找到一个PT_LOAD片以后，先要确定其装入地址。程序头数据结构中的p_vaddr
+提供了映像在连接时确定的装入地址vaddr.
+
+```
 
         vaddr = elf_ppnt->p_vaddr;
+
+        /* 根据程序二进制头的type设置程序段的权限和装入地址.
+         *
+         * 如果映像的类型为ET_EXEC那么装入地址就是固定的
+         * MAP_FIXED - 指定除了给定的地址之外，不能将其它地址用于映射.
+         * 如果没有设置该标志，内核可以在受阻时随意改变目标地址.
+         *
+         * 而若类型为ET_DYN(即共享库)，那么即使装入地址固定也要
+         * 加上一个偏移量.
+         */
         if (loc->elf_ex.e_type == ET_EXEC || load_addr_set) {
             elf_flags |= MAP_FIXED;
         } else if (loc->elf_ex.e_type == ET_DYN) {
@@ -421,6 +451,9 @@ Program Headers (PT_LOAD)
 
 ### elf_map
 
+确定了装入地址以后，就通过elf_map()建立进程虚拟地址空间与目标映像文件中
+某个连续区间之间的映射。返回值是实际映射的起始地址.
+
 ```
         error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
                 elf_prot, elf_flags, total_size);
@@ -430,6 +463,8 @@ Program Headers (PT_LOAD)
             goto out_free_dentry;
         }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
 
 ###
 
@@ -609,111 +644,8 @@ out_free_ph:
 }
 ```
 
-13.映射PT_LOAD段
-----------------------------------------
 
-```
-    unsigned long load_addr = 0, load_bias = 0;
-    ...
-    /* Now we do a little grungy work by mmapping the ELF image into
-       the correct location in memory. */
-    for(i = 0, elf_ppnt = elf_phdata;
-        i < loc->elf_ex.e_phnum; i++, elf_ppnt++) {
-        int elf_prot = 0, elf_flags;
-        unsigned long k, vaddr;
 
-        /* 1.还是从目标映像的程序头表中搜索，这一次是寻找类型为PT_LOAD
-         * 的段。在二进制映像中，只有类型为PT_LOAD的部才是需要装入的。
-         */
-        if (elf_ppnt->p_type != PT_LOAD)
-            continue;
-
-        if (unlikely (elf_brk > elf_bss)) {
-            unsigned long nbyte;
-
-            /* There was a PT_LOAD segment with p_memsz > p_filesz
-               before this one. Map anonymous pages, if needed,
-               and clear the area.  */
-            retval = set_brk(elf_bss + load_bias,
-                     elf_brk + load_bias);
-            if (retval)
-                goto out_free_dentry;
-            nbyte = ELF_PAGEOFFSET(elf_bss);
-            if (nbyte) {
-                nbyte = ELF_MIN_ALIGN - nbyte;
-                if (nbyte > elf_brk - elf_bss)
-                    nbyte = elf_brk - elf_bss;
-                if (clear_user((void __user *)elf_bss +
-                            load_bias, nbyte)) {
-                    /*
-                     * This bss-zeroing can fail if the ELF
-                     * file specifies odd protections. So
-                     * we don't check the return value
-                     */
-                }
-            }
-        }
-
-        /* 2.设置程序段(PT_LOAD)的权限. */
-        if (elf_ppnt->p_flags & PF_R)
-            elf_prot |= PROT_READ;
-        if (elf_ppnt->p_flags & PF_W)
-            elf_prot |= PROT_WRITE;
-        if (elf_ppnt->p_flags & PF_X)
-            elf_prot |= PROT_EXEC;
-        /* MAP_PRIVATE创建一个与数据源分离的私有映射，对映射区域的
-         * 写入操作不影响文件中的数据.
-         */
-        elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
-
-        /* 3.找到一个PT_LOAD片以后，先要确定其装入地址。程序头
-         * 数据结构中的p_vaddr提供了映像在连接时确定的装入地址vaddr。
-         */
-        vaddr = elf_ppnt->p_vaddr;
-        /* 4.根据程序二进制头的type设置程序段的权限和装入地址. */
-        /* A.如果映像的类型为ET_EXEC那么装入地址就是固定的
-         * MAP_FIXED - 指定除了给定的地址之外，不能将其它地址用于映射.
-         * 如果没有设置该标志，内核可以在受阻时随意改变目标地址.
-         */
-        if (loc->elf_ex.e_type == ET_EXEC || load_addr_set) {
-            elf_flags |= MAP_FIXED;
-        /* B.而若类型为ET_DYN(即共享库)，那么即使装入地址固定也要
-         * 加上一个偏移量.
-         */
-        } else if (loc->elf_ex.e_type == ET_DYN) {
-            /* Try and get dynamic programs out of the way of the
-             * default mmap base, as well as whatever program they
-             * might try to exec.  This is because the brk will
-             * follow the loader, and is not movable.  */
-#ifdef CONFIG_ARCH_BINFMT_ELF_RANDOMIZE_PIE
-            /* Memory randomization might have been switched off
-             * in runtime via sysctl or explicit setting of
-             * personality flags.
-             * If that is the case, retain the original non-zero
-             * load_bias value in order to establish proper
-             * non-randomized mappings.
-             */
-             /* #define ELF_PAGESTART(_v) \
-              *     ((_v) & ~(unsigned long)(ELF_MIN_ALIGN-1))
-              * 该宏负责将装入地址按照ELF_MIN_ALIGN对齐，通常
-              * ELF_MIN_ALIGN的大小为PAGE_SIZE, 也就是按页对齐.
-              * ELF_ET_DYN_BASE定义如下所示:
-              * #define ELF_ET_DYN_BASE (2 * TASK_SIZE / 3)
-              * 装入地址即为：ELF_ET_DYN_BASE - vaddr按页对齐的地址.
-              */
-            if (current->flags & PF_RANDOMIZE)
-                load_bias = 0;
-            else
-                load_bias = ELF_PAGESTART(ELF_ET_DYN_BASE - vaddr);
-#else
-            load_bias = ELF_PAGESTART(ELF_ET_DYN_BASE - vaddr);
-#endif
-        }
-
-        /* 确定了装入地址以后，就通过elf_map()建立进程虚拟地址空间与
-         * 目标映像文件中某个连续区间之间的映射。返回值是实际映射的
-         * 起始地址.
-         */
         error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
                 elf_prot, elf_flags, 0);
         if (BAD_ADDR(error)) {
@@ -790,11 +722,7 @@ out_free_ph:
     ...
 ```
 
-### elf_map
 
-elf_map的具体实现如下所示：
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf_map.md
 
 ### 计算进程空间各段起始地址和结束地址
 
