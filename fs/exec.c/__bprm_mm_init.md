@@ -56,6 +56,18 @@ Initialize vma
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/processor.h/STACK_TOP_MAX.md
 
+### vma Layout
+
+```
+|--------------------------------------| 0xffffffff
+|                                      |
+|--------------------------------------| <- vma->end (STACK_TOP_MAX: 0xc0000000 - 16MB)
+|                                      |
+|--------------------------------------| <- bprm->p (vma->end - sizeof (void *))
+|                                      |
+|--------------------------------------| <- vma->start (vma->end - PAGE_SIZE)
+```
+
 insert_vm_struct
 ----------------------------------------
 

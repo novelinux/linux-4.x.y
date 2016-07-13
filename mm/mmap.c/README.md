@@ -127,8 +127,33 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/res/file
 文件区间到一些虚拟地址空间的映射。由于每个struct vm_area的实例都包含了一个指向所属进程的
 mm_struct的指针，关联就已经建立起来了.
 
+Initialization
+----------------------------------------
+
+### bprm_mm_init
+
+创建一个mm_struct实例管理新进程的进程地址空间.
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/bprm_mm_init.md
+
+### __bprm_mm_init
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/__bprm_mm_init.md
+
+### setup_new_exec
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/setup_new_exec.md
+
+### setup_arg_pages
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.md
+
 APIS
 ----------------------------------------
+
+### exec_mmap
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/exec_mmap.md
 
 ### insert_vm_struct
 

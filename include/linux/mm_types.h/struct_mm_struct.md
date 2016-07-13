@@ -37,6 +37,12 @@ vmacache_seqnum
 
 ```
     u32 vmacache_seqnum;              /* per-thread vmacache */
+```
+
+get_unmapped_area
+----------------------------------------
+
+```
 #ifdef CONFIG_MMU
     unsigned long (*get_unmapped_area) (struct file *filp,
                 unsigned long addr, unsigned long len,
@@ -231,6 +237,9 @@ exe_file
     /* store ref to file /proc/<pid>/exe symlink points to */
     struct file *exe_file;
 ```
+
+mmu_notifier_mm
+----------------------------------------
 
 ```
 #ifdef CONFIG_MMU_NOTIFIER

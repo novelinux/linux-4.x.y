@@ -97,7 +97,7 @@ load_elf_phdrs
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/load_elf_phdrs.md
 
-Program Headers - INTERP
+Program Headers (PT_INTERP)
 ----------------------------------------
 
 ```
@@ -313,13 +313,35 @@ setup_arg_pages
     if (retval < 0)
         goto out_free_dentry;
 
-    current->mm->start_stack = bprm->p;
+
 ```
 
 setup_arg_pages函数用来重新调整当前进程的栈区域位置，权限，大小.
 并将命令行参数的起始位置设置为栈的起始位置.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.md
+
+current->mm->start_stack
+----------------------------------------
+
+```
+    current->mm->start_stack = bprm->p;
+```
+
+### Layout
+
+```
+|--------------------------------------| 0xffffffff
+|                                      |
+|--------------------------------------| <- vma->end (STACK_TOP_MAX: 0xc0000000 - 16MB)
+|                                      |
+|--------------------------------------| <- bprm->p (vma->end - sizeof (void *))
+|                                      |
+|--------------------------------------| <- vma->start (vma->end - PAGE_SIZE)
+```
+
+Program Headers (PT_LOAD)
+----------------------------------------
 
 ```
     /* Now we do a little grungy work by mmapping the ELF image into
@@ -358,14 +380,24 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.m
                 }
             }
         }
+```
 
+elf_ppnt
+----------------------------------------
+
+```
         if (elf_ppnt->p_flags & PF_R)
             elf_prot |= PROT_READ;
         if (elf_ppnt->p_flags & PF_W)
             elf_prot |= PROT_WRITE;
         if (elf_ppnt->p_flags & PF_X)
             elf_prot |= PROT_EXEC;
+```
 
+elf_flags
+----------------------------------------
+
+```
         elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
 
         vaddr = elf_ppnt->p_vaddr;
@@ -387,7 +419,12 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.m
                 goto out_free_dentry;
             }
         }
+```
 
+elf_map
+----------------------------------------
+
+```
         error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
                 elf_prot, elf_flags, total_size);
         if (BAD_ADDR(error)) {
