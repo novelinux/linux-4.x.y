@@ -382,8 +382,7 @@ Program Headers (PT_LOAD)
         }
 ```
 
-elf_ppnt
-----------------------------------------
+### elf_ppnt
 
 ```
         if (elf_ppnt->p_flags & PF_R)
@@ -394,8 +393,7 @@ elf_ppnt
             elf_prot |= PROT_EXEC;
 ```
 
-elf_flags
-----------------------------------------
+### elf_flags
 
 ```
         elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
@@ -421,8 +419,7 @@ elf_flags
         }
 ```
 
-elf_map
-----------------------------------------
+### elf_map
 
 ```
         error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
@@ -432,7 +429,11 @@ elf_map
                 PTR_ERR((void*)error) : -EINVAL;
             goto out_free_dentry;
         }
+```
 
+###
+
+```
         if (!load_addr_set) {
             load_addr_set = 1;
             load_addr = (elf_ppnt->p_vaddr - elf_ppnt->p_offset);
@@ -474,7 +475,11 @@ elf_map
         if (k > elf_brk)
             elf_brk = k;
     }
+```
 
+----------------------------------------
+
+```
     loc->elf_ex.e_entry += load_bias;
     elf_bss += load_bias;
     elf_brk += load_bias;
