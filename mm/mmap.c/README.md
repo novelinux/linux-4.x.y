@@ -180,6 +180,10 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/bprm_mm_init.md
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/__bprm_mm_init.md
 
+### exec_mmap
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/exec_mmap.md
+
 ### setup_new_exec
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/setup_new_exec.md
@@ -191,10 +195,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.m
 APIS
 ----------------------------------------
 
-### exec_mmap
-
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/exec.c/exec_mmap.md
-
 ### insert_vm_struct
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/insert_vm_struct.md
+
+### mmap
+
+https://github.com/novelinux/system_calls/mmap/mmap.md
