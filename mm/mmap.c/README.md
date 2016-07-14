@@ -201,4 +201,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/insert_vm_struct.
 
 ### mmap
 
-https://github.com/novelinux/system_calls/mmap/mmap.md
+https://github.com/novelinux/system_calls/blob/master/mmap/mmap.md
