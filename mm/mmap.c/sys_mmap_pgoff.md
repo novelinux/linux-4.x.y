@@ -1,6 +1,9 @@
 sys_mmap_pgoff
 ========================================
 
+Arguments
+----------------------------------------
+
 path: mm/mmap.c
 ```
 SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,
@@ -9,7 +12,12 @@ SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,
 {
     struct file *file = NULL;
     unsigned long retval = -EBADF;
+```
 
+MAP_ANONYMOUS
+----------------------------------------
+
+```
     if (!(flags & MAP_ANONYMOUS)) {
         audit_mmap_fd(fd, flags);
         file = fget(fd);
@@ -20,6 +28,12 @@ SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,
         retval = -EINVAL;
         if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
             goto out_fput;
+```
+
+MAP_HUGETLB
+----------------------------------------
+
+```
     } else if (flags & MAP_HUGETLB) {
         struct user_struct *user = NULL;
         struct hstate *hs;
@@ -42,7 +56,12 @@ SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,
         if (IS_ERR(file))
             return PTR_ERR(file);
     }
+```
 
+vm_mmap_pgoff
+----------------------------------------
+
+```
     flags &= ~(MAP_EXECUTABLE | MAP_DENYWRITE);
 
     retval = vm_mmap_pgoff(file, addr, len, prot, flags, pgoff);
@@ -53,3 +72,5 @@ out:
     return retval;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/util.c/vm_mmap_pgoff.md
