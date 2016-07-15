@@ -25,8 +25,16 @@ unlocked_ioctl
 #ifdef CONFIG_COMPAT
     .compat_ioctl    = ext4_compat_ioctl,
 #endif
+```
+
+mmap
+----------------------------------------
+
+```
     .mmap        = ext4_file_mmap,
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file.c/ext4_file_mmap.md
 
 open
 ----------------------------------------

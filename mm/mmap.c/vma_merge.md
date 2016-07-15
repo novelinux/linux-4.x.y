@@ -1,6 +1,9 @@
 vma_merge
 ========================================
 
+Comments
+----------------------------------------
+
 path: mm/mmap.c
 ```
 /*
@@ -32,24 +35,23 @@ path: mm/mmap.c
  * Odd one out? Case 8, because it extends NNNN but needs flags of XXXX:
  * mprotect_fixup updates vm_flags & vm_page_prot on successful return.
  */
+```
+
+Arguments
+----------------------------------------
+
+```
 struct vm_area_struct *vma_merge(struct mm_struct *mm,
             struct vm_area_struct *prev, unsigned long addr,
             unsigned long end, unsigned long vm_flags,
             struct anon_vma *anon_vma, struct file *file,
-            pgoff_t pgoff, struct mempolicy *policy)
+            pgoff_t pgoff, struct mempolicy *policy,
+            struct vm_userfaultfd_ctx vm_userfaultfd_ctx)
 {
     pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
     struct vm_area_struct *area, *next;
     int err;
-
-    ...
-
-    return NULL;
-}
 ```
-
-1. 参数
-----------------------------------------
 
 * mm: 是相关进程的地址空间实例.
 * prev: 是紧接着新分区之前的区域.
@@ -60,21 +62,19 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
 * file: 如果该区域属于一个文件映射，则file是一个指向表示该文件的file实例.
 * policy: 只在NUMA系统上需要.
 
-2.特殊标志检查
+Check flags
 ----------------------------------------
 
 ```
-    ...
     /*
      * We later require that vma->vm_flags == vm_flags,
      * so this tests vma->vm_flags & VM_SPECIAL, too.
      */
     if (vm_flags & VM_SPECIAL)
         return NULL;
-    ...
 ```
 
-3.检查前一个区域是否可以合并
+Check prev
 ----------------------------------------
 
 首先检查确定前一个区域的结束地址是否是新区域的起始地址.
@@ -85,7 +85,6 @@ can_vma_merge_after辅助函数完成检查. 将区域与前一个区域
 合并的工作看起来如下所示:
 
 ```
-    ...
     if (prev)
         next = prev->vm_next;
     else
@@ -100,14 +99,17 @@ can_vma_merge_after辅助函数完成检查. 将区域与前一个区域
     if (prev && prev->vm_end == addr &&
             mpol_equal(vma_policy(prev), policy) &&
             can_vma_merge_after(prev, vm_flags,
-                        anon_vma, file, pgoff)) {
+                        anon_vma, file, pgoff,
+                        vm_userfaultfd_ctx)) {
         /*
          * OK, it can.  Can we now merge in the successor as well?
          */
         if (next && end == next->vm_start &&
                 mpol_equal(policy, vma_policy(next)) &&
                 can_vma_merge_before(next, vm_flags,
-                    anon_vma, file, pgoff+pglen) &&
+                             anon_vma, file,
+                             pgoff+pglen,
+                             vm_userfaultfd_ctx) &&
                 is_mergeable_anon_vma(prev->anon_vma,
                               next->anon_vma, NULL)) {
                             /* cases 1, 6 */
@@ -121,10 +123,9 @@ can_vma_merge_after辅助函数完成检查. 将区域与前一个区域
         khugepaged_enter_vma_merge(prev, vm_flags);
         return prev;
     }
-    ...
 ```
 
-4.检查后一个区域是否可以合并
+Check next
 ----------------------------------------
 
 与前一例的差别是使用can_vma_merge_before来检查两个区域是否可以合并,
@@ -133,14 +134,14 @@ can_vma_merge_after辅助函数完成检查. 将区域与前一个区域
 这(两个或者三个区域)的第一个单一区域.
 
 ```
-    ...
     /*
      * Can this new request be merged in front of next?
      */
     if (next && end == next->vm_start &&
             mpol_equal(policy, vma_policy(next)) &&
             can_vma_merge_before(next, vm_flags,
-                    anon_vma, file, pgoff+pglen)) {
+                         anon_vma, file, pgoff+pglen,
+                         vm_userfaultfd_ctx)) {
         if (prev && addr < prev->vm_end)    /* case 4 */
             err = vma_adjust(prev, prev->vm_start,
                 addr, prev->vm_pgoff, NULL);
@@ -152,9 +153,7 @@ can_vma_merge_after辅助函数完成检查. 将区域与前一个区域
         khugepaged_enter_vma_merge(area, vm_flags);
         return area;
     }
-    ...
-```
 
-在两种情况下，都调用了辅助函数vma_adjust执行最后的合并.它会适当第修改
-所有数据结构，包括优先树和vm_area_struct实例，还包括释放不在需要的
-数据结构.
+    return NULL;
+}
+```

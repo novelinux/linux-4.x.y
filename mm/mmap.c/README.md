@@ -205,4 +205,30 @@ https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/insert_vm_struct.
 
 ### mmap
 
+```
+mmap +-> mmap64 +-> __mmap2 ---+
+                               |
+sys_mmap_pgoff <-+ sys_mmap2 <-+
+ |
+ +-> vm_mmap_pgoff
+     |
+     +-> do_mmap_pgoff
+         |
+         +-> do_mmap
+             |
+             +-> get_unmapped_area
+             |   |
+             |   +-> arch_get_unmapped_area_topdown
+             |
+             +-> mmap_region
+                 |
+                 +-> may_expand_vm
+                 |
+                 +-> find_vma_links
+                 |
+                 +-> accountable_mapping
+                 |
+                 +-> vma_merge
+```
+
 https://github.com/novelinux/system_calls/blob/master/mmap/mmap.md

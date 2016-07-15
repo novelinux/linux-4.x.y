@@ -97,7 +97,7 @@ vma_merge
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/vma_merge.md
 
-kmem_cache_zalloc
+alloc vma
 ----------------------------------------
 
 ```
@@ -119,7 +119,12 @@ kmem_cache_zalloc
     vma->vm_page_prot = vm_get_page_prot(vm_flags);
     vma->vm_pgoff = pgoff;
     INIT_LIST_HEAD(&vma->anon_vma_chain);
+```
 
+file->f_op->mmap
+----------------------------------------
+
+```
     if (file) {
         if (vm_flags & VM_DENYWRITE) {
             error = deny_write_access(file);
@@ -160,15 +165,9 @@ kmem_cache_zalloc
     }
 ```
 
-如上代码段主要完成如下两个工作:
+### EXT4
 
-* A.分配并初始化一个新的vm_area_struct实例,并插入到进程链表/树数据结构中.
-* B.用特定文件的函数file->f_op->mmap创建映射.大多数文件系统将generic_file_mmap用于
-  该目的。它所做的所有工作，就是将映射的vm_ops成员设置为generic_file_vm_ops.
-
-**注意**: 但是常用的ext4文件系统是将mmap函数设置为ext4_file_mmap，具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file.c/ext4_file_mmap.md
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file.c/ext4_file_operations.md
 
 vma_link
 ----------------------------------------
@@ -244,71 +243,4 @@ unacct_error:
         vm_unacct_memory(charged);
     return error;
 }
-```
-
-
-
-5.分配并初始化一个新的vm_area_struct实例
-----------------------------------------
-
-```
-    ...
-    /*
-     * Determine the object being mapped and call the appropriate
-     * specific mapper. the address has already been validated, but
-     * not unmapped, but the maps are removed from the list.
-     */
-    vma = kmem_cache_zalloc(vm_area_cachep, GFP_KERNEL);
-    if (!vma) {
-        error = -ENOMEM;
-        goto unacct_error;
-    }
-
-    vma->vm_mm = mm;
-    vma->vm_start = addr;
-    vma->vm_end = addr + len;
-    vma->vm_flags = vm_flags;
-    vma->vm_page_prot = vm_get_page_prot(vm_flags);
-    vma->vm_pgoff = pgoff;
-    INIT_LIST_HEAD(&vma->anon_vma_chain);
-
-    if (file) {
-        if (vm_flags & VM_DENYWRITE) {
-            error = deny_write_access(file);
-            if (error)
-                goto free_vma;
-        }
-        if (vm_flags & VM_SHARED) {
-            error = mapping_map_writable(file->f_mapping);
-            if (error)
-                goto allow_write_and_free_vma;
-        }
-
-        /* ->mmap() can change vma->vm_file, but must guarantee that
-         * vma_link() below can deny write-access if VM_DENYWRITE is set
-         * and map writably if VM_SHARED is set. This usually means the
-         * new file must not have been exposed to user-space, yet.
-         */
-        vma->vm_file = get_file(file);
-        error = file->f_op->mmap(file, vma);
-        if (error)
-            goto unmap_and_free_vma;
-
-        /* Can addr have changed??
-         *
-         * Answer: Yes, several device drivers can do it in their
-         *         f_op->mmap method. -DaveM
-         * Bug: If addr is changed, prev, rb_link, rb_parent should
-         *      be updated for vma_link()
-         */
-        WARN_ON_ONCE(addr != vma->vm_start);
-
-        addr = vma->vm_start;
-        vm_flags = vma->vm_flags;
-    } else if (vm_flags & VM_SHARED) {
-        error = shmem_zero_setup(vma);
-        if (error)
-            goto free_vma;
-    }
-    ...
 ```
