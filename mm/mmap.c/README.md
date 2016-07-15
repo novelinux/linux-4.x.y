@@ -152,6 +152,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/st
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm_types.h/struct_vm_area_struct.md
 
+### struct vm_unmapped_area_info
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/mm.h/struct_vm_unmapped_area_info.md
+
 ### struct address_space
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
