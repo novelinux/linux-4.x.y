@@ -670,23 +670,64 @@ load_elf_interp具体实现如下所示:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/load_elf_interp.md
 
+linker作为解释器，其映射首地址为b6f74000(elf_entry),也就是load_elf_interp的返回值.
+
 set_binfmt
 ----------------------------------------
 
 ```
     set_binfmt(&elf_format);
+```
 
+接下来调用set_binfmt函数将对应的elf格式文件的处理接口函数包存到描述
+当前进程空间的数据结构mm_struct实例的成员变量binfmt中去.具体实现如下所示:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/set_binfmt.md
+
+arch_setup_additional_pages
+----------------------------------------
+
+```
 #ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES
     retval = arch_setup_additional_pages(bprm, !!elf_interpreter);
     if (retval < 0)
         goto out;
 #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
+```
 
+install_exec_creds
+----------------------------------------
+
+```
     install_exec_creds(bprm);
+```
+
+install_exec_creds为新的可执行二进制文件配置credentials.具体实现如下所示:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/install_exec_creds.md
+
+create_elf_tables
+----------------------------------------
+
+```
     retval = create_elf_tables(bprm, &loc->elf_ex,
               load_addr, interp_load_addr);
     if (retval < 0)
         goto out;
+```
+
+调用create_elf_tables，它将argc、argv等，还有一些辅助向量(Auxiliary Vector)等信息复制到用户栈空间.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/create_elf_tables.md
+
+针对本实例，设置完成后用户栈顶指针(bprm->p)指向的地址为0xbeb36850.
+
+current->mm
+----------------------------------------
+
+接下来设置描述当前进程虚拟地址空间的mm_struct实例中各段的起始和结束地址.
+
+```
     /* N.B. passed_fileno might not be initialized? */
     current->mm->end_code = end_code;
     current->mm->start_code = start_code;
@@ -724,9 +765,26 @@ set_binfmt
      */
     ELF_PLAT_INIT(regs, reloc_func_desc);
 #endif
+```
 
+start_thread
+----------------------------------------
+
+```
     start_thread(regs, elf_entry, bprm->p);
     retval = 0;
+```
+
+elf_entry当前指向了解释器(linker)的入口地址.接下来调用start_thread加载执行新进程程序.
+
+### ARM
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/processor.h/start_thread.md
+
+out
+----------------------------------------
+
+```
 out:
     kfree(loc);
 out_ret:
@@ -745,140 +803,3 @@ out_free_ph:
     goto out;
 }
 ```
-
-
-
-针对本例来说，linker作为解释器，其映射首地址为b6f74000(elf_entry),也就是load_elf_interp的返回值.
-
-17.set_binfmt
-----------------------------------------
-
-```
-    ...
-    set_binfmt(&elf_format);
-    ...
-```
-
-elf_format定义如下所示:
-
-path: fs/binfmt_elf.c
-```
-static struct linux_binfmt elf_format = {
-    .module       = THIS_MODULE,
-    .load_binary  = load_elf_binary,
-    .load_shlib   = load_elf_library,
-    .core_dump    = elf_core_dump,
-    .min_coredump = ELF_EXEC_PAGESIZE,
-};
-...
-```
-
-接下来调用set_binfmt函数将对应的elf格式文件的处理接口函数包存到描述当前进程空间的
-数据结构mm_struct实例的成员变量binfmt中去.具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/set_binfmt.md
-
-18.install_exec_creds
-----------------------------------------
-
-```
-    ...
-#ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES
-    retval = arch_setup_additional_pages(bprm, !!elf_interpreter);
-    if (retval < 0)
-        goto out;
-#endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
-
-    install_exec_creds(bprm);
-    ...
-```
-
-install_exec_creds为新的可执行二进制文件配置credentials.具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec_c/install_exec_creds.md
-
-19.create_elf_tables
-----------------------------------------
-
-```
-    ...
-    retval = create_elf_tables(bprm, &loc->elf_ex,
-              load_addr, interp_load_addr);
-    if (retval < 0)
-        goto out;
-    ...
-```
-
-调用create_elf_tables，它将argc、argv等，还有一些辅助向量(Auxiliary Vector)等信息复制到用户栈空间.
-具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/create_elf_tables.md
-
-针对本实例，设置完成后用户栈顶指针(bprm->p)指向的地址为0xbeb36850.
-
-20.设置进程code, data, stack段信息
-----------------------------------------
-
-接下来设置描述当前进程虚拟地址空间的mm_struct实例中各段的起始和结束地址.
-
-```
-    ...
-    /* N.B. passed_fileno might not be initialized? */
-    current->mm->end_code = end_code;
-    current->mm->start_code = start_code;
-    current->mm->start_data = start_data;
-    current->mm->end_data = end_data;
-    current->mm->start_stack = bprm->p;
-
-#ifdef arch_randomize_brk
-    if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
-        current->mm->brk = current->mm->start_brk =
-            arch_randomize_brk(current->mm);
-#ifdef CONFIG_COMPAT_BRK
-        current->brk_randomized = 1;
-#endif
-    }
-#endif
-
-    if (current->personality & MMAP_PAGE_ZERO) {
-        /* Why this, you ask???  Well SVr4 maps page 0 as read-only,
-           and some applications "depend" upon this behavior.
-           Since we do not have the power to recompile these, we
-           emulate the SVr4 behavior. Sigh. */
-        error = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,
-                MAP_FIXED | MAP_PRIVATE, 0);
-    }
-    ...
-```
-
-21.start_thread
-----------------------------------------
-
-elf_entry当前指向了解释器(linker)的入口地址.接下来调用start_thread加载执行新进程程序.
-
-```
-    ...
-#ifdef ELF_PLAT_INIT
-    /*
-     * The ABI may specify that certain registers be set up in special
-     * ways (on i386 %edx is the address of a DT_FINI function, for
-     * example.  In addition, it may also specify (eg, PowerPC64 ELF)
-     * that the e_entry field is the address of the function descriptor
-     * for the startup routine, rather than the address of the startup
-     * routine itself.  This macro performs whatever initialization to
-     * the regs structure is required as well as any relocations to the
-     * function descriptor entries when executing dynamically links apps.
-     */
-    ELF_PLAT_INIT(regs, reloc_func_desc);
-#endif
-
-    start_thread(regs, elf_entry, bprm->p);
-    retval = 0;
-    ...
-```
-
-start_thread跟体系结构相关，具体实现如下所示:
-
-### arm
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/processor_h/start_thread.md

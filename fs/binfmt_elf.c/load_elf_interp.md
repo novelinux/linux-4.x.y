@@ -127,9 +127,50 @@ Program Headers (PT_LOAD)
                 elf_type |= MAP_FIXED;
             else if (no_base && interp_elf_ex->e_type == ET_DYN)
                 load_addr = -vaddr;
+```
 
+#### load_addr
+
+最终返回给上级调用函数的load_addr值如下所示:
+
+```
+load_addr=b6f74000
+```
+
+### elf_map
+
+通过elf_map为解释器分配一块虚拟内存映射区域,map_addr保存linker文件映射
+的首地址并将其作为返回值保存到interp_map_addr中去.
+
+```
             map_addr = elf_map(interpreter, load_addr + vaddr,
                     eppnt, elf_prot, elf_type, total_size);
+```
+
+在这里我们elf文件的解释器是linker,其header信息如下所示:
+其共有两个LOAD段经过elf_map得到的映射信息如下所示:
+
+#### PT_LOAD1
+
+```
+addr=0
+size=d000
+off=0
+map_addr=b6f74000
+```
+
+#### PT_LOAD2
+
+```
+addr=b6f81000
+size=2000
+off=c000
+map_addr=b6f81000
+```
+
+### elf_bss, last_bss
+
+```
             total_size = 0;
             if (!*interp_map_addr)
                 *interp_map_addr = map_addr;
@@ -175,6 +216,18 @@ Program Headers (PT_LOAD)
         }
     }
 ```
+
+此时计算出的last_bss同elf_bss地址值分别如下所示:
+
+```
+elf_bss=b6f82190
+last_bss=b6f836fc
+```
+
+vm_brk
+----------------------------------------
+
+映射解释器bss段
 
 ```
     if (last_bss > elf_bss) {
@@ -207,151 +260,8 @@ out:
 }
 ```
 
-3.total_mapping_size
-----------------------------------------
+elf_bss和last_bss分别是bss和堆的起始地址,而因为bss与堆是前后相连的，
+所以它们之间的距离正好是bss区的大小. 所以它们之间的距离正好是bss段的大小.
+vm_brk的两个参数正好是bss段的起始地址和长度.vm_brk的具体实现如下所示:
 
-计算映射区域总的大小.
-
-```
-    ...
-    total_size = total_mapping_size(interp_elf_phdata,
-                    interp_elf_ex->e_phnum);
-    if (!total_size) {
-        error = -EINVAL;
-        goto out;
-    }
-    ...
-```
-
-
-```
-            /* 2.通过elf_map为解释器分配一块虚拟内存映射区域,map_addr保存linker文件映射的首地址
-             * 并将其作为返回值保存到interp_map_addr中去.
-             */
-            map_addr = elf_map(interpreter, load_addr + vaddr,
-                    eppnt, elf_prot, elf_type, total_size);
-            total_size = 0;
-            if (!*interp_map_addr)
-                *interp_map_addr = map_addr;
-            error = map_addr;
-            if (BAD_ADDR(map_addr))
-                goto out;
-
-            /* 如果是DYN类型，则重新计算装载地址存放到load_addr中去. */
-            if (!load_addr_set &&
-                interp_elf_ex->e_type == ET_DYN) {
-                load_addr = map_addr - ELF_PAGESTART(vaddr);
-                load_addr_set = 1;
-            }
-
-            /*
-             * Check to see if the section's size will overflow the
-             * allowed task size. Note that p_filesz must always be
-             * <= p_memsize so it's only necessary to check p_memsz.
-             */
-            k = load_addr + eppnt->p_vaddr;
-            if (BAD_ADDR(k) ||
-                eppnt->p_filesz > eppnt->p_memsz ||
-                eppnt->p_memsz > TASK_SIZE ||
-                TASK_SIZE - eppnt->p_memsz < k) {
-                error = -ENOMEM;
-                goto out;
-            }
-
-            /*
-             * Find the end of the file mapping for this phdr, and
-             * keep track of the largest address we see for this.
-             */
-            k = load_addr + eppnt->p_vaddr + eppnt->p_filesz;
-            if (k > elf_bss)
-                elf_bss = k;
-
-            /*
-             * Do the same thing for the memory mapping - between
-             * elf_bss and last_bss is the bss section.
-             */
-            k = load_addr + eppnt->p_memsz + eppnt->p_vaddr;
-            if (k > last_bss)
-                last_bss = k;
-        }
-    }
-    ...
-```
-
-在这里我们elf文件的解释器是linker,其header信息如下所示:
-
-https://github.com/leeminghao/doc-linux/blob/master/linker/AndroidLinker/src/linker/linker_header.md
-
-其共有两个LOAD段经过elf_map得到的映射信息如下所示:
-
-### PT_LOAD1
-
-```
-addr=0
-size=d000
-off=0
-map_addr=b6f74000
-```
-
-### PT_LOAD2
-
-```
-addr=b6f81000
-size=2000
-off=c000
-map_addr=b6f81000
-```
-
-### load_addr
-
-最终返回给上级调用函数的load_addr值如下所示:
-
-```
-load_addr=b6f74000
-```
-
-### last_bss vs elf_bss
-
-此时计算出的last_bss同elf_bss地址值分别如下所示:
-
-```
-elf_bss=b6f82190
-last_bss=b6f836fc
-```
-
-5.映射解释器bss段
-----------------------------------------
-
-```
-    ...
-    if (last_bss > elf_bss) {
-        /*
-         * Now fill out the bss section.  First pad the last page up
-         * to the page boundary, and then perform a mmap to make sure
-         * that there are zero-mapped pages up to and including the
-         * last bss page.
-         */
-        if (padzero(elf_bss)) {
-            error = -EFAULT;
-            goto out;
-        }
-
-        /* What we have mapped so far */
-        elf_bss = ELF_PAGESTART(elf_bss + ELF_MIN_ALIGN - 1);
-
-        /* Map the last of the bss segment */
-        error = vm_brk(elf_bss, last_bss - elf_bss);
-        if (BAD_ADDR(error))
-            goto out;
-    }
-    ...
-```
-
-通过ELF_PAGESTART计算得到的elf_bss值为b6f83000
-
-elf_bss和last_bss分别是bss和堆的起始地址,而因为bss与堆是前后相连的，所以它们之间的距离正好是
-bss区的大小. 所以它们之间的距离正好是bss段的大小. vm_brk的两个参数正好是bss段的起始地址和长度.
-
-vm_brk的具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap_c/vm_brk.md
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/vm_brk.md
