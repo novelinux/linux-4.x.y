@@ -466,7 +466,12 @@ MAP_PRIVATE创建一个与数据源分离的私有映射，对映射区域的写
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
 
-###
+### load_addr_set
+
+load_addr_set已经被设置成1, 那么装入地址load_bias就是固定的
+load_addr_set默认是0, 那么针对DYN类型的elf格式文件其load_addr
+和load_bias的值一般是等同于error(即实际映射的起始地址).
+从elf_map得知elf这个DYN类型文件该值为0xb6f21000
 
 ```
         if (!load_addr_set) {
@@ -479,6 +484,19 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
                 reloc_func_desc = load_bias;
             }
         }
+```
+
+### Count addr
+
+下面的一段代码用于计算代码区和数据区的开始位置, 结束位置:
+由于代码区在进程空间的最前面，如果当前映射的这一段的开始位置
+还位于当前的代码区之前，那么代码区的开始位置应该还要向前移，
+至少移到这一段的位置上。
+而如果当前映射的这一段的开始位置还位于当前的数据区之后，
+那么数据区的开始位置还应该向后移，至少移到这一段的位置上。
+这是因为数据区在可装载的段的最后，不应该有哪个段的位置比较数据区还靠后。
+
+```
         k = elf_ppnt->p_vaddr;
         if (k < start_code)
             start_code = k;
@@ -500,6 +518,10 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
 
         k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
 
+        /* elf_bss变量记录的是BSS区的开始位置。BSS区排在所有可加载段的后面，
+         * 即它的开始处也就是最后一个可加载段的结尾处。所以总是把当前加载段
+         * 的结尾与它相比，如果当前加载段的结尾比较靠后的话，则还需要把BSS区往后推。
+         */
         if (k > elf_bss)
             elf_bss = k;
         if ((elf_ppnt->p_flags & PF_X) && end_code < k)
@@ -507,11 +529,47 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
         if (end_data < k)
             end_data = k;
         k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
+
+        /* elf_brk变量记录的是堆(heap)的上边界，现在进程还没有运行起来，没有从堆上面申请内存，
+         * 所以堆的大小是0，堆的上边界与下边界重合，而堆的位置还在BSS之后，即它的开始位置应该是
+         * BSS区的结构位置。一般情况下，一个程序头的p_memsz与p_filesz如果不一样大小的话，
+         * 其差值应是未初始化全局变量的大小，这段空间应归入BSS区。上面代码中两个k值的计算
+         * 正是考虑到这一点，所以第二次k值(BRK)的计算是把BSS区大小也计算在内的。
+         */
         if (k > elf_brk)
             elf_brk = k;
     }
 ```
 
+#### PT_LOAD1
+
+针对名称elf(DYN)这个文件我们计算出的各段值如下所示:
+
+在加载完PT_LOAD1段时各值结果如下所示:
+
+```
+start_code=0x0
+end_code=0x494
+start_data=0x0
+end_data=0x494
+elf_bss=0x494
+elf_brk=0x494
+```
+
+#### PT_LOAD2
+
+在加载完PT_LOAD2段时各值结果如下所示:
+
+```
+start_code=0x0
+end_code=0x494
+start_data=0x1ec0
+end_data=0x2000
+elf_bss=0x2000
+elf_brk=0x2004
+```
+
+Count absolute address
 ----------------------------------------
 
 ```
@@ -522,7 +580,24 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
     end_code += load_bias;
     start_data += load_bias;
     end_data += load_bias;
+```
 
+通过如上计算得到的各段值如下所示:
+
+```
+entry=b6f84360
+start_code=b6f84000
+end_code=b6f84494
+start_data=b6f85ec0
+end_data=b6f86000
+elf_bss=b6f86000
+elf_brk=b6f86004
+```
+
+set_brk
+----------------------------------------
+
+```
     /* Calling set_brk effectively mmaps the pages that we need
      * for the bss and break sections.  We must do this before
      * mapping in the interpreter, to make sure it doesn't wind
@@ -535,7 +610,25 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
         retval = -EFAULT; /* Nobody gets to see this, but.. */
         goto out_free_dentry;
     }
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/set_brk.md
+
+经过set_brk设置之后，当前进程的brk段起始地址和结束地址如下所示:
+
+```
+start_brk=0xb6f87000
+end_brk=0xb6f87000
+```
+
+load_elf_interp
+----------------------------------------
+
+elf_interpreter指向解释器(连接器)名称,如果有解释器，则调用load_elf_interp
+函数装载解释器文件.并把将来进入用户空间时的入口地址设置成load_elf_interp()的返回值，
+那显然是解释器的程序入口。而若不装入解释器，那么这个地址就是目标映像本身的程序入口。
+
+```
     if (elf_interpreter) {
         unsigned long interp_map_addr = 0;
 
@@ -571,7 +664,16 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/elf_map.md
 
     kfree(interp_elf_phdata);
     kfree(elf_phdata);
+```
 
+load_elf_interp具体实现如下所示:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/load_elf_interp.md
+
+set_binfmt
+----------------------------------------
+
+```
     set_binfmt(&elf_format);
 
 #ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES
@@ -645,231 +747,6 @@ out_free_ph:
 ```
 
 
-
-        error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
-                elf_prot, elf_flags, 0);
-        if (BAD_ADDR(error)) {
-            retval = IS_ERR((void *)error) ?
-                PTR_ERR((void*)error) : -EINVAL;
-            goto out_free_dentry;
-        }
-
-        /* load_addr_set已经被设置成1, 那么装入地址load_bias就是固定的
-         * load_addr_set默认是0, 那么针对DYN类型的elf格式文件其load_addr
-         * 和load_bias的值一般是等同于error(即实际映射的起始地址).
-         * 从elf_map得知elf这个DYN类型文件该值为0xb6f21000
-         */
-        if (!load_addr_set) {
-            load_addr_set = 1;
-            load_addr = (elf_ppnt->p_vaddr - elf_ppnt->p_offset);
-            if (loc->elf_ex.e_type == ET_DYN) {
-                load_bias += error -
-                             ELF_PAGESTART(load_bias + vaddr);
-                load_addr += load_bias;
-                reloc_func_desc = load_bias;
-            }
-        }
-
-        /* 下面的一段代码用于计算代码区和数据区的开始位置:
-         * 由于代码区在进程空间的最前面，如果当前映射的这一段的开始位置
-         * 还位于当前的代码区之前，那么代码区的开始位置应该还要向前移，
-         * 至少移到这一段的位置上。
-         * 而如果当前映射的这一段的开始位置还位于当前的数据区之后，
-         * 那么数据区的开始位置还应该向后移，至少移到这一段的位置上。
-         * 这是因为数据区在可装载的段的最后，不应该有哪个段的位置比较数据区还靠后。
-         */
-        k = elf_ppnt->p_vaddr;
-        if (k < start_code)
-            start_code = k;
-        if (start_data < k)
-            start_data = k;
-
-        /*
-         * Check to see if the section's size will overflow the
-         * allowed task size. Note that p_filesz must always be
-         * <= p_memsz so it is only necessary to check p_memsz.
-         */
-        if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
-            elf_ppnt->p_memsz > TASK_SIZE ||
-            TASK_SIZE - elf_ppnt->p_memsz < k) {
-            /* set_brk can never work. Avoid overflows. */
-            retval = -EINVAL;
-            goto out_free_dentry;
-        }
-        /* 接下来的代码是用于计算几个区的结束位置: */
-        k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
-
-        /* elf_bss变量记录的是BSS区的开始位置。BSS区排在所有可加载段的后面，
-         * 即它的开始处也就是最后一个可加载段的结尾处。所以总是把当前加载段
-         * 的结尾与它相比，如果当前加载段的结尾比较靠后的话，则还需要把BSS区往后推。
-         */
-        if (k > elf_bss)
-            elf_bss = k;
-        if ((elf_ppnt->p_flags & PF_X) && end_code < k)
-            end_code = k;
-        if (end_data < k)
-            end_data = k;
-        /* elf_brk变量记录的是堆(heap)的上边界，现在进程还没有运行起来，没有从堆上面申请内存，
-         * 所以堆的大小是0，堆的上边界与下边界重合，而堆的位置还在BSS之后，即它的开始位置应该是
-         * BSS区的结构位置。一般情况下，一个程序头的p_memsz与p_filesz如果不一样大小的话，
-         * 其差值应是未初始化全局变量的大小，这段空间应归入BSS区。上面代码中两个k值的计算
-         * 正是考虑到这一点，所以第二次k值(BRK)的计算是把BSS区大小也计算在内的。
-         */
-        k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
-        if (k > elf_brk)
-            elf_brk = k;
-    }
-    ...
-```
-
-
-
-### 计算进程空间各段起始地址和结束地址
-
-针对名称elf(DYN)这个文件我们计算出的各段值如下所示:
-
-在加载完PT_LOAD1段时各值结果如下所示:
-
-```
-start_code=0x0
-end_code=0x494
-start_data=0x0
-end_data=0x494
-elf_bss=0x494
-elf_brk=0x494
-```
-
-在加载完PT_LOAD2段时各值结果如下所示:
-
-```
-start_code=0x0
-end_code=0x494
-start_data=0x1ec0
-end_data=0x2000
-elf_bss=0x2000
-elf_brk=0x2004
-```
-
-14.计算进程各段地址
-----------------------------------------
-
-进程虚拟内存空间布局如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/mm/task_vm_layout.md
-
-```
-    ...
-    loc->elf_ex.e_entry += load_bias;
-    elf_bss += load_bias;
-    elf_brk += load_bias;
-    start_code += load_bias;
-    end_code += load_bias;
-    start_data += load_bias;
-    end_data += load_bias;
-    ...
-```
-
-通过如上计算得到的各段值如下所示:
-
-```
-entry=b6f84360
-start_code=b6f84000
-end_code=b6f84494
-start_data=b6f85ec0
-end_data=b6f86000
-elf_bss=b6f86000
-elf_brk=b6f86004
-```
-
-对应完整的maps如下所示
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/elf.maps
-
-接下来调用set_brk来设置bss段和brk段信息,如下所示:
-
-15.set_brk设置brk段
-----------------------------------------
-
-```
-    ...
-    /* Calling set_brk effectively mmaps the pages that we need
-     * for the bss and break sections.  We must do this before
-     * mapping in the interpreter, to make sure it doesn't wind
-     * up getting placed where the bss needs to go.
-     */
-    retval = set_brk(elf_bss, elf_brk);
-    if (retval)
-        goto out_free_dentry;
-    if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {
-        retval = -EFAULT; /* Nobody gets to see this, but.. */
-        goto out_free_dentry;
-    }
-    ...
-```
-
-set_brk函数用来设置当前进程brk空间区域，具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/set_brk.md
-
-经过set_brk设置之后，当前进程的brk段起始地址和结束地址如下所示:
-
-```
-start_brk=0xb6f87000
-end_brk=0xb6f87000
-```
-
-16.load_elf_interp
-----------------------------------------
-
-elf_interpreter指向解释器(连接器)名称,如果有解释器，则调用load_elf_interp
-函数装载解释器文件.并把将来进入用户空间时的入口地址设置成load_elf_interp()的返回值，
-那显然是解释器的程序入口。而若不装入解释器，那么这个地址就是目标映像本身的程序入口。
-
-```
-    ...
-    if (elf_interpreter) {
-        unsigned long interp_map_addr = 0;
-
-        /* 返回解释器(linker)映射的首地址. */
-        elf_entry = load_elf_interp(&loc->interp_elf_ex,
-                        interpreter,
-                        &interp_map_addr,
-                        load_bias, interp_elf_phdata);
-        if (!IS_ERR((void *)elf_entry)) {
-            /*
-             * load_elf_interp() returns relocation
-             * adjustment
-             */
-            interp_load_addr = elf_entry;
-            /* 接下来将映射首地址再加上对应解释器的入口偏移量即可. */
-            elf_entry += loc->interp_elf_ex.e_entry;
-        }
-        if (BAD_ADDR(elf_entry)) {
-            retval = IS_ERR((void *)elf_entry) ?
-                    (int)elf_entry : -EINVAL;
-            goto out_free_dentry;
-        }
-        reloc_func_desc = interp_load_addr;
-
-        allow_write_access(interpreter);
-        fput(interpreter);
-        kfree(elf_interpreter);
-    } else {
-        elf_entry = loc->elf_ex.e_entry;
-        if (BAD_ADDR(elf_entry)) {
-            retval = -EINVAL;
-            goto out_free_dentry;
-        }
-    }
-
-    kfree(interp_elf_phdata);
-    kfree(elf_phdata);
-    ...
-```
-
-load_elf_interp具体实现如下所示:
-
-https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/load_elf_interp.md
 
 针对本例来说，linker作为解释器，其映射首地址为b6f74000(elf_entry),也就是load_elf_interp的返回值.
 
