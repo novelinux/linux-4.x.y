@@ -199,9 +199,29 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/setup_arg_pages.m
 APIS
 ----------------------------------------
 
-### insert_vm_struct
+### VMA
+
+#### find_vma
+
+将虚拟地址关联到区域:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/find_vma.md
+
+#### vma_merge
+
+区域合并:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/vma_merge.md
+
+#### insert_vm_struct
+
+插入区域:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/insert_vm_struct.md
+
+#### get_unmapped_area
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/get_unmapped_area.md
 
 ### mmap
 
@@ -232,3 +252,31 @@ sys_mmap_pgoff <-+ sys_mmap2 <-+
 ```
 
 https://github.com/novelinux/system_calls/blob/master/mmap/mmap.md
+
+#### sys_mmap2
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/sys_mmap2.md
+
+### sys_brk
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/sys_brk.md
+
+Page Fault
+----------------------------------------
+
+在实际需要某个虚拟内存区域的数据之前，虚拟和物理内存之间的关联不会建立。
+如果进程访问的虚拟地址空间部分尚未与页帧关联，处理器自动地引发一个缺页异常，
+内核必须处理此异常。这是内存管理中最重要、最复杂的方面之一，因为必须考虑到无数的细节。
+例如，内核必须确定以下情况。
+* 缺页异常是由于访问用户地址空间中的有效地址而引起，还是应用程序试图访问内核的受保护区域?
+* 目标地址对应于某个现存的映射吗？
+* 获取该区域的数据，需要使用何种机制？
+
+内核在处理缺页异常时，可能使用的各种代码路径的一个粗略的概观。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/mm/mmap.c/res/page_fault_framework.jpg
+
+按下文的讲述，实际上各个操作都要复杂得多，因为内核不仅要防止来自用户空间的恶意访问，
+还要注意许多细枝末节。此外，决不能因为缺页处理的相关操作而不必要地降低系统性能。
+缺页处理的实现因处理器的不同而有所不同。由于CPU采用了不同的内存管理概念，生成缺页
+异常的细节也不太相同。因此，缺页异常的处理例程在内核代码中位于特定于体系结构的部分。
