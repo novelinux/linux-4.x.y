@@ -1,6 +1,11 @@
 handle_pte_fault
 ========================================
 
+handle_pte_fault函数分析缺页异常的原因。pte是指向相关页表项(pte_t)的指针。
+
+Arguments
+----------------------------------------
+
 path: mm/memory.c
 ```
 /*
@@ -36,6 +41,12 @@ static int handle_pte_fault(struct mm_struct *mm,
      */
     entry = *pte;
     barrier();
+```
+
+!pte_present
+----------------------------------------
+
+```
     if (!pte_present(entry)) {
         if (pte_none(entry)) {
             if (vma_is_anonymous(vma))
@@ -48,7 +59,30 @@ static int handle_pte_fault(struct mm_struct *mm,
         return do_swap_page(mm, vma, address,
                     pte, pmd, flags, entry);
     }
+```
 
+如果页不在物理内存中，即!pte_present(entry)，则必须区分下面情况:
+
+### do_anonymous_page
+
+如果没有对应的页表项（page_none），则内核必须从头开始加载该页，对匿名映射
+称之为按需分配(demand allocation)，对基于文件的映射，则称之为按需调页（demand paging）。
+内核使用do_anonymous_page返回一个匿名页。
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_anonymous_page.md
+
+### do_fault
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_fault.md
+
+### do_swap_page
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_swap_page.md
+
+do_numa_page
+----------------------------------------
+
+```
     if (pte_protnone(entry))
         return do_numa_page(mm, vma, address, entry, pte, pmd);
 
@@ -56,12 +90,26 @@ static int handle_pte_fault(struct mm_struct *mm,
     spin_lock(ptl);
     if (unlikely(!pte_same(*pte, entry)))
         goto unlock;
+```
+
+do_wp_page
+----------------------------------------
+
+```
     if (flags & FAULT_FLAG_WRITE) {
         if (!pte_write(entry))
             return do_wp_page(mm, vma, address,
                     pte, pmd, ptl, entry);
         entry = pte_mkdirty(entry);
     }
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_wp_page.md
+
+pte_mkyoung
+----------------------------------------
+
+```
     entry = pte_mkyoung(entry);
     if (ptep_set_access_flags(vma, address, pte, entry, flags & FAULT_FLAG_WRITE)) {
         update_mmu_cache(vma, address, pte);
