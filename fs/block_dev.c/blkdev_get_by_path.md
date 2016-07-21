@@ -39,6 +39,8 @@ lookup_bdev
         return bdev;
 ```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/block_dev.c/lookup_bdev.md
+
 blkdev_get
 ----------------------------------------
 

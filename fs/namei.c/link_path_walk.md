@@ -36,8 +36,6 @@ for
 本身感兴趣。例如，如果文件名为/cache/test.txt，那么只有路径的3个分量cache, test.txt是相关的，
 斜线应该与路径分量分离开来。每个循环中处理一个路径分量。
 
-
-
 ```
     /* At this point we know we have a real path component. */
     for(;;) {
