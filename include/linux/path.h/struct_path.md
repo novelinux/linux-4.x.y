@@ -12,7 +12,7 @@ struct path {
 
 有关所在文件系统的信息包含在structvfs_mount中.
 
-https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/dcache.h/struct_vfsmount.md
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/mount.h/struct_vfsmount.md
 
 dentry
 ----------------------------------------
