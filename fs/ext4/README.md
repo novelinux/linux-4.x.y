@@ -11,6 +11,8 @@ EXT4
 Disk Layout
 ----------------------------------------
 
+https://ext4.wiki.kernel.org/index.php/Ext4_Disk_Layout
+
 ### File System Layout
 
 ![fs_layout.jpg](https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/res/fs_layout.jpg)
@@ -74,95 +76,9 @@ Disk Layout
 它找到的使用负荷最小的块组中。这可以保证目录在磁盘上的分散性。
 * 6.即使上述机制无效，仍然可以使用e4defrag整理碎片文件。
 
-dumpe2fs
-----------------------------------------
+* Extended Attributes
 
-dumpe2fs可以查看磁盘上对应ext4文件系统信息，如下所示:
-
-```
-# dumpe2fs /dev/block/bootdevice/by-name/cust
-dumpe2fs 1.42.9 (28-Dec-2013)
-Filesystem volume name:   cust
-Last mounted on:          /cust
-Filesystem UUID:          f00b9a3b-4d08-c450-8c71-e78719096954
-Filesystem magic number:  0xEF53
-Filesystem revision #:    1 (dynamic)
-Filesystem features:      has_journal ext_attr resize_inode filetype needs_recovery extent sparse_super large_file uninit_bg
-Filesystem flags:         unsigned_directory_hash
-Default mount options:    (none)
-Filesystem state:         clean
-Errors behavior:          Remount read-only
-Filesystem OS type:       Linux
-Inode count:              32768
-Block count:              131072
-Reserved block count:     0
-Free blocks:              1612
-Free inodes:              32708
-First block:              0
-Block size:               4096
-Fragment size:            4096
-Reserved GDT blocks:      31
-Blocks per group:         32768
-Fragments per group:      32768
-Inodes per group:         8192
-Inode blocks per group:   512
-Last mount time:          Mon Jun 20 09:38:41 2016
-Last write time:          Mon Jun 20 09:38:41 2016
-Mount count:              1
-Maximum mount count:      -1
-Last checked:             Thu Jan  1 08:00:00 1970
-Check interval:           0 (<none>)
-Reserved blocks uid:      0 (user root)
-Reserved blocks gid:      0 (group root)
-First inode:              11
-Inode size:                         256
-Required extra isize:     28
-Desired extra isize:      28
-Journal inode:            8
-Default directory hash:   tea
-Journal backup:           inode blocks
-Journal features:         (none)
-Journal size:             8M
-Journal length:           2048
-Journal sequence:         0x00000002
-Journal start:            1
-
-
-Group 0: (Blocks 0-32767) [ITABLE_ZEROED]
-  Checksum 0x5ac5, unused inodes 0
-  Primary superblock at 0, Group descriptors at 1-1
-  Reserved GDT blocks at 2-32
-  Block bitmap at 33 (+33), Inode bitmap at 34 (+34)
-  Inode table at 35-546 (+35)
-  349 free blocks, 8132 free inodes, 26 directories
-  Free blocks: 32419-32767
-  Free inodes: 61-8192
-Group 1: (Blocks 32768-65535) [INODE_UNINIT, ITABLE_ZEROED]
-  Checksum 0x01a5, unused inodes 0
-  Backup superblock at 32768, Group descriptors at 32769-32769
-  Reserved GDT blocks at 32770-32800
-  Block bitmap at 32801 (+33), Inode bitmap at 32802 (+34)
-  Inode table at 32803-33314 (+35)
-  6567 free blocks, 8192 free inodes, 0 directories
-  Free blocks: 46450-51754, 64274-65535
-  Free inodes: 8193-16384
-Group 2: (Blocks 65536-98303) [INODE_UNINIT, ITABLE_ZEROED]
-  Checksum 0x3504, unused inodes 0
-  Block bitmap at 65536 (+0), Inode bitmap at 65537 (+1)
-  Inode table at 65538-66049 (+2)
-  1 free blocks, 8192 free inodes, 0 directories
-  Free blocks: 98303
-  Free inodes: 16385-24576
-Group 3: (Blocks 98304-131071) [INODE_UNINIT, ITABLE_ZEROED]
-  Checksum 0x9f8f, unused inodes 0
-  Backup superblock at 98304, Group descriptors at 98305-98305
-  Reserved GDT blocks at 98306-98336
-  Block bitmap at 98337 (+33), Inode bitmap at 98338 (+34)
-  Inode table at 98339-98850 (+35)
-  0 free blocks, 8192 free inodes, 0 directories
-  Free blocks:
-  Free inodes: 24577-32768
-```
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/xattr.h/README.md
 
 Data Structure
 ----------------------------------------
@@ -201,6 +117,8 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_
 持久驻留在物理内存中。这样访问速度就快了很多，也减少了与硬盘的交互。那么为什么不将所有的文件
 系统管理数据保存在物理内存中（定期将修改写回磁盘）？尽管这在理论上是可能的，但在实际上行不通，
 因为对以吉字节计算的大硬盘来说（现在很常见），需要大量内存来保存所有的块位图和inode位图。
+
+### Xattr
 
 ### Dir vs File
 
@@ -279,3 +197,93 @@ APIS
 ### About File System
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/super.c/ext4_fs_type.md
+
+dumpe2fs
+----------------------------------------
+
+dumpe2fs可以查看磁盘上对应ext4文件系统信息，如下所示:
+
+```
+# dumpe2fs /dev/block/bootdevice/by-name/cust
+dumpe2fs 1.42.9 (28-Dec-2013)
+Filesystem volume name:   cust
+Last mounted on:          /cust
+Filesystem UUID:          f00b9a3b-4d08-c450-8c71-e78719096954
+Filesystem magic number:  0xEF53
+Filesystem revision #:    1 (dynamic)
+Filesystem features:      has_journal ext_attr resize_inode filetype needs_recovery extent sparse_super large_file uninit_bg
+Filesystem flags:         unsigned_directory_hash
+Default mount options:    (none)
+Filesystem state:         clean
+Errors behavior:          Remount read-only
+Filesystem OS type:       Linux
+Inode count:              32768
+Block count:              131072
+Reserved block count:     0
+Free blocks:              1612
+Free inodes:              32708
+First block:              0
+Block size:               4096
+Fragment size:            4096
+Reserved GDT blocks:      31
+Blocks per group:         32768
+Fragments per group:      32768
+Inodes per group:         8192
+Inode blocks per group:   512
+Last mount time:          Mon Jun 20 09:38:41 2016
+Last write time:          Mon Jun 20 09:38:41 2016
+Mount count:              1
+Maximum mount count:      -1
+Last checked:             Thu Jan  1 08:00:00 1970
+Check interval:           0 (<none>)
+Reserved blocks uid:      0 (user root)
+Reserved blocks gid:      0 (group root)
+First inode:              11
+Inode size:               256
+Required extra isize:     28
+Desired extra isize:      28
+Journal inode:            8
+Default directory hash:   tea
+Journal backup:           inode blocks
+Journal features:         (none)
+Journal size:             8M
+Journal length:           2048
+Journal sequence:         0x00000002
+Journal start:            1
+
+
+Group 0: (Blocks 0-32767) [ITABLE_ZEROED]
+  Checksum 0x5ac5, unused inodes 0
+  Primary superblock at 0, Group descriptors at 1-1
+  Reserved GDT blocks at 2-32
+  Block bitmap at 33 (+33), Inode bitmap at 34 (+34)
+  Inode table at 35-546 (+35)
+  349 free blocks, 8132 free inodes, 26 directories
+  Free blocks: 32419-32767
+  Free inodes: 61-8192
+Group 1: (Blocks 32768-65535) [INODE_UNINIT, ITABLE_ZEROED]
+  Checksum 0x01a5, unused inodes 0
+  Backup superblock at 32768, Group descriptors at 32769-32769
+  Reserved GDT blocks at 32770-32800
+  Block bitmap at 32801 (+33), Inode bitmap at 32802 (+34)
+  Inode table at 32803-33314 (+35)
+  6567 free blocks, 8192 free inodes, 0 directories
+  Free blocks: 46450-51754, 64274-65535
+  Free inodes: 8193-16384
+Group 2: (Blocks 65536-98303) [INODE_UNINIT, ITABLE_ZEROED]
+  Checksum 0x3504, unused inodes 0
+  Block bitmap at 65536 (+0), Inode bitmap at 65537 (+1)
+  Inode table at 65538-66049 (+2)
+  1 free blocks, 8192 free inodes, 0 directories
+  Free blocks: 98303
+  Free inodes: 16385-24576
+Group 3: (Blocks 98304-131071) [INODE_UNINIT, ITABLE_ZEROED]
+  Checksum 0x9f8f, unused inodes 0
+  Backup superblock at 98304, Group descriptors at 98305-98305
+  Reserved GDT blocks at 98306-98336
+  Block bitmap at 98337 (+33), Inode bitmap at 98338 (+34)
+  Inode table at 98339-98850 (+35)
+  0 free blocks, 8192 free inodes, 0 directories
+  Free blocks:
+  Free inodes: 24577-32768
+```
