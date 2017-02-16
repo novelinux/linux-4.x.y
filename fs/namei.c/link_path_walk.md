@@ -38,7 +38,7 @@ for
 
 ```
     /* At this point we know we have a real path component. */
-    for(;;) {
+    for(;;) {  /* 把name参数中传递的路径名分解为分量"/"被当做分隔符对于每个分量执行 */
         u64 hash_len;
         int type;
 
@@ -59,6 +59,12 @@ for
             case 1:
                 type = LAST_DOT;
         }
+```
+
+### this
+
+
+```
         if (likely(type == LAST_NORM)) {
             struct dentry *parent = nd->path.dentry;
             nd->flags &= ~LOOKUP_JUMPED;
@@ -87,6 +93,11 @@ for
             name++;
         } while (unlikely(*name == '/'));
         if (unlikely(!*name)) {
+```
+
+### OK
+
+```
 OK:
             /* pathname body, done */
             if (!nd->depth)
