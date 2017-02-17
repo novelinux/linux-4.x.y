@@ -12,6 +12,12 @@ nodelalloc
       Disable delayed allocation. Blocks are allocated when data is copied from user to page cache.
 ```
 
+* sagit
+
+```
+/dev/block/sda17 on /data type ext4 (rw,seclabel,nosuid,nodev,relatime,discard,noauto_da_alloc,data=ordered)
+```
+
 path: fs/ext4/inode.c
 ```
 void ext4_set_aops(struct inode *inode)
