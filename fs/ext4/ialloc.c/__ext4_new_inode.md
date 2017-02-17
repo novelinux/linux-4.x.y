@@ -66,6 +66,8 @@ ext4_encrypted_inode
     }
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4_encrypted_inode.md
+
 ext4_get_groups_count
 ----------------------------------------
 
@@ -422,13 +424,25 @@ got:
         ei->i_sync_tid = handle->h_transaction->t_tid;
         ei->i_datasync_tid = handle->h_transaction->t_tid;
     }
+```
 
+ext4_inherit_context
+----------------------------------------
+
+```
     if (encrypt) {
         err = ext4_inherit_context(dir, inode);
         if (err)
             goto fail_free_drop;
     }
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/crypto_policy.c/ext4_inherit_context.md
+
+ext4_mark_inode_dirty
+----------------------------------------
+
+```
     err = ext4_mark_inode_dirty(handle, inode);
     if (err) {
         ext4_std_error(sb, err);

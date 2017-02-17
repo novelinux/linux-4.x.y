@@ -1,38 +1,6 @@
 sys_openat
 ========================================
 
-Code Flow
-----------------------------------------
-
-```
-sys_openat
- |
- +-> do_sys_open
-     |
-     +-> getname
-     |
-     +-> getunused_fd_flags
-     |
-     +-> do_filp_open
-     |   |
-     |   +-> set_nameidata
-     |   |
-     |   +-> path_openat
-     |   |   |
-     |   |   +-> get_empty_filep
-     |   |   |
-     |   |   +-> path_init
-     |   |   |
-     |   |   +-> link_path_walk
-     |   |   |
-     |   |   +-> do_last
-     |   |
-     |   +-> restore_nameidata
-     |
-     +-> fd_install
-         |
-         +-> __fd_install
-```
 
 Arguments
 ----------------------------------------

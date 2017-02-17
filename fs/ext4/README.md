@@ -120,6 +120,8 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_
 
 ### Xattr
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/xattr.h/
+
 ### Dir vs File
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/ext4.h/struct_ext4_dir_entry_2.md
