@@ -1,5 +1,4 @@
-ext4_file_operations
-========================================
+# ext4_file_operations
 
 path: fs/ext4/file.c
 ```
@@ -8,8 +7,7 @@ const struct file_operations ext4_file_operations = {
     .read_iter    = generic_file_read_iter,
 ```
 
-write_iter
-----------------------------------------
+## write_iter
 
 ```
     .write_iter    = ext4_file_write_iter,
@@ -17,8 +15,7 @@ write_iter
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/file.c/ext4_file_write_iter.md
 
-unlocked_ioctl
-----------------------------------------
+## unlocked_ioctl
 
 ```
     .unlocked_ioctl = ext4_ioctl,
@@ -27,8 +24,7 @@ unlocked_ioctl
 #endif
 ```
 
-mmap
-----------------------------------------
+## mmap
 
 ```
     .mmap        = ext4_file_mmap,
@@ -36,8 +32,7 @@ mmap
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/ext4/file.c/ext4_file_mmap.md
 
-open
-----------------------------------------
+## open
 
 ```
     .open        = ext4_file_open,
@@ -45,12 +40,23 @@ open
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/file.c/ext4_file_open.md
 
-release
-----------------------------------------
+## release
 
 ```
     .release    = ext4_release_file,
+```
+
+## fsync
+
+```
     .fsync        = ext4_sync_file,
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/ext4/fsync.c/ext4_sync_file.md
+
+## splice_read
+
+```
     .splice_read    = generic_file_splice_read,
     .splice_write    = iter_file_splice_write,
     .fallocate    = ext4_fallocate,

@@ -1,8 +1,6 @@
-ext4_file_write_iter
-========================================
+# ext4_file_write_iter
 
-Arguments
-----------------------------------------
+## Arguments
 
 path: fs/ext4/file.c
 ```
@@ -87,8 +85,7 @@ ext4_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
     }
 ```
 
-__generic_file_write_iter
-----------------------------------------
+## __generic_file_write_iter
 
 ```
     ret = __generic_file_write_iter(iocb, from);
@@ -97,8 +94,7 @@ __generic_file_write_iter
 
 https://github.com/novelinux/linux-4.x.y/blob/master/mm/filemap.c/__generic_file_write_iter.md
 
-generic_write_sync
-----------------------------------------
+## generic_write_sync
 
 ```
     if (ret > 0) {
@@ -108,6 +104,13 @@ generic_write_sync
         if (err < 0)
             ret = err;
     }
+```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/fs.h/generic_write_sync.md
+
+## blk_finish_plug
+
+```
     if (o_direct)
         blk_finish_plug(&plug);
 
