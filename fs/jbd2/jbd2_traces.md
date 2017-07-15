@@ -34,28 +34,12 @@ int main(int argc, char *argv[])
 ## open-write JBD2 - barrier
 
 ```
-           test-9810  [001] ...1 21614.465228: jbd2_handle_start: dev 259,0 tid 47 type 4 line_no 2460 requested_blocks 35
-            test-9810  [001] ...1 21614.465581: jbd2_handle_stats: dev 259,0 tid 47 type 4 line_no 2460 interval 0 sync 0 requested_blocks 35 dirtied_blocks 5
-            test-9810  [001] ...1 21614.465681: jbd2_handle_start: dev 259,0 tid 47 type 2 line_no 2765 requested_blocks 1
-            test-9810  [001] ...1 21614.465787: jbd2_handle_stats: dev 259,0 tid 47 type 2 line_no 2765 interval 0 sync 0 requested_blocks 1 dirtied_blocks 0
-   kworker/u16:0-9258  [000] ...1 21617.542392: jbd2_handle_start: dev 259,0 tid 47 type 2 line_no 2573 requested_blocks 8
-   kworker/u16:0-9258  [000] ...1 21617.542847: jbd2_handle_stats: dev 259,0 tid 47 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 1
-   kworker/u16:0-9258  [000] ...1 21617.542911: jbd2_handle_start: dev 259,0 tid 47 type 2 line_no 2573 requested_blocks 8
-   kworker/u16:0-9258  [000] ...1 21617.542918: jbd2_handle_stats: dev 259,0 tid 47 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 0
-    jbd2/sda16-8-578   [001] ...1 21620.001803: jbd2_start_commit: dev 259,0 transaction 47 sync 0
-    jbd2/sda16-8-578   [001] ...2 21620.001966: jbd2_commit_locking: dev 259,0 transaction 47 sync 0
-    jbd2/sda16-8-578   [001] ...2 21620.002010: jbd2_commit_flushing: dev 259,0 transaction 47 sync 0
-    jbd2/sda16-8-578   [001] ...1 21620.002043: jbd2_commit_logging: dev 259,0 transaction 47 sync 0
-    jbd2/sda16-8-578   [001] ...3 21620.013692: jbd2_checkpoint_stats: dev 259,0 tid 46 chp_time 0 forced_to_close 0 written 0 dropped 5
-    jbd2/sda16-8-578   [001] ...3 21620.013774: jbd2_drop_transaction: dev 259,0 transaction 46 sync 0
-    jbd2/sda16-8-578   [001] ...2 21620.013799: jbd2_run_stats: dev 259,0 tid 47 wait 0 request_delay 0 running 5540 locked 0 flushing 0 logging 10 handle_count 4 blocks 6 blocks_logged 7
-    jbd2/sda16-8-578   [001] ...1 21620.013811: jbd2_end_commit: dev 259,0 transaction 47 sync 0 head 25
 ```
 
 ## open-write  - barrier
 
 ```
- test-open-writ-9948  [000] ...1 22423.447216: ext4_request_inode: dev 259,0 dir 2 mode 0100700
+  test-open-writ-9948  [000] ...1 22423.447216: ext4_request_inode: dev 259,0 dir 2 mode 0100700
   test-open-writ-9948  [000] ...1 22423.447440: ext4_journal_start: dev 259,0 blocks, 35 rsv_blocks, 0 caller __ext4_new_inode+0x750/0x1338
   test-open-writ-9948  [000] ...1 22423.447483: jbd2_handle_start: dev 259,0 tid 56 type 4 line_no 2460 requested_blocks 35
   test-open-writ-9948  [000] ...1 22423.447640: ext4_mark_inode_dirty: dev 259,0 ino 13 caller ext4_ext_tree_init+0x24/0x30
@@ -378,9 +362,4 @@ int main(int argc, char *argv[])
   test-open-writ-10096 [000] ...1 23439.439851: ext4_discard_preallocations: dev 259,0 ino 16
    kworker/u16:9-9917  [000] ...1 23444.432269: ext4_writepages: dev 259,0 ino 16 nr_to_write 1024 pages_skipped 0 range_start 0 range_end 9223372036854775807 sync_mode 0 for_kupdate 1 range_cyclic 1 writeback_index 1
    kworker/u16:9-9917  [000] ...1 23444.432444: ext4_writepages_result: dev 259,0 ino 16 ret 0 pages_written 0 pages_skipped 0 sync_mode 0 writeback_index 1
-```
-
-## open-write-fsync - nobarrier
-
-```
 ```
