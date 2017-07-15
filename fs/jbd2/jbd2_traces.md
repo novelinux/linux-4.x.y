@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 ## open-write  - barrier
 
 ```
+open:
   test-open-writ-9948  [000] ...1 22423.447216: ext4_request_inode: dev 259,0 dir 2 mode 0100700
   test-open-writ-9948  [000] ...1 22423.447440: ext4_journal_start: dev 259,0 blocks, 35 rsv_blocks, 0 caller __ext4_new_inode+0x750/0x1338
   test-open-writ-9948  [000] ...1 22423.447483: jbd2_handle_start: dev 259,0 tid 56 type 4 line_no 2460 requested_blocks 35
@@ -45,6 +46,8 @@ int main(int argc, char *argv[])
   test-open-writ-9948  [000] ...1 22423.447703: ext4_mark_inode_dirty: dev 259,0 ino 2 caller add_dirent_to_buf+0x170/0x1dc
   test-open-writ-9948  [000] ...1 22423.447711: ext4_mark_inode_dirty: dev 259,0 ino 13 caller ext4_add_nondir+0x34/0x7c
   test-open-writ-9948  [000] ...1 22423.447734: jbd2_handle_stats: dev 259,0 tid 56 type 4 line_no 2460 interval 0 sync 0 requested_blocks 35 dirtied_blocks 4
+
+write:
   test-open-writ-9948  [000] ...1 22423.447810: ext4_da_write_begin: dev 259,0 ino 13 pos 0 len 12 flags 0
   test-open-writ-9948  [000] ...1 22423.447834: ext4_journal_start: dev 259,0 blocks, 1 rsv_blocks, 0 caller ext4_da_write_begin+0x1d4/0x304
   test-open-writ-9948  [000] ...1 22423.447835: jbd2_handle_start: dev 259,0 tid 56 type 2 line_no 2765 requested_blocks 1

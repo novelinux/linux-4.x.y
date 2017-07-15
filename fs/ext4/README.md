@@ -289,3 +289,7 @@ Group 3: (Blocks 98304-131071) [INODE_UNINIT, ITABLE_ZEROED]
   Free blocks:
   Free inodes: 24577-32768
 ```
+
+## EXT4 - JBD2
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/jbd2/ext4_jbd2_flow.md
