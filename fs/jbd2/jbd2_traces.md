@@ -53,13 +53,17 @@ write:
   test-open-writ-9948  [000] ...1 22423.447835: jbd2_handle_start: dev 259,0 tid 56 type 2 line_no 2765 requested_blocks 1
   test-open-writ-9948  [000] ...1 22423.447850: ext4_es_lookup_extent_enter: dev 259,0 ino 13 lblk 0
   test-open-writ-9948  [000] ...1 22423.447852: ext4_es_lookup_extent_exit: dev 259,0 ino 13 found 0 [0/0) 0
-  test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259,0 ino 13 lblk 0 len 1 flags
+
+test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259,0 ino 13 lblk 0 len 1 flags
   test-open-writ-9948  [000] ...1 22423.447872: ext4_es_find_delayed_extent_range_enter: dev 259,0 ino 13 lblk 0
   test-open-writ-9948  [000] ...1 22423.447880: ext4_es_find_delayed_extent_range_exit: dev 259,0 ino 13 es [0/0) mapped 0 status
   test-open-writ-9948  [000] ...1 22423.447887: ext4_es_insert_extent: dev 259,0 ino 13 es [0/4294967295) mapped 576460752303423487 status H
   test-open-writ-9948  [000] ...1 22423.447909: ext4_ext_map_blocks_exit: dev 259,0 ino 13 flags  lblk 0 pblk 18446743803717991120 len 1 mflags  ret 0
+
   test-open-writ-9948  [000] ...2 22423.447919: ext4_da_reserve_space: dev 259,0 ino 13 mode 0100700 i_blocks 0 reserved_data_blocks 1 reserved_meta_blocks 0
   test-open-writ-9948  [000] ...1 22423.447920: ext4_es_insert_extent: dev 259,0 ino 13 es [0/1) mapped 576460752303423487 status D
+
+
   test-open-writ-9948  [000] ...1 22423.447950: ext4_da_write_end: dev 259,0 ino 13 pos 0 len 12 copied 12
   test-open-writ-9948  [000] ...1 22423.447974: ext4_journal_start: dev 259,0 blocks, 2 rsv_blocks, 0 caller ext4_dirty_inode+0x30/0x68
   test-open-writ-9948  [000] ...1 22423.447975: ext4_mark_inode_dirty: dev 259,0 ino 13 caller ext4_dirty_inode+0x44/0x68
