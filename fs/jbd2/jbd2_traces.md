@@ -31,11 +31,6 @@ int main(int argc, char *argv[])
 }
 ```
 
-## open-write JBD2 - barrier
-
-```
-```
-
 ## open-write  - barrier
 
 ```

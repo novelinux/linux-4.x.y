@@ -1,5 +1,36 @@
 # JBD2
 
+## Test Code
+
+```
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+
+#include <fcntl.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[])
+{
+    char *filename = argv[1];
+
+    int fd = open(filename, O_CREAT | O_RDWR);
+    if (fd < 0) {
+        printf("open %s failed: %s\n", filename, strerror(errno));
+        return 1;
+    }
+    if (write(fd, "hello world\n", 12) != 12) {
+        printf("write failed: %s\n", strerror(errno));
+        return 1;
+    }
+    fsync(fd);
+
+    return 0;
+}
+```
+
 ## open-write JBD2 - nobarrier
 
 ```
