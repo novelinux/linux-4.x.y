@@ -151,6 +151,7 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
 ## open-write-O_SYNC - barrier
 
 ```
+open:
   test-open-writ-10076 [000] ...1 23353.359860: ext4_request_inode: dev 259,0 dir 2 mode 0100360
   test-open-writ-10076 [000] ...1 23353.360035: ext4_journal_start: dev 259,0 blocks, 35 rsv_blocks, 0 caller __ext4_new_inode+0x750/0x1338
   test-open-writ-10076 [000] ...1 23353.360054: jbd2_handle_start: dev 259,0 tid 57 type 4 line_no 2460 requested_blocks 35
@@ -162,6 +163,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10076 [000] ...1 23353.360190: ext4_mark_inode_dirty: dev 259,0 ino 2 caller add_dirent_to_buf+0x170/0x1dc
   test-open-writ-10076 [000] ...1 23353.360200: ext4_mark_inode_dirty: dev 259,0 ino 14 caller ext4_add_nondir+0x34/0x7c
   test-open-writ-10076 [000] ...1 23353.360213: jbd2_handle_stats: dev 259,0 tid 57 type 4 line_no 2460 interval 0 sync 0 requested_blocks 35 dirtied_blocks 4
+
+write:
   test-open-writ-10076 [000] ...1 23353.360261: ext4_da_write_begin: dev 259,0 ino 14 pos 0 len 12 flags 0
   test-open-writ-10076 [000] ...1 23353.360276: ext4_journal_start: dev 259,0 blocks, 1 rsv_blocks, 0 caller ext4_da_write_begin+0x1d4/0x304
   test-open-writ-10076 [000] ...1 23353.360278: jbd2_handle_start: dev 259,0 tid 57 type 2 line_no 2765 requested_blocks 1
@@ -178,6 +181,9 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10076 [000] ...1 23353.360353: ext4_journal_start: dev 259,0 blocks, 2 rsv_blocks, 0 caller ext4_dirty_inode+0x30/0x68
   test-open-writ-10076 [000] ...1 23353.360354: ext4_mark_inode_dirty: dev 259,0 ino 14 caller ext4_dirty_inode+0x44/0x68
   test-open-writ-10076 [000] ...1 23353.360356: jbd2_handle_stats: dev 259,0 tid 57 type 2 line_no 2765 interval 0 sync 0 requested_blocks 1 dirtied_blocks 0
+
+
+O_SYNC:
   test-open-writ-10076 [000] ...1 23353.360366: ext4_sync_file_enter: dev 259,0 ino 14 parent 2 datasync 0
   test-open-writ-10076 [000] ...1 23353.360370: ext4_writepages: dev 259,0 ino 14 nr_to_write 9223372036854775807 pages_skipped 0 range_start 0 range_end 11 sync_mode 1 for_kupdate 0 range_cyclic 0 writeback_index 0
   test-open-writ-10076 [000] ...1 23353.360382: ext4_journal_start: dev 259,0 blocks, 8 rsv_blocks, 0 caller ext4_writepages+0x524/0xd24
@@ -200,6 +206,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10076 [000] ...1 23353.360506: ext4_mark_inode_dirty: dev 259,0 ino 14 caller ext4_writepages+0xc1c/0xd24
   test-open-writ-10076 [000] ...1 23353.360508: jbd2_handle_stats: dev 259,0 tid 57 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 1
   test-open-writ-10076 [000] .n.1 23353.360648: ext4_writepages_result: dev 259,0 ino 14 ret 0 pages_written 1 pages_skipped 0 sync_mode 1 writeback_index 0
+
+
     jbd2/sda16-8-578   [001] ...1 23353.380478: jbd2_start_commit: dev 259,0 transaction 57 sync 0
     jbd2/sda16-8-578   [001] ...2 23353.380541: jbd2_commit_locking: dev 259,0 transaction 57 sync 0
     jbd2/sda16-8-578   [001] ...3 23353.380556: jbd2_checkpoint_stats: dev 259,0 tid 55 chp_time 0 forced_to_close 0 written 0 dropped 5
@@ -261,6 +269,7 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
 ## open-write-fsync - barrier
 
 ```
+open:
   test-open-writ-10096 [000] ...1 23439.421309: ext4_request_inode: dev 259,0 dir 2 mode 0107220
   test-open-writ-10096 [000] ...1 23439.421469: ext4_journal_start: dev 259,0 blocks, 35 rsv_blocks, 0 caller __ext4_new_inode+0x750/0x1338
   test-open-writ-10096 [000] ...1 23439.421501: jbd2_handle_start: dev 259,0 tid 58 type 4 line_no 2460 requested_blocks 35
@@ -272,7 +281,9 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10096 [000] ...1 23439.421732: ext4_mark_inode_dirty: dev 259,0 ino 2 caller add_dirent_to_buf+0x170/0x1dc
   test-open-writ-10096 [000] ...1 23439.421745: ext4_mark_inode_dirty: dev 259,0 ino 16 caller ext4_add_nondir+0x34/0x7c
   test-open-writ-10096 [000] ...1 23439.421769: jbd2_handle_stats: dev 259,0 tid 58 type 4 line_no 2460 interval 0 sync 0 requested_blocks 35 dirtied_blocks 4
-  test-open-writ-10096 [000] ...1 23439.421849: ext4_da_write_begin: dev 259,0 ino 16 pos 0 len 12 flags 0
+
+write:
+test-open-writ-10096 [000] ...1 23439.421849: ext4_da_write_begin: dev 259,0 ino 16 pos 0 len 12 flags 0
   test-open-writ-10096 [000] ...1 23439.421872: ext4_journal_start: dev 259,0 blocks, 1 rsv_blocks, 0 caller ext4_da_write_begin+0x1d4/0x304
   test-open-writ-10096 [000] ...1 23439.421875: jbd2_handle_start: dev 259,0 tid 58 type 2 line_no 2765 requested_blocks 1
   test-open-writ-10096 [000] ...1 23439.421890: ext4_es_lookup_extent_enter: dev 259,0 ino 16 lblk 0
@@ -288,7 +299,11 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10096 [000] ...1 23439.422023: ext4_journal_start: dev 259,0 blocks, 2 rsv_blocks, 0 caller ext4_dirty_inode+0x30/0x68
   test-open-writ-10096 [000] ...1 23439.422024: ext4_mark_inode_dirty: dev 259,0 ino 16 caller ext4_dirty_inode+0x44/0x68
   test-open-writ-10096 [000] ...1 23439.422027: jbd2_handle_stats: dev 259,0 tid 58 type 2 line_no 2765 interval 0 sync 0 requested_blocks 1 dirtied_blocks 0
+
+fsync:
   test-open-writ-10096 [000] ...1 23439.422049: ext4_sync_file_enter: dev 259,0 ino 16 parent 2 datasync 0
+
+
   test-open-writ-10096 [000] ...1 23439.422058: ext4_writepages: dev 259,0 ino 16 nr_to_write 9223372036854775807 pages_skipped 0 range_start 0 range_end 9223372036854775807 sync_mode 1 for_kupdate 0 range_cyclic 0 writeback_index 0
   test-open-writ-10096 [000] ...1 23439.422080: ext4_journal_start: dev 259,0 blocks, 8 rsv_blocks, 0 caller ext4_writepages+0x524/0xd24
   test-open-writ-10096 [000] ...1 23439.422081: jbd2_handle_start: dev 259,0 tid 58 type 2 line_no 2573 requested_blocks 8
@@ -296,6 +311,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10096 [000] ...1 23439.422107: ext4_da_write_pages_extent: dev 259,0 ino 16 lblk 0 len 1 flags 0x200
   test-open-writ-10096 [000] ...1 23439.422108: ext4_es_lookup_extent_enter: dev 259,0 ino 16 lblk 0
   test-open-writ-10096 [000] ...1 23439.422109: ext4_es_lookup_extent_exit: dev 259,0 ino 16 found 1 [0/1) 576460752303423487 D0x10
+
+
   test-open-writ-10096 [000] ...1 23439.422111: ext4_ext_map_blocks_enter: dev 259,0 ino 16 lblk 0 len 1 flags CREATE|DELALLOC|METADATA_NOFAIL
   test-open-writ-10096 [000] ...1 23439.422130: ext4_request_blocks: dev 259,0 ino 16 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
   test-open-writ-10096 [000] ...1 23439.422183: ext4_mballoc_prealloc: dev 259,0 inode 16 orig 0/0/1@0 result 0/2053/1@0
@@ -306,6 +323,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10096 [000] ...1 23439.422225: ext4_journal_start: dev 259,0 blocks, 2 rsv_blocks, 0 caller ext4_dirty_inode+0x30/0x68
   test-open-writ-10096 [000] ...1 23439.422226: ext4_mark_inode_dirty: dev 259,0 ino 16 caller ext4_dirty_inode+0x44/0x68
   test-open-writ-10096 [000] ...1 23439.422229: ext4_ext_map_blocks_exit: dev 259,0 ino 16 flags CREATE|DELALLOC|METADATA_NOFAIL lblk 0 pblk 2053 len 1 mflags NM ret 1
+
+
   test-open-writ-10096 [000] ...1 23439.422232: ext4_es_insert_extent: dev 259,0 ino 16 es [0/1) mapped 2053 status W
   test-open-writ-10096 [000] ...1 23439.422281: ext4_mark_inode_dirty: dev 259,0 ino 16 caller ext4_writepages+0xc1c/0xd24
   test-open-writ-10096 [000] ...1 23439.422284: jbd2_handle_stats: dev 259,0 tid 58 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 1
@@ -314,6 +333,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-10096 [000] ...1 23439.422399: ext4_da_write_pages: dev 259,0 ino 16 first_page 1 nr_to_write 9223372036854775806 sync_mode 1
   test-open-writ-10096 [000] ...1 23439.422400: jbd2_handle_stats: dev 259,0 tid 58 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 0
   test-open-writ-10096 [000] .n.1 23439.422521: ext4_writepages_result: dev 259,0 ino 16 ret 0 pages_written 1 pages_skipped 0 sync_mode 1 writeback_index 1
+
+
     jbd2/sda16-8-578   [001] ...1 23439.436833: jbd2_start_commit: dev 259,0 transaction 58 sync 0
     jbd2/sda16-8-578   [001] ...2 23439.436860: jbd2_commit_locking: dev 259,0 transaction 58 sync 0
     jbd2/sda16-8-578   [001] ...2 23439.436870: jbd2_commit_flushing: dev 259,0 transaction 58 sync 0
@@ -365,6 +386,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
     jbd2/sda16-8-578   [002] ...2 23439.438355: jbd2_run_stats: dev 259,0 tid 58 wait 0 request_delay 0 running 10 locked 0 flushing 0 logging 10 handle_count 4 blocks 5 blocks_logged 6
     jbd2/sda16-8-578   [002] ...1 23439.438361: jbd2_end_commit: dev 259,0 transaction 58 sync 0 head 25
   test-open-writ-10096 [000] ...1 23439.438391: ext4_sync_file_exit: dev 259,0 ino 16 ret 0
+
+
   test-open-writ-10096 [000] ...1 23439.439851: ext4_discard_preallocations: dev 259,0 ino 16
    kworker/u16:9-9917  [000] ...1 23444.432269: ext4_writepages: dev 259,0 ino 16 nr_to_write 1024 pages_skipped 0 range_start 0 range_end 9223372036854775807 sync_mode 0 for_kupdate 1 range_cyclic 1 writeback_index 1
    kworker/u16:9-9917  [000] ...1 23444.432444: ext4_writepages_result: dev 259,0 ino 16 ret 0 pages_written 0 pages_skipped 0 sync_mode 0 writeback_index 1
