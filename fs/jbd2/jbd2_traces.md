@@ -68,6 +68,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
   test-open-writ-9948  [000] ...1 22423.447974: ext4_journal_start: dev 259,0 blocks, 2 rsv_blocks, 0 caller ext4_dirty_inode+0x30/0x68
   test-open-writ-9948  [000] ...1 22423.447975: ext4_mark_inode_dirty: dev 259,0 ino 13 caller ext4_dirty_inode+0x44/0x68
   test-open-writ-9948  [000] ...1 22423.447978: jbd2_handle_stats: dev 259,0 tid 56 type 2 line_no 2765 interval 0 sync 0 requested_blocks 1 dirtied_blocks 0
+
+
    kworker/u16:8-9916  [000] ...1 22427.743227: ext4_writepages: dev 259,0 ino 13 nr_to_write 1024 pages_skipped 0 range_start 0 range_end 9223372036854775807 sync_mode 0 for_kupdate 1 range_cyclic 1 writeback_index 0
    kworker/u16:8-9916  [000] ...1 22427.743252: ext4_journal_start: dev 259,0 blocks, 8 rsv_blocks, 0 caller ext4_writepages+0x524/0xd24
    kworker/u16:8-9916  [000] ...1 22427.743268: jbd2_handle_start: dev 259,0 tid 56 type 2 line_no 2573 requested_blocks 8
@@ -94,6 +96,8 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
    kworker/u16:8-9916  [000] ...1 22427.743936: ext4_da_write_pages: dev 259,0 ino 13 first_page 1 nr_to_write 1023 sync_mode 0
    kworker/u16:8-9916  [000] ...1 22427.743942: jbd2_handle_stats: dev 259,0 tid 56 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 0
    kworker/u16:8-9916  [000] ...1 22427.743950: ext4_writepages_result: dev 259,0 ino 13 ret 0 pages_written 1 pages_skipped 0 sync_mode 0 writeback_index 1
+
+
     jbd2/sda16-8-578   [000] ...1 22429.041544: jbd2_start_commit: dev 259,0 transaction 56 sync 0
     jbd2/sda16-8-578   [000] ...2 22429.041737: jbd2_commit_locking: dev 259,0 transaction 56 sync 0
     jbd2/sda16-8-578   [000] ...2 22429.041783: jbd2_commit_flushing: dev 259,0 transaction 56 sync 0
