@@ -87,7 +87,9 @@ ext4_map_blocks
  |   |
  |   +-> ext4_mb_new_blocks { event: ext4_request_blocks }
  |   |   |
- |   |   +-> ext4_mb_release_context - ext4_mb_collect_stats { event: ext4_mballoc_prealloc }
+ |   |   +-> ext4_mb_release_context - ext4_mb_collect_stats
+ |   |   |                                       |
+ |   |   | !{ event: ext4_mballoc_alloc } || { event: ext4_mballoc_prealloc [O_SYNC | fsync]}
  |   |   |
  |   |   +-> { event: ext4_allocate_blocks }
  |   |
@@ -102,12 +104,14 @@ ext4_map_blocks
  |   +-> ext4_da_update_reserve_space { event: ext4_da_update_reserve_space }
  |   |   |
  |   |   +-> dquot_claim_block -> mark_inode_dirty_sync
- |   |                                   |
- |   |      ext4_dirty_inode <- __mark_inode_dirty
- |   |      |
- |   |      +-> ext4_journal_start { event: ext4_journal_start }
- |   |      |
- |   |      +-> ext4_mark_inode_dirty { event: ext4_mark_inode_dirty }
+ |   |   |                               |
+ |   |   |   ext4_dirty_inode <- __mark_inode_dirty
+ |   |   |   |
+ |   |   |   +-> ext4_journal_start { event: ext4_journal_start }
+ |   |   |   |
+ |   |   |   +-> ext4_mark_inode_dirty { event: ext4_mark_inode_dirty }
+ |   |   |
+ |   |   +-> !ext4_discard_preallocations { event: ext4_discard_preallocations }
  |   |
  |   +-> { event: ext4_ext_map_blocks_exit }
  |

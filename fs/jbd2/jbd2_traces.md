@@ -89,6 +89,7 @@ test-open-writ-9948  [000] ...1 22423.447860: ext4_ext_map_blocks_enter: dev 259
    kworker/u16:8-9916  [000] ...1 22427.743755: ext4_discard_preallocations: dev 259,0 ino 13
    kworker/u16:8-9916  [000] ...1 22427.743771: ext4_ext_map_blocks_exit: dev 259,0 ino 13 flags CREATE|DELALLOC|METADATA_NOFAIL lblk 0 pblk 1555 len 1 mflags NM ret 1
    kworker/u16:8-9916  [000] ...1 22427.743786: ext4_es_insert_extent: dev 259,0 ino 13 es [0/1) mapped 1555 status W
+
    kworker/u16:8-9916  [000] ...1 22427.743857: ext4_mark_inode_dirty: dev 259,0 ino 13 caller ext4_writepages+0xc1c/0xd24
    kworker/u16:8-9916  [000] ...1 22427.743868: jbd2_handle_stats: dev 259,0 tid 56 type 2 line_no 2573 interval 0 sync 0 requested_blocks 8 dirtied_blocks 1
    kworker/u16:8-9916  [000] ...1 22427.743924: ext4_journal_start: dev 259,0 blocks, 8 rsv_blocks, 0 caller ext4_writepages+0x524/0xd24
