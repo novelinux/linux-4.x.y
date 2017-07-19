@@ -60,3 +60,7 @@ kernel_thread - kthreadd
     cpu_idle();
 }
 ```
+
+### kthreadd
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/kthread.c/kthreadd.md

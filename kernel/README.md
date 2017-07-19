@@ -170,6 +170,10 @@ https://github.com/novelinux/system_calls/blob/master/fork.md
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/fork.c/kernel_thread.md
 
+* kthreadd
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md
+
 Schedule
 ----------------------------------------
 
