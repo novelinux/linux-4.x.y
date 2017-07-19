@@ -1,5 +1,7 @@
 # kthreadd
 
+## kthreadd
+
 ```
 int kthreadd(void *unused)
 {
@@ -39,3 +41,7 @@ int kthreadd(void *unused)
 	return 0;
 }
 ```
+
+## kthread_create_list
+
+### add - kthread_create_on_node
