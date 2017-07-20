@@ -10,7 +10,7 @@ Workqueue 是内核里面很重要的一个机制，特别是内核驱动，一�
 (Concurrency Managed Workqueue)，也就是用更加智能的算法来实现“并行和节省”。新版本的 workqueue
 创建函数改成 alloc_workqueue()，旧版本的函数 create_workqueue() 逐渐会被被废弃。
 
-## 1.CMWQ 的几个基本概念
+## CMWQ 的几个基本概念
 
 关于 workqueue 中几个概念都是 work 相关的数据结构非常容易混淆，大概可以这样来理解：
 
@@ -19,14 +19,15 @@ Workqueue 是内核里面很重要的一个机制，特别是内核驱动，一�
 * worker： 工人。在代码中 worker 对应一个 worker_thread() 内核线程。
 * worker_pool： 工人的集合。worker_pool 和 worker 是一对多的关系。
 * pwq(pool_workqueue)： 中间人 / 中介，负责建立起 workqueue 和 worker_pool 之间的关系。
-  workqueue 和 pwq 是一对多的关系，pwq 和 worker_pool 是一对一的关系
+
+**NOTE**: workqueue和pwq是一对多的关系， pwq和worker_pool是一对一的关系
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_topology.png
 
 最终的目的还是把 work( 工作 ) 传递给 worker( 工人 ) 去执行，中间的数据结构和各种关系目的是把
 这件事组织的更加清晰高效。
 
-### worker_pool
+## worker_pool
 
 每个执行 work 的线程叫做 worker，一组 worker 的集合叫做 worker_pool。CMWQ 的精髓就在
 worker_pool里面worker 的动态增减管理上 manage_workers():
@@ -38,7 +39,7 @@ CMWQ 对 worker_pool 分成两类：
 * normal worker_pool: 给通用的 workqueue 使用；
 * unbound worker_pool: 给 WQ_UNBOUND 类型的的 workqueue 使；
 
-#### 1.1.1 normal worker_pool
+### normal worker_pool
 
 默认 work 是在 normal worker_pool 中处理的。系统的规划是每个 CPU 创建两个 normal worker_pool：
 一个 normal 优先级 (nice=0)、一个高优先级 (nice=HIGHPRI_NICE_LEVEL)，对应创建出来的 worker的进程
@@ -57,6 +58,8 @@ path: kernel/workqueue.c
 			 pool->attrs->nice < 0  ? "H" : "");
 	else // unbound worker_pool
 		snprintf(id_buf, sizeof(id_buf), "u%d:%d", pool->id, id);
+	worker->task = kthread_create_on_node(worker_thread, worker, pool->node,
+					      "kworker/%s", id_buf);
 ```
 
 类似名字是 normal worker_pool：
@@ -73,7 +76,7 @@ root      52    2     0      0              0 0000000000 S kworker/6:0H
 root      59    2     0      0              0 0000000000 S kworker/7:0H
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_normal_worker_pool.png
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_normal_wq.png
 
 对应的拓扑图如下：
 
@@ -82,4 +85,107 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_n
 normal worker_pool 详细的创建过程代码分析：
 
 ```
+workqueue_init_early -> for_each_cpu_worker_pool
+ |
+ +-> init_worker_pool
+ |
+ +-> worker_pool_assign_id
+ .
+ .
+workqueue_init
+ |
+create_worker -> for_each_online_cpu( cpu )
+ |
+ +-> worker = alloc_worker
+ |
+ +-> worker->task = kthread_create_on_node
+ |
+ +-> worker_attach_to_pool
+```
+
+## unbound worker_pool
+
+大部分的 work 都是通过 normal worker_pool 来执行的 ( 例如通过 schedule_work()、schedule_work_on()
+压入到系统 workqueue(system_wq) 中的 work)，最后都是通过 normal worker_pool 中的 worker 来执行的。
+这些 worker是和某个CPU 绑定的，work 一旦被worker开始执行，都是一直运行到某个CPU 上的不会切换 CPU。
+
+unbound worker_pool 相对应的意思，就是 worker 可以在多个 CPU 上调度的。但是他其实也是绑定的，
+只不过它绑定的单位不是 CPU 而是 node。所谓的 node 是对 NUMA(Non Uniform Memory Access Architecture)
+系统来说的，NUMA 可能存在多个 node，每个 node 可能包含一个或者多个 CPU。
+
+unbound worker_pool 对应内核线程 (worker_thread()) 的命名规则是这样的：
+
+```
+	if (pool->cpu >= 0) // normal worker_pool
+		snprintf(id_buf, sizeof(id_buf), "%d:%d%s", pool->cpu, id,
+			 pool->attrs->nice < 0  ? "H" : "");
+	else // unbound worker_pool
+		snprintf(id_buf, sizeof(id_buf), "u%d:%d", pool->id, id);
+	worker->task = kthread_create_on_node(worker_thread, worker, pool->node,
+					      "kworker/%s", id_buf);
+```
+
+类似名字是 unbound worker_pool：
+
+```
+sagit:/ $ ps | grep kworker/u
+root      82    2     0      0              0 0000000000 D kworker/u16:1
+root      89    2     0      0              0 0000000000 S kworker/u16:2
+root      358   2     0      0              0 0000000000 S kworker/u16:8
+root      359   2     0      0              0 0000000000 S kworker/u16:9
+root      369   2     0      0              0 0000000000 S kworker/u17:0
+root      1054  2     0      0              0 0000000000 S kworker/u17:1
+root      12344 2     0      0              0 0000000000 S kworker/u16:4
+root      12510 2     0      0              0 0000000000 S kworker/u16:6
+root      12601 2     0      0              0 0000000000 S kworker/u16:0
+root      12627 2     0      0              0 0000000000 S kworker/u16:3
+```
+
+unbound worker_pool 也分成两类：
+
+#### unbound std_wq
+
+每个 node 对应一个 worker_pool，多个 node 就对应多个 worker_pool;
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_unbound_std_wq.png
+
+对应的拓扑图如下：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_unbound_std_wq_topology.png
+
+#### unbound ordered_wq
+
+所有 node 对应一个 default worker_pool；
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_unbound_ordered_wq.png
+
+对应的拓扑图如下：
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_unbound_ordered_wq_topology.png
+
+unbound worker_pool 详细的创建过程代码分析：
+
+```
+workqueue_init_early -> for NR_STD_WORKER_POOLS
+ |
+ +-> alloc_workqueue_attrs [unbound_std_wq_attrs + ordered_wq_attrs]
+ .
+ .
+workqueue_init
+ |
+create_worker -> hash_for_each( unbound_pool_hash )
+ |
+ +-> worker = alloc_worker
+ |
+ +-> worker->task = kthread_create_on_node
+ |
+ +-> worker_attach_to_pool
+```
+
+* alloc_workqueue
+
+```
+alloc_workqueue
+ |
+__alloc_workqueue_key
 ```

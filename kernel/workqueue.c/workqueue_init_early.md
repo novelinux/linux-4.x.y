@@ -26,7 +26,7 @@ int __init workqueue_init_early(void)
 
 ## init_worker_pool
 
-给每个cpu创建对应的 worker_pool
+给每个cpu创建对应的 normal worker_pool
 
 ```
 	/* initialize CPU pools */
@@ -51,11 +51,13 @@ int __init workqueue_init_early(void)
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/init_worker_pool.md
 
+## alloc_workqueue_attrs
+
 ```
 	/* create default unbound and ordered wq attrs */
 	for (i = 0; i < NR_STD_WORKER_POOLS; i++) {
 		struct workqueue_attrs *attrs;
-
+                // unbound_std_wq_attrs
 		BUG_ON(!(attrs = alloc_workqueue_attrs(GFP_KERNEL)));
 		attrs->nice = std_nice[i];
 		unbound_std_wq_attrs[i] = attrs;
@@ -91,3 +93,5 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/init_wor
 	return 0;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/alloc_workqueue_attrs.md
