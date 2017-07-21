@@ -32,6 +32,10 @@ normal workqueue, pool_workqueue 链接 workqueue 和 worker_pool 的过程
 		return 0;
 ```
 
+### init_pwq
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/init_pwq.md
+
 ## unbound workqueue
 
 ```

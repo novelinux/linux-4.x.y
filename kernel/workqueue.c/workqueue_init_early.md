@@ -72,7 +72,13 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/init_wor
 		attrs->no_numa = true;
 		ordered_wq_attrs[i] = attrs;
 	}
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/alloc_workqueue_attrs.md
+
+## alloc_workqueue
+
+```
 	system_wq = alloc_workqueue("events", 0, 0);
 	system_highpri_wq = alloc_workqueue("events_highpri", WQ_HIGHPRI, 0);
 	system_long_wq = alloc_workqueue("events_long", 0, 0);
@@ -94,4 +100,4 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/init_wor
 }
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/alloc_workqueue_attrs.md
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/workqueue.h/alloc_workqueue.md

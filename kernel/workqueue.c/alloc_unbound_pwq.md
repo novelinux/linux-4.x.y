@@ -9,11 +9,19 @@ static struct pool_workqueue *alloc_unbound_pwq(struct workqueue_struct *wq,
 	struct pool_workqueue *pwq;
 
 	lockdep_assert_held(&wq_pool_mutex);
+```
 
+## get_unbound_pool
+
+```
 	pool = get_unbound_pool(attrs);
 	if (!pool)
 		return NULL;
+```
 
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/get_unbound_pool.md
+
+```
 	pwq = kmem_cache_alloc_node(pwq_cache, GFP_KERNEL, pool->node);
 	if (!pwq) {
 		put_unbound_pool(pool);

@@ -14,11 +14,11 @@ Workqueue 是内核里面很重要的一个机制，特别是内核驱动，一�
 
 关于 workqueue 中几个概念都是 work 相关的数据结构非常容易混淆，大概可以这样来理解：
 
-* work： 工作。
-* workqueue： 工作的集合。workqueue 和 work 是一对多的关系。
-* worker： 工人。在代码中 worker 对应一个 worker_thread() 内核线程。
-* worker_pool： 工人的集合。worker_pool 和 worker 是一对多的关系。
-* pwq(pool_workqueue)： 中间人 / 中介，负责建立起 workqueue 和 worker_pool 之间的关系。
+* work: 工作。
+* workqueue: 工作的集合。workqueue 和 work 是一对多的关系。
+* worker: 工人, 在代码中 worker 对应一个 worker_thread() 内核线程。
+* worker_pool: 工人的集合,worker_pool 和 worker 是一对多的关系。
+* pool_workqueue(pwq): 中间人/中介，负责建立起workqueue和worker_pool之间的关系。
 
 **NOTE**: workqueue和pwq是一对多的关系， pwq和worker_pool是一对一的关系
 
@@ -84,8 +84,18 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_n
 
 normal worker_pool 详细的创建过程代码分析：
 
+* cpu_worker_pools
+
 ```
-workqueue_init_early -> for_each_cpu_worker_pool
+/* the per-cpu worker pools */
+static DEFINE_PER_CPU_SHARED_ALIGNED(struct worker_pool [NR_STD_WORKER_POOLS], cpu_worker_pools);
+ .
+ .
+workqueue_init_early
+ |
+for_each_possible_cpu
+ |
+for_each_cpu_worker_pool ( cpu_worker_pools )
  |
  +-> init_worker_pool
  |
@@ -94,7 +104,11 @@ workqueue_init_early -> for_each_cpu_worker_pool
  .
 workqueue_init
  |
-create_worker -> for_each_online_cpu( cpu )
+for_each_possible_cpu
+ |
+for_each_cpu_worker_pool (cpu_worker_pools)
+ |
+create_worker
  |
  +-> worker = alloc_worker
  |
@@ -166,14 +180,31 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_u
 unbound worker_pool 详细的创建过程代码分析：
 
 ```
-workqueue_init_early -> for NR_STD_WORKER_POOLS
+/* PL: hash of all unbound pools keyed by pool->attrs */
+static DEFINE_HASHTABLE(unbound_pool_hash, UNBOUND_POOL_HASH_ORDER);
+
+/* I: attributes used when instantiating standard unbound pools on demand */
+static struct workqueue_attrs *unbound_std_wq_attrs[NR_STD_WORKER_POOLS];
+
+/* I: attributes used when instantiating ordered pools on demand */
+static struct workqueue_attrs *ordered_wq_attrs[NR_STD_WORKER_POOLS];
+ .
+ .
+ .
+workqueue_init_early
  |
- +-> alloc_workqueue_attrs [unbound_std_wq_attrs + ordered_wq_attrs]
+for NR_STD_WORKER_POOLS
+ |
+ +-> unbound_std_wq_attrs[i] = alloc_workqueue_attrs
+ |
+ +-> ordered_wq_attrs[i] = alloc_workqueue_attrs
  .
  .
 workqueue_init
  |
-create_worker -> hash_for_each( unbound_pool_hash )
+hash_for_each( unbound_pool_hash )
+ |
+create_worker
  |
  +-> worker = alloc_worker
  |
@@ -182,10 +213,72 @@ create_worker -> hash_for_each( unbound_pool_hash )
  +-> worker_attach_to_pool
 ```
 
-* alloc_workqueue
+## workqueue
+
+### alloc_workqueue
 
 ```
 alloc_workqueue
  |
 __alloc_workqueue_key
+ |
+ +-> wq = kzalloc( struct workqueue_struct)
+ |
+ +-> **alloc_and_link_pwqs(wq)**
+ |
+ +-> rescuer_thread
+```
+
+### alloc_and_link_pwqs
+
+```
+alloc_and_link_pwqs(wq)
+ |
+ +-> ! (wq->flags & WQ_UNBOUND)
+ |   |
+ |   +-> wq->cpu_pwqs = alloc_percpu(struct pool_workqueue)
+ |   |
+ |   +-> for_each_possible_cpu
+ |       |
+ |       +-> pwq = per_cpu_ptr(wq->cpu_pwqs, cpu)
+ |       |
+ |       +-> cpu_pools = per_cpu(cpu_worker_pools, cpu)
+ |       |
+ |       +-> init_pwq(pwq, wq, &cpu_pools[highpri])
+ |
+ apply_workqueue_attrs(wq, ordered_wq_attrs || unbound_std_wq_attrs)
+ |
+ apply_workqueue_attrs_locked(wq, attrs)
+  |
+  +-> apply_wqattrs_prepare(wq, attrs)
+  |   |        ORDERED
+  |   +-> ctx->dfl_pwq = alloc_unbound_pwq(wq, new_attrs)
+  |   |
+  |   +-> for_each_node
+  |           |
+  | ctx->_pwq_tbl[node] = alloc_unbound_pwq || ctx->dfl_pwq
+  |   |
+  |   +-> pool = **get_unbound_pool**
+  |   |
+  |   +-> pwq = kmem_cache_alloc_node(pwq_cache)
+  |   |
+  |   +-> init_pwq(pwq, wq, pool)
+  |
+  +-> apply_wqattrs_commit
+  |
+  +-> apply_wqattrs_cleanup
+```
+
+### get_unbound_pool
+
+```
+get_unbound_pool
+ |
+ +-> hash_for_each_possible(unbound_pool_hash)
+ |
+ nope, create a new one
+  |
+  +-> pool = kzalloc_node
+  |
+  +-> hash_add(unbound_pool_hash, &pool->hash_node, hash)
 ```
