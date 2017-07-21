@@ -27,6 +27,11 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_t
 最终的目的还是把 work( 工作 ) 传递给 worker( 工人 ) 去执行，中间的数据结构和各种关系目的是把
 这件事组织的更加清晰高效。
 
+所以这其中有几个重点：
+
+worker 怎么处理 work；
+worker_pool 怎么动态管理 worker 的数量；
+
 ## worker_pool
 
 每个执行 work 的线程叫做 worker，一组 worker 的集合叫做 worker_pool。CMWQ 的精髓就在
@@ -215,13 +220,52 @@ create_worker
  +-> worker_attach_to_pool
 ```
 
+## worker
+
+每个 worker 对应一个worker_thread() 内核线程，一个 worker_pool 对应一个或者多个 worker。
+多个 worker 从同一个链表中 worker_pool->worklist 获取 work 进行处理。
+
+### struct worker
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue_internal.h/worker.md
+
+处理 work 的过程主要在 worker_thread() -> process_one_work() 中处理，我们具体看看代码的实现过程。
+
+```
+```
+
+###  worker_pool 动态管理 worker
+
+worker_pool 怎么来动态增减 worker，这部分的算法是 CMWQ 的核心。其思想如下：
+
+* worker_pool 中的 worker 有 3 种状态：idle、running、suspend；
+* 如果 worker_pool 中有 work 需要处理，保持至少一个 running worker 来处理；
+* running worker 在处理 work 的过程中进入了阻塞 suspend 状态，为了保持其他 work 的执行，
+  需要唤醒新的 idle worker 来处理 work；
+* 如果有 work 需要执行且 running worker 大于 1 个，会让多余的 running worker 进入 idle 状态；
+* 如果没有 work 需要执行，会让所有 worker 进入 idle 状态；
+* 如果创建的 worker 过多，destroy_worker在300s(IDLE_WORKER_TIMEOUT) 时间内没有再次运行的 idle worker。
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_worker_status_machine.png
+
 ## workqueue
+
+workqueue 就是存放一组 work 的集合，基本可以分为两类：
+
+* 一类系统创建的 workqueue;
+* 一类是用户自己创建的 workqueue。
+
+不论是系统还是用户的 workqueue，如果没有指定 WQ_UNBOUND，默认都是和 normal worker_pool 绑定。
 
 ### struct workqueue_struct
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/workqueue_struct.md
 
 ### alloc_workqueue
+
+系统在初始化时创建了一批默认的 workqueue：system_wq、system_highpri_wq、system_long_wq、
+system_unbound_wq、system_freezable_wq、system_power_efficient_wq、
+system_freezable_power_efficient_wq。 像 system_wq，就是 schedule_work() 默认使用的。
 
 ```
 alloc_workqueue
@@ -289,8 +333,16 @@ get_unbound_pool
   +-> hash_add(unbound_pool_hash, &pool->hash_node, hash)
 ```
 
+## work
+
+描述一份待执行的工作。
+
 ## pwq (pool_workqueue)
 
-https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/pool_workqueue.md
+pool_workqueue 只是一个中介角色。
 
-## worker
+详细过程见上workqueue的代码分析.
+
+### struct pool_workqueue
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/pool_workqueue.md
