@@ -215,7 +215,7 @@ create_worker
  +-> worker_attach_to_pool
 ```
 
-## workqueue vs pool_workqueue
+## workqueue
 
 ### struct workqueue_struct
 
