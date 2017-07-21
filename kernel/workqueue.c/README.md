@@ -39,6 +39,10 @@ CMWQ 对 worker_pool 分成两类：
 * normal worker_pool: 给通用的 workqueue 使用；
 * unbound worker_pool: 给 WQ_UNBOUND 类型的的 workqueue 使；
 
+### struct worker_pool
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/worker_pool.md
+
 ### normal worker_pool
 
 默认 work 是在 normal worker_pool 中处理的。系统的规划是每个 CPU 创建两个 normal worker_pool：
@@ -84,8 +88,6 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_n
 
 normal worker_pool 详细的创建过程代码分析：
 
-* cpu_worker_pools
-
 ```
 /* the per-cpu worker pools */
 static DEFINE_PER_CPU_SHARED_ALIGNED(struct worker_pool [NR_STD_WORKER_POOLS], cpu_worker_pools);
@@ -117,7 +119,7 @@ create_worker
  +-> worker_attach_to_pool
 ```
 
-## unbound worker_pool
+### unbound worker_pool
 
 大部分的 work 都是通过 normal worker_pool 来执行的 ( 例如通过 schedule_work()、schedule_work_on()
 压入到系统 workqueue(system_wq) 中的 work)，最后都是通过 normal worker_pool 中的 worker 来执行的。
@@ -213,7 +215,11 @@ create_worker
  +-> worker_attach_to_pool
 ```
 
-## workqueue
+## workqueue vs pool_workqueue
+
+### struct workqueue_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/workqueue_struct.md
 
 ### alloc_workqueue
 
@@ -282,3 +288,9 @@ get_unbound_pool
   |
   +-> hash_add(unbound_pool_hash, &pool->hash_node, hash)
 ```
+
+## pwq (pool_workqueue)
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/pool_workqueue.md
+
+## worker
