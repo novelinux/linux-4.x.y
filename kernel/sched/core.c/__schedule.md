@@ -1,5 +1,4 @@
-__schedule
-========================================
+# __schedule
 
 在内核中的许多地方，如果要将CPU分配给与当前活动进程不同的
 另一个进程，都会直接调用主调度器函数（schedule）。在从系统
@@ -7,8 +6,7 @@ __schedule
 例如，前述的scheduler_tick就会设置该标志。如果是这样，则内核会调用schedule。
 该函数假定当前活动进程一定会被另一个进程取代。
 
-Comments
-----------------------------------------
+## Comments
 
 path: kernel/sched/core.c
 ```
@@ -53,8 +51,7 @@ path: kernel/sched/core.c
  */
 ```
 
-Arguments
-----------------------------------------
+## Arguments
 
 ```
 static void __sched notrace __schedule(bool preempt)
@@ -73,15 +70,13 @@ static void __sched notrace __schedule(bool preempt)
 所有与调度有关的调用。由于调度器函数调用不是普通代码流程的一
 部分，因此在这种情况下是没有意义的。
 
-smp_processor_id
-----------------------------------------
+## smp_processor_id
 
 ```
     cpu = smp_processor_id();
 ```
 
-cpu_rq
-----------------------------------------
+## cpu_rq
 
 该函数首先确定当前就绪队列，并在prev中保存一个指向（仍然）活动进程的task_struct的指针。
 
@@ -90,8 +85,7 @@ cpu_rq
     prev = rq->curr;
 ```
 
-pick_next_task
-----------------------------------------
+## pick_next_task
 
 ```
     /*
@@ -137,7 +131,6 @@ pick_next_task
         } else {
             deactivate_task(rq, prev, DEQUEUE_SLEEP);
             prev->on_rq = 0;
-
             /*
              * If a worker went to sleep, notify and ask workqueue
              * whether it wants to wake up a task to maintain
@@ -162,8 +155,11 @@ pick_next_task
 
 选择下一个应该执行的进程，该工作由pick_next_task负责：
 
-clear_tsk_need_resched
-----------------------------------------
+### wq_worker_sleeping
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/wq_worker_sleeping.md
+
+## clear_tsk_need_resched
 
 类似于周期性调度器，内核也利用该时机来更新就绪队列的时钟，并
 清除当前运行进程task_struct中的重调度标志TIF_NEED_RESCHED。
@@ -174,8 +170,7 @@ clear_tsk_need_resched
     rq->clock_skip_update = 0;
 ```
 
-context_switch
-----------------------------------------
+## context_switch
 
 不见得必然选择一个新进程。也可能其他进程都在睡眠，当前只有一个
 进程能够运行，这样它自然就被留在CPU上。但如果已经选择了一个新
@@ -201,8 +196,7 @@ context_switch一个接口，供访问特定于体系结构的方法，后者负
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/context_switch.md
 
-balance_callback
-----------------------------------------
+## balance_callback
 
 下述代码片段可能在两个不同的上下文中执行。在没有执行上下文切换
 时，它在schedule函数的末尾直接执行。但如果已经执行了上下文切换，

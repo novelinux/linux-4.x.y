@@ -20,3 +20,5 @@ static void wake_up_worker(struct worker_pool *pool)
 ```
 
 ## wake_up_process
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/core.c/wake_up_process.md

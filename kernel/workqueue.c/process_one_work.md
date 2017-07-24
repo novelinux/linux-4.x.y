@@ -64,7 +64,19 @@ __acquires(&pool->lock)
 	work_color = get_work_color(work);
 
 	list_del_init(&work->entry);
+```
 
+## worker_set_flags - WQ_CPU_INTENSIVE
+
+这里worker_pool的调度思想是: 如果有 work 需要处理，保持一个 running 状态的 worker 处理，不多也不少。
+
+但是这里有一个问题如果 work 是 CPU 密集型的，它虽然也没有进入 suspend 状态，但是会长时间的占用 CPU，
+让后续的 work 阻塞太长时间。 为了解决这个问题，CMWQ 设计了 WQ_CPU_INTENSIVE，如果一个 wq 声明
+自己是 CPU_INTENSIVE，则让当前 worker 脱离动态调度，像是进入了 suspend 状态，那么 CMWQ 会创建
+新的 worker，后续的 work
+会得到执行。
+
+```
 	/*
 	 * CPU intensive works don't participate in concurrency management.
 	 * They're the scheduler's responsibility.  This takes @worker out
@@ -78,6 +90,8 @@ __acquires(&pool->lock)
 ```
 
 ## wake_up_worker
+
+接上一步，判断是否需要唤醒新的 worker 来处理 work
 
 ```
 	/*
@@ -147,7 +161,11 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/wake_up_
 	cond_resched_rcu_qs();
 
 	spin_lock_irq(&pool->lock);
+```
 
+## worker_clr_flags -> WORKER_CPU_INTENSIVE
+
+```
 	/* clear cpu intensive status */
 	if (unlikely(cpu_intensive))
 		worker_clr_flags(worker, WORKER_CPU_INTENSIVE);

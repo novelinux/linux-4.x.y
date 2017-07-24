@@ -232,13 +232,20 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue_internal.h
 处理 work 的过程主要在 worker_thread() -> process_one_work() 中处理，我们具体看看代码的实现过程。
 
 ```
+worker_thread
+ |
+process_one_work(worker, work)
+ |
+ +-> wake_up_worker
+ |
+ +-> worker->current_func
 ```
 
-###  worker_pool 动态管理 worker
+### worker_pool 动态管理 worker
 
 worker_pool 怎么来动态增减 worker，这部分的算法是 CMWQ 的核心。其思想如下：
 
-* worker_pool 中的 worker 有 3 种状态：idle、running、suspend；
+* worker_pool 中的 worker 有 3 种状态: idle |  running | suspend;
 * 如果 worker_pool 中有 work 需要处理，保持至少一个 running worker 来处理；
 * running worker 在处理 work 的过程中进入了阻塞 suspend 状态，为了保持其他 work 的执行，
   需要唤醒新的 idle worker 来处理 work；
@@ -247,6 +254,32 @@ worker_pool 怎么来动态增减 worker，这部分的算法是 CMWQ 的核心�
 * 如果创建的 worker 过多，destroy_worker在300s(IDLE_WORKER_TIMEOUT) 时间内没有再次运行的 idle worker。
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/res/wq_worker_status_machine.png
+
+#### SUSPEND -> RUNNING
+
+```
+wake_up_worker
+ |
+wake_up_process
+ |
+try_to_wake_up
+ |
+ttwu_queue
+ |
+ttwu_do_activate
+ |
+ttwu_activate
+ |
+wq_worker_waking_up
+```
+
+#### RUNNING -> SUSPEND
+
+```
+__schedule
+ |
+wq_worker_sleeping
+```
 
 ## workqueue
 
@@ -336,6 +369,10 @@ get_unbound_pool
 ## work
 
 描述一份待执行的工作。
+
+### struct work_struct
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/workqueue.h/work_struct.md
 
 ## pwq (pool_workqueue)
 
