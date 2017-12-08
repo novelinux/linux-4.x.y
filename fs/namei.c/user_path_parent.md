@@ -22,7 +22,15 @@ user_path_parent(int dfd, const char __user *path,
 }
 ```
 
-函数返回值是filename结构体，参数分别是系统调用传入的dfd参数，存储在用户空间的path，带填充的nameidata结构体（这个结构体在路径行走的过程中，主要用来保存一些临时数据），最后是一个标志位。我们看到参数里面有一个nameidata结构体，这个结构体在整个路径行走过程中至关重要，所以还是在看函数之前还是看看这个结构体。定义如下：
+## struct filename
+
+函数返回值是filename结构体，参数分别是系统调用传入的dfd参数，存储在用户空间的path，最后是一个标志位。
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/fs.h/struct_filename.md
+
+## getname
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/getname.md
 
 ## filename_parentat
 

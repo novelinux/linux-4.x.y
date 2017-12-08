@@ -1,0 +1,140 @@
+./terminate_walk.md:7:	if (!(nd->flags & LOOKUP_RCU)) {
+./terminate_walk.md:9:		path_put(&nd->path);
+./terminate_walk.md:10:		for (i = 0; i < nd->depth; i++)
+./terminate_walk.md:11:			path_put(&nd->stack[i].link);
+./terminate_walk.md:12:		if (nd->root.mnt && !(nd->flags & LOOKUP_ROOT)) {
+./terminate_walk.md:13:			path_put(&nd->root);
+./terminate_walk.md:14:			nd->root.mnt = NULL;
+./terminate_walk.md:17:		nd->flags &= ~LOOKUP_RCU;
+./terminate_walk.md:18:		if (!(nd->flags & LOOKUP_ROOT))
+./terminate_walk.md:19:			nd->root.mnt = NULL;
+./terminate_walk.md:22:	nd->depth = 0;
+./lookup_last.md:8:    if (nd->last_type == LAST_NORM && nd->last.name[nd->last.len])
+./lookup_last.md:9:        nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
+./lookup_last.md:11:    nd->flags &= ~LOOKUP_PARENT;
+./lookup_last.md:13:            nd->flags & LOOKUP_FOLLOW
+./lookup_last.md:14:                ? nd->depth
+./complete_walk.md:8: * If we had been in RCU mode, drop out of it and legitimize nd->path.
+./complete_walk.md:12: * need to drop nd->path.
+./complete_walk.md:16:	struct dentry *dentry = nd->path.dentry;
+./complete_walk.md:19:	if (nd->flags & LOOKUP_RCU) {
+./complete_walk.md:20:		if (!(nd->flags & LOOKUP_ROOT))
+./complete_walk.md:21:			nd->root.mnt = NULL;
+./complete_walk.md:26:	if (likely(!(nd->flags & LOOKUP_JUMPED)))
+./complete_walk.md:32:	status = dentry->d_op->d_weak_revalidate(dentry, nd->flags);
+./path_init.md:16:    const char *s = nd->name->name;
+./path_init.md:22:    nd->last_type = LAST_ROOT; /* if there are only slashes... */
+./path_init.md:23:    nd->flags = flags | LOOKUP_JUMPED | LOOKUP_PARENT;
+./path_init.md:24:    nd->depth = 0;
+./path_init.md:25:    nd->total_link_count = 0;
+./path_init.md:27:        struct dentry *root = nd->root.dentry;
+./path_init.md:36:        nd->path = nd->root;
+./path_init.md:37:        nd->inode = inode;
+./path_init.md:40:            nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
+./path_init.md:41:            nd->root_seq = nd->seq;
+./path_init.md:42:            nd->m_seq = read_seqbegin(&mount_lock);
+./path_init.md:44:            path_get(&nd->path);
+./path_init.md:49:    nd->root.mnt = NULL;
+./path_init.md:51:    nd->m_seq = read_seqbegin(&mount_lock);
+./path_init.md:56:            nd->seq = nd->root_seq;
+./path_init.md:59:            path_get(&nd->root);
+./path_init.md:61:        nd->path = nd->root;
+./path_init.md:71:    } else if (nd->dfd == AT_FDCWD) {
+./path_init.md:80:                nd->path = fs->pwd;
+./path_init.md:81:                nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
+./path_init.md:84:            get_fs_pwd(current->fs, &nd->path);
+./path_init.md:88:        struct fd f = fdget_raw(nd->dfd);
+./path_init.md:103:        nd->path = f.file->f_path;
+./path_init.md:106:            nd->inode = nd->path.dentry->d_inode;
+./path_init.md:107:            nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
+./path_init.md:109:            path_get(&nd->path);
+./path_init.md:110:            nd->inode = nd->path.dentry->d_inode;
+./path_init.md:116:    nd->inode = nd->path.dentry->d_inode;
+./path_init.md:119:    if (likely(!read_seqcount_retry(&nd->path.dentry->d_seq, nd->seq)))
+./path_init.md:121:    if (!(nd->flags & LOOKUP_ROOT))
+./path_init.md:122:        nd->root.mnt = NULL;
+./user_path_parent.md:8: *     to struct filename, but the nd->last pointer points into the name string
+./lookup_fast.md:15:    struct vfsmount *mnt = nd->path.mnt;
+./lookup_fast.md:16:    struct dentry *dentry, *parent = nd->path.dentry;
+./lookup_fast.md:26:    if (nd->flags & LOOKUP_RCU) {
+./lookup_fast.md:29:        dentry = __d_lookup_rcu(parent, &nd->last, &seq);
+./lookup_fast.md:49:        if (__read_seqcount_retry(&parent->d_seq, nd->seq))
+./lookup_fast.md:54:            status = d_revalidate(dentry, nd->flags);
+./lookup_fast.md:75:        dentry = __d_lookup(parent, &nd->last);
+./lookup_fast.md:82:        status = d_revalidate(dentry, nd->flags);
+./atomic_open.md:25:    struct inode *dir =  nd->path.dentry->d_inode;
+./atomic_open.md:79:        error = may_o_create(&nd->path, dentry, mode);
+./atomic_open.md:88:    if (nd->flags & LOOKUP_DIRECTORY)
+./atomic_open.md:92:    file->f_path.mnt = nd->path.mnt;
+./atomic_open.md:147:        dentry = lookup_real(dir, dentry, nd->flags);
+./atomic_open.md:169:    path->mnt = nd->path.mnt;
+./set_root.md:10:    if (nd->flags & LOOKUP_RCU) {
+./set_root.md:15:            nd->root = fs->root;
+./set_root.md:16:            nd->root_seq = __read_seqcount_begin(&nd->root.dentry->d_seq);
+./set_root.md:19:        get_fs_root(fs, &nd->root);
+./walk_component.md:17:    if (unlikely(nd->last_type != LAST_NORM)) {
+./walk_component.md:18:        err = handle_dots(nd, nd->last_type);
+./walk_component.md:45:    nd->inode = inode;
+./walk_component.md:46:    nd->seq = seq;
+./path_openat.md:67:        nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
+./link_path_walk.md:53:                    nd->flags |= LOOKUP_JUMPED;
+./link_path_walk.md:65:            struct dentry *parent = nd->path.dentry;
+./link_path_walk.md:66:            nd->flags &= ~LOOKUP_JUMPED;
+./link_path_walk.md:77:        nd->last.hash_len = hash_len;
+./link_path_walk.md:78:        nd->last.name = name;
+./link_path_walk.md:79:        nd->last_type = type;
+./link_path_walk.md:99:            if (!nd->depth)
+./link_path_walk.md:101:            name = nd->stack[nd->depth - 1].name;
+./link_path_walk.md:123:                nd->stack[nd->depth - 1].name = name;
+./link_path_walk.md:128:        if (unlikely(!d_can_lookup(nd->path.dentry))) {
+./link_path_walk.md:129:            if (nd->flags & LOOKUP_RCU) {
+./lookup_open.md:38:    struct dentry *dir = nd->path.dentry;
+./lookup_open.md:50:    dentry = lookup_dcache(&nd->last, dir, nd->flags, &need_lookup);
+./lookup_open.md:65:    if ((nd->flags & LOOKUP_OPEN) && dir_inode->i_op->atomic_open) {
+./lookup_open.md:80:        dentry = lookup_real(dir_inode, dentry, nd->flags);
+./lookup_open.md:107:        error = security_path_mknod(&nd->path, dentry, mode, 0);
+./lookup_open.md:111:                   nd->flags & LOOKUP_EXCL);
+./lookup_open.md:125:    path->mnt = nd->path.mnt;
+./path_parentat.md:41:		*parent = nd->path;
+./path_parentat.md:42:		nd->path.mnt = NULL;
+./path_parentat.md:43:		nd->path.dentry = NULL;
+./path_lookupat.md:57:    if (!err && nd->flags & LOOKUP_DIRECTORY)
+./path_lookupat.md:58:        if (!d_can_lookup(nd->path.dentry))
+./path_lookupat.md:61:        *path = nd->path;
+./path_lookupat.md:62:        nd->path.mnt = NULL;
+./path_lookupat.md:63:        nd->path.dentry = NULL;
+./do_last.md:12: +-> handle_dots (nd->last_type != LAST_NORM)
+./do_last.md:43:    struct dentry *dir = nd->path.dentry;
+./do_last.md:55:    nd->flags &= ~LOOKUP_PARENT;
+./do_last.md:56:    nd->flags |= op->intent;
+./do_last.md:63:    if (nd->last_type != LAST_NORM) {
+./do_last.md:64:        error = handle_dots(nd, nd->last_type);
+./do_last.md:76:        if (nd->last.name[nd->last.len])
+./do_last.md:77:            nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
+./do_last.md:86:        BUG_ON(nd->inode != dir->d_inode);
+./do_last.md:98:        audit_inode(nd->name, dir, LOOKUP_PARENT);
+./do_last.md:100:        if (unlikely(nd->last.name[nd->last.len]))
+./do_last.md:115:        error = mnt_want_write(nd->path.mnt);
+./do_last.md:145:        audit_inode(nd->name, file->f_path.dentry, 0);
+./do_last.md:172:        audit_inode(nd->name, path.dentry, 0);
+./do_last.md:180:        mnt_drop_write(nd->path.mnt);
+./do_last.md:193:    BUG_ON(nd->flags & LOOKUP_RCU);
+./do_last.md:207:    if (nd->depth)
+./do_last.md:209:    error = should_follow_link(nd, &path, nd->flags & LOOKUP_FOLLOW,
+./do_last.md:219:    if ((nd->flags & LOOKUP_RCU) || nd->path.mnt != path.mnt) {
+./do_last.md:222:        save_parent.dentry = nd->path.dentry;
+./do_last.md:224:        nd->path.dentry = path.dentry;
+./do_last.md:227:    nd->inode = inode;
+./do_last.md:228:    nd->seq = seq;
+./do_last.md:242:    audit_inode(nd->name, nd->path.dentry, 0);
+./do_last.md:244:    if ((open_flag & O_CREAT) && d_is_dir(nd->path.dentry))
+./do_last.md:247:    if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
+./do_last.md:249:    if (!d_is_reg(nd->path.dentry))
+./do_last.md:253:        error = mnt_want_write(nd->path.mnt);
+./do_last.md:267:    error = may_open(&nd->path, acc_mode, open_flag);
+./do_last.md:279:    error = vfs_open(&nd->path, file, current_cred());
+./do_last.md:322:        mnt_drop_write(nd->path.mnt);
+./do_last.md:346:    path_put(&nd->path);
+./do_last.md:347:    nd->path = save_parent;
+./do_last.md:348:    nd->inode = dir->d_inode;
+./do_last.md:352:        mnt_drop_write(nd->path.mnt);

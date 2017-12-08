@@ -1,5 +1,4 @@
-path_init
-========================================
+# path_init
 
 内核使用nameidata实例规定查找的起点。如果名称以/开始，则使用当前根目录
 的dentry和vfsmount实例（要注意，必须考虑到chroot的效应）；否则，从当前进程的
@@ -7,8 +6,7 @@ task_struct获得当前工作目录的数据。
 
 首先将nameidata实例path的mnt和dentry成员设置为根目录或工作目录对应的数据项。
 
-Arguments
-----------------------------------------
+## Arguments
 
 path: fs/namei.c
 ```
@@ -18,8 +16,7 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
     const char *s = nd->name->name;
 ```
 
-Absolute Path
-----------------------------------------
+## Absolute Path
 
 ```
     nd->last_type = LAST_ROOT; /* if there are only slashes... */
@@ -68,8 +65,7 @@ Absolute Path
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/set_root.md
 
-Relative Path
-----------------------------------------
+## Relative Path
 
 ```
     } else if (nd->dfd == AT_FDCWD) {

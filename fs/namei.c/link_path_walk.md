@@ -1,10 +1,8 @@
-link_path_walk
-========================================
+# link_path_walk
 
 link_path_walk的流程是一个不断穿过目录层次的过程。
 
-Arguments
-----------------------------------------
+## Arguments
 
 path: fs/namei.c
 ```
@@ -26,8 +24,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
         return 0;
 ```
 
-for
-----------------------------------------
+## for
 
 该函数由一个大的循环组成，逐分量处理文件名或路径名。名称在循环内部分解为各个分量（各分量通过
 一个或多个斜线分隔）。每个分量表示一个目录名，最后一个分量例外，总是文件名。
@@ -62,7 +59,6 @@ for
 ```
 
 ### this
-
 
 ```
         if (likely(type == LAST_NORM)) {

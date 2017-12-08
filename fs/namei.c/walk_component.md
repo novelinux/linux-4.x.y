@@ -1,5 +1,4 @@
-walk_component
-========================================
+# walk_component
 
 path: fs/namei.c
 ```
@@ -20,15 +19,25 @@ static int walk_component(struct nameidata *nd, int flags)
             put_link(nd);
         return err;
     }
+```
+
+## lookup_fast
+
+```
     err = lookup_fast(nd, &path, &inode, &seq);
     if (unlikely(err)) {
         if (err < 0)
             return err;
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/lookup_fast.md
+
+## lookup_slow
+
+```
         err = lookup_slow(nd, &path);
         if (err < 0)
             return err;
-
         inode = d_backing_inode(path.dentry);
         seq = 0;    /* we are already out of RCU mode */
         err = -ENOENT;
@@ -51,3 +60,5 @@ out_path_put:
     return err;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/lookup_slow.md

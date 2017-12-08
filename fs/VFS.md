@@ -93,6 +93,14 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_f
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/file.h/struct_fd.md
 
+### struct path
+
+https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/path.h/struct_path.md
+
+### struct dentry
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/dcache.h/struct_dentry.md
+
 ### struct address_space
 
 https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md

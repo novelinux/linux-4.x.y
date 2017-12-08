@@ -1,5 +1,4 @@
-lookup_fast
-========================================
+# lookup_fast
 
 path: fs/namei.c
 ```
@@ -71,6 +70,11 @@ static int lookup_fast(struct nameidata *nd,
 unlazy:
         if (unlazy_walk(nd, dentry, seq))
             return -ECHILD;
+```
+
+## __d_lookup
+
+```
     } else {
         dentry = __d_lookup(parent, &nd->last);
     }
@@ -105,3 +109,5 @@ need_lookup:
     return 1;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/dcache.c/__d_lookup.md

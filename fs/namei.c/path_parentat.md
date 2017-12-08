@@ -9,6 +9,9 @@ static int path_parentat(struct nameidata *nd, unsigned flags,
 
 ## path_init
 
+首先是path_init函数，顾名思义就是初始化path函数，我们前面说了整个路径查找的过程其实就是填充
+nameidata的过程，所以这个函数肯定就是初始化nameidata，
+
 ```
 	const char *s = path_init(nd, flags);
 ```
@@ -16,6 +19,9 @@ static int path_parentat(struct nameidata *nd, unsigned flags,
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_init.md
 
 ## link_path_walk
+
+然后是就函数link_path_walk，这个函数是整个路径名查找过程的核心功能实现函数，经过这个函数，
+我们就找到了路径中的最后一个目录的dentry和inode信息了。
 
 ```
 	int err;
