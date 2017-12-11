@@ -65,6 +65,10 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/set_root.md
 
+### path_get
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_get.md
+
 ## Relative Path
 
 ```

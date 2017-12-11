@@ -21,7 +21,7 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_init.md
 ## link_path_walk
 
 然后是就函数link_path_walk，这个函数是整个路径名查找过程的核心功能实现函数，经过这个函数，
-我们就找到了路径中的最后一个目录的dentry和inode信息了。
+我们就找到了路径中的最后一个目录的文件name和type信息了。
 
 ```
 	int err;

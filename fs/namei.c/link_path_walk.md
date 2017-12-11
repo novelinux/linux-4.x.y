@@ -91,7 +91,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
         if (unlikely(!*name)) {
 ```
 
-### OK
+## walk_component
 
 ```
 OK:
@@ -135,3 +135,5 @@ OK:
     }
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/walk_component.md

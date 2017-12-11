@@ -1,8 +1,6 @@
-path_openat
-========================================
+# path_openat
 
-Arguments
-----------------------------------------
+## Arguments
 
 path: fs/namei.c
 ```
@@ -15,8 +13,7 @@ static struct file *path_openat(struct nameidata *nd,
     int error;
 ```
 
-get_empty_filp
-----------------------------------------
+## get_empty_filp
 
 获取一个空的struct file结构.
 
@@ -35,8 +32,7 @@ get_empty_filp
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/file_table.c/get_empty_filp.md
 
-path_init
-----------------------------------------
+## path_init
 
 ```
     s = path_init(nd, flags);
@@ -48,8 +44,7 @@ path_init
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_init.md
 
-walk
-----------------------------------------
+## walk
 
 为什么link_path_walk和do_last的代码如此冗长？令人遗憾的是，查找与给定文件名相关的inode比初看起来
 复杂得多，而由于必须考虑下列因素，造成了更多的困难。
@@ -89,8 +84,7 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/do_last.md
     terminate_walk(nd);
 ```
 
-out2
-----------------------------------------
+## out2
 
 ```
 out2:

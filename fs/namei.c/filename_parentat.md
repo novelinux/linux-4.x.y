@@ -19,7 +19,7 @@ static struct filename *filename_parentat(int dfd, struct filename *name,
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/struct_nameidata.md
 
-## path_parent
+## path_parentat
 
 ```
 	retval = path_parentat(&nd, flags | LOOKUP_RCU, parent);
@@ -40,4 +40,4 @@ https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/struct_nameidata
 }
 ```
 
-https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_parent.md
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/path_parentat.md

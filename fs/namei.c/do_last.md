@@ -1,10 +1,8 @@
-do_last
-========================================
+# do_last
 
 do_last用于处理从link_path_walk扫描处理回来的路径分量.
 
-Code Flow
-----------------------------------------
+## Code Flow
 
 ```
 do_last
@@ -28,8 +26,7 @@ do_last
  +-> vfs_open
 ```
 
-Arguments
-----------------------------------------
+## Arguments
 
 path: fs/namei.c
 ```
@@ -56,8 +53,7 @@ static int do_last(struct nameidata *nd,
     nd->flags |= op->intent;
 ```
 
-handle_dots
-----------------------------------------
+## handle_dots
 
 ```
     if (nd->last_type != LAST_NORM) {
@@ -68,8 +64,7 @@ handle_dots
     }
 ```
 
-lookup_fast
-----------------------------------------
+## lookup_fast
 
 ```
     if (!(open_flag & O_CREAT)) {
@@ -104,8 +99,7 @@ lookup_fast
 
 https://github.com/novelinux/linux-4.x.y/blob/master/fs/namei.c/lookup_fast.md
 
-retry_lookup
-----------------------------------------
+## retry_lookup
 
 ### mnt_want_write
 
@@ -199,8 +193,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/lookup_open.md
     }
 ```
 
-finish_lookup
-----------------------------------------
+## finish_lookup
 
 ```
 finish_lookup:
@@ -229,8 +222,7 @@ finish_lookup:
     /* Why this, you ask?  _Now_ we might have grown LOOKUP_JUMPED... */
 ```
 
-finish_open
-----------------------------------------
+## finish_open
 
 ```
 finish_open:
@@ -257,8 +249,7 @@ finish_open:
     }
 ```
 
-finish_open_created
-----------------------------------------
+## finish_open_created
 
 ### may_open
 
@@ -288,8 +279,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/may_open.md
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/open.c/vfs_open.md
 
-opened
-----------------------------------------
+## opened
 
 ```
 opened:
@@ -313,8 +303,7 @@ opened:
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/namei.c/handle_truncate.md
 
-out
-----------------------------------------
+## out
 
 ```
 out:
@@ -324,8 +313,7 @@ out:
     return error;
 ```
 
-exit_fput
-----------------------------------------
+## exit_fput
 
 ```
 exit_fput:
@@ -333,8 +321,7 @@ exit_fput:
     goto out;
 ```
 
-stale_open
-----------------------------------------
+## stale_open
 
 ```
 stale_open:
