@@ -1,5 +1,7 @@
 # __d_lookup
 
+## d_hash
+
 ```
 /**
  * __d_lookup - search for a dentry (racy)
@@ -45,7 +47,13 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
 	 * See Documentation/filesystems/path-lookup.txt for more details.
 	 */
 	rcu_read_lock();
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/dcache.c/d_hash.md
+
+## hlist_bl_for_each_entry_rcu
+
+```
 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
 
 		if (dentry->d_name.hash != hash)
@@ -72,3 +80,5 @@ next:
  	return found;
 }
 ```
+
+https://github.com/novelinux/linux-4.x.y/blob/master/include/linux/rculist_bl.h/hlist_bl_for_each_entry_rcu.md
