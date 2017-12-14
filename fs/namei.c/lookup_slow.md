@@ -46,6 +46,8 @@ again:
 		}
 ```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/dcache.c/d_alloc_parallel.md
+
 ## inode->i_op->lookup
 
 ```

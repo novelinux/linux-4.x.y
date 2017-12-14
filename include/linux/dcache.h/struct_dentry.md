@@ -38,6 +38,45 @@ d_hash
     struct hlist_bl_node d_hash;    /* lookup hash list */
 ```
 
+The d_hash field of a dentry links the dentry into
+the list of dentries for filenames with a given hash value
+with list head dentry_hashtable[hashvalue] defined in dcache.c.
+This list is used in d_lookup() to find a dentry with given name
+and parent. It is used in d_validate() to find a dentry with
+known hash and parent.
+	[The present code takes the parent into account when
+	 computing a hash. Not doing this would make the code
+	 simpler and faster, possibly at the expense of a few
+	 more collisions. Has anyone investigated this?]
+The d_hash field is an empty list when the file is a mount point
+(cf. d_validate) or has been deleted, or when the dentry was
+dropped for some other reason.
+
+
+d_add(D,I) will put D into its hash chain and provide it
+with the inode I. It is called by all filesystem lookup routines.
+
+d_drop(D) will remove D from its hash chain. A dentry is called
+`unhashed' when its d_hash field is an empty list.
+Sometimes dentries are dropped temporarily to make sure
+no lookup will find them. The general routine vfs_rmdir(I,D)
+will drop D if d_count=2, so that all filesystem rmdir()
+routines can return -EBUSY when D still occurs in the hash list.
+The filesystem routines for unlink and rmdir call d_delete()
+which again calls d_drop().
+
+[The d_hash field is referred to in many places that should
+not know about its existence, in the phrase
+	if (list_empty(&dentry->d_hash)) ...
+No doubt there should be a line
+	#define unhashed(d)	(list_empty(&(d)->d_hash))
+in dcache.h, together with a comment describing the semantics
+of being unhashed. Then all these occurrences of d_hash can
+be removed. Next, d_drop() should be renamed d_unhash().]
+
+The dentry for the root of a mounted filesystem is returned by
+d_alloc_root() and is unhashed.
+
 d_parent
 ----------------------------------------
 
@@ -124,9 +163,43 @@ d_time
 ```
     unsigned long d_time;        /* used by d_revalidate */
     void *d_fsdata;            /* fs-specific data */
+```
 
+## d_lru
+
+```
     struct list_head d_lru;        /* LRU list */
 ```
+
+he simplest list is the one joining the d_lru fields of
+dentries that had d_count = 0 at some point in time.
+The list head is the variable dentry_unused defined in dcache.c.
+The number of elements in this list is dentry_stat.nr_unused.
+There are no references to the d_lru field outside dcache.[ch].
+
+Note that d_count is incremented by dget(), invoked by d_lookup(),
+without removing the dentry from the LRU list. Thus, anyone hoping
+to find unused dentries on this list must first check d_count.
+If a dentry is not on the LRU list, its d_lru field is an
+empty list (initialized by d_alloc()).
+
+dput(D) tries to get rid of D altogether when d_count = 0, but
+puts D at the head of the LRU list if it is still on the hash list.
+Thus, every D with d_count = 0 will be on the LRU list.
+
+select_dcache(ict,pct) removes D with d_count > 0 from the
+LRU list, and moves D that are ready to be sacrificed for memory
+to the end of the list. (If ict and/or pct is given, then we are
+satisfied when the selected D's involve ict inodes or pct pages.)
+
+prune_dcache(ct) removes D with d_count > 0 from the LRU list,
+and frees unused D, stopping when ct of them have been freed.
+
+shrink_dcache_sb(sb) removes all unused D with given superblock
+from the LRU list.
+
+select_parent(D) move all unused descendants of D to the end
+of the LRU list.
 
 d_child, d_subdirs
 ----------------------------------------
@@ -140,6 +213,17 @@ d_child, d_subdirs
 关系。与给定目录下的所有文件和子目录相关联的den-try实例，
 都归入到d_subdirs链表（在目录对应的dentry实例中）。子结点的
 d_child成员充当链表元素。
+
+As already noted, the names are terrible. The d_child field
+does not refer to a child but to a sibling, and the d_subdirs
+field does not refer to a subdirectory but to a child, directory
+or not. These two fields form a threaded tree: the d_subdirs field
+points to the first child, and the d_child field is member of the
+circularly linked list of all children of one parent.
+
+To be more precise: this circularly linked list of all children
+of one parent P passes through the d_child fields of all children
+and through the d_subdirs field of the parent P.
 
 union
 ----------------------------------------
@@ -161,5 +245,14 @@ d_alias用作链表元素，以连接表示相同文件的各个dentry对象。
 在利用硬链接用两个不同名称表示同一文件时，会发生这种情况。
 对应于文件的inode的i_dentry成员用作该链表的表头。各个dentry
 对象通过d_alias连接到该链表中。
+
+Somewhat similar to the above, where we had a circularly linked list
+with one special element, we here have a circularly linked list
+passing through the d_alias field of all dentries that are aliases
+of one inode, and through the i_dentry field of the inode.
+
+The dentry is added to this list by d_instantiate().
+It is removed again by dentry_iput() which is called by dput()
+and d_delete().
 
 ### d_rcu

@@ -1,5 +1,7 @@
 # d_alloc_parallel
 
+## d_alloc
+
 ```
 struct dentry *d_alloc_parallel(struct dentry *parent,
 				const struct qstr *name,
@@ -14,7 +16,13 @@ struct dentry *d_alloc_parallel(struct dentry *parent,
 
 	if (unlikely(!new))
 		return ERR_PTR(-ENOMEM);
+```
 
+https://github.com/novelinux/linux-4.x.y/blob/master/fs/dcache.c/d_alloc.md
+
+## retry
+
+```
 retry:
 	rcu_read_lock();
 	seq = smp_load_acquire(&parent->d_inode->i_dir_seq) & ~1;
