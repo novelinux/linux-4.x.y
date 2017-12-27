@@ -302,6 +302,14 @@ inode结构中的i_dentry链表结构，把属于同一个inode的被使用的�
 
 另外，在inode结构中嵌入的双向链表成员struct list_head i_dentry，并不是用来链接inode结构的，而是链接dentry结构的.
 
+在linux系统中有一种比较特殊的文件，我们称之为链接（link），通俗地说，链接就是从一个文件指向另外一个文件的路径。
+linux中链接分为俩种，硬链接和软链接。简单来说，硬链接相当于源文件和链接文件在磁盘和内存中共享一个inode，
+因此，链接文件和源文件有不同的dentry，因此，这个特性决定了硬链接无法跨越文件系统，而且我们无法为目录创建硬链接。
+软链接和硬链接不同，首先软链接可以跨越文件系统，其次，链接文件和源文件有着不同的inode和dentry，因此，两个文件的属性和内容也截然不同，
+软链接文件的文件内容是源文件的文件名。
+
+s://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/res/link_symlink.png
+
 
 ## i_version
 
