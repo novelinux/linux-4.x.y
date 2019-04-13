@@ -77,8 +77,9 @@ accountable_mapping统计，即内核维护了进程用于映射的页数目统�
 由于可以限制进程的资源用量,内核必须始终确保资源使用不超过允许值.
 对于每个进程可以创建的映射，还有一个最大数目的限制.
 
-security_vm_enough_memory_mm进行广泛的安全性和合理性检查，
-以防止应用程序设置无效的参数或可能影响系统稳定性的参数.
+### security_vm_enough_memory_mm
+
+https://github.com/novelinux/linux-4.x.y/blob/master/mm/mmap.c/memory_overcommit.md
 
 vma_merge
 ----------------------------------------
