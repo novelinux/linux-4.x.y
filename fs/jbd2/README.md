@@ -1,5 +1,12 @@
 # Linux: The Journaling Block Device
 
+什么是日志文件系统：
+
+日志（Journal)文件系统比非日志文件系统多了一个Journal，即记录上层(system call)对文件系统修改行为的数据。简而言之，就是将对File System的修改在Journal区域先备份一份，然后在写道真正的File system区域。如果数据在写到File system的时候发生了Power fail而导致数据不完整，那么下次启动的时候就会从Journal区域把备份的数据再写一遍到Filesystem，这样file system和journal就保持一致了。
+
+ext4 Journal和File System的工作流程：
+
+File System的工作流程和无Journal的流程基本一样。System call -> VFS -> ext4 -> Block device。不同点是在向文件系统写数据前会先产生一个Journal log,这些log在commit到disk的journal区域之前在内存里被一个transaction管理着。那么什么时候将内存里的transaction commit到disk上呢？线程kjournald2就是负责提交这些transaction的。kjournald2定时被唤醒（default是5秒）或被其他线程主动唤醒，检查有无transaction要commit,若有，并且log对应的data还没有被写到disk的filesystem上(如果data已经写到disk上则该log无需commit)，则commit log，并将该log放到checkpoint list上。至此提交journal log就完成了。还有一个问题，disk上的journal区域是有限的，不可能无限制的写入journal log。当数据写到disk filesystem上后，disk上Journal区域的log就不需要了，就应该删除这些log，腾出空间给后面的log用。所以还有一套checkpoint机制来删除journal区域的log。这套删除机制大约是这样的：当要生成新的journal log时首先检查disk上的journal区域是否还有空间容纳新的log，如果没有则启动checkpoint流程，等待checkpoint完成后有空闲的区域腾出来接受新log（start_this_handle -〉__jbd2_log_wait_for_space-〉jbd2_log_do_checkpoint）。checkpoint流程是这样的（实现在jbd2_log_do_checkpoint）：检查checkpoint list看已commit的journal log所对应的data有没有写到disk上，如果已经写上去了，就从journal区域删掉log（删掉log实现在jbd2_cleanup_journal_tail）。如果还没有写上去，则在这里将data写到file system，然后将log从journal区域删掉。
 
 Submitted by Kedar Sovani on June 21, 2006 - 2:40am.
 

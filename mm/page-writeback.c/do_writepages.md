@@ -1,5 +1,7 @@
 # do_writepages
 
+do_writepages函数将优先调用地址空间a_ops函数集中的writepages注册函数，ext4文件系统实现为ext4_writepages，若没有实现则调用通用函数generic_writepages（该函数在后台赃页回刷进程wb_workfn函数调用流程中也会被调用来执行回写操作）。
+
 ```
 int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
 {

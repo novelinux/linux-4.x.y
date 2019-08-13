@@ -1,5 +1,9 @@
 # __filemap_fdatawrite_range
 
+__filemap_fdatawrite_range函数会将<start, end>位置的dirty page回写。它首先构造一个struct writeback_control实例并初始化相应的字段，该结构体用于控制writeback回写操作，其中sync_mode表示同步模式，一共有WB_SYNC_NONE和WB_SYNC_ALL两种可选，前一种不会等待回写结束，一般用于周期性回写，后一种会等待回写结束，用于sync之类的强制回写；nr_to_write表示要回写的页数；range_start和range_end表示要会写的偏移起始和结束的位置，以字节为单位。
+
+接下来调用mapping_cap_writeback_dirty函数判断文件所在的bdi是否支持回写动作，若不支持则直接返回0（表示写回的数量为0）；然后调用wbc_attach_fdatawrite_inode函数将wbc和inode的bdi进行绑定（需启用blk_cgroup内核属性，否则为空操作）；然后调用do_writepages执行回写动作，回写完毕后调用wbc_detach_inode函数将wbc和inode解除绑定。
+
 
 ```
 /**

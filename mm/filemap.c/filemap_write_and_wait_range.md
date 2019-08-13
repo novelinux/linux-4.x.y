@@ -1,5 +1,7 @@
 # filemap_write_and_wait_range
 
+filemap_write_and_wait_range回写dirty文件数据块并等待回写完成。filemap_write_and_wait_range函数首先判断是否需要回写.
+
 ```
 int filemap_write_and_wait(struct address_space *mapping)
 {
