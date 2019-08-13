@@ -134,3 +134,34 @@ out:
   日志事务通常使用两个写入请求来提交：一个用于写入日志描述符块和日志块的合并块，另一个用于写入提交块。在本文的其余部分，我们将分别使用JD和JC来表示日志描述符和日志块的合并块，以及提交块。在提交日志事务时，JBD需要在两个关系中执行存储顺序：事务内和事务间。在事务内，JBD需要确保JD在JC之前持久。在事务间，JBD必须确保日记事务按序持久化。当违反这两个条件中的任何一个时，如果发生意外故障，文件系统可能会错误地恢复[67,9]。对于事务内的存储顺序，JBD将JD的写入请求和JC的写入请求与Transfer-and-Flush交错。为了控制事务之间的存储顺序，JBD线程在开始提交后面的事务之前等待JC变为持久。 JBD使用Transfer-and-Flush机制来执行intra-transaction（内部事务）和inter-transaction（事务间）存储顺序。
 
   在早期的Linux中，块设备层在提交日志事务时显式发出flush命令[15]。在这种方法中，flush命令不仅阻塞调用者，而且阻塞同一个调度队列中的其他请求。从Linux 2.6.37开始，文件系统（JBD）隐式地发出了一个flush命令[16]。在写入JC时，JBD用REQ_FLUSH和REQ_FUA标记写入请求。大多数存储控制器已经演变为支持这两个标志;有了这两个标志，存储控制器在为命令提供服务之前刷新写回缓存，并在服务命令时，它直接持久化JC到存储表面，绕过写回缓存。在这种方法中，只有JBD线程块和共享相同调度队列的其他线程才能继续。我们的努力可以被认为是IO堆栈演化的延续。我们通过使存储设备更具能力来缓解Transfer-and-Flush开销：支持屏障命令并相应地重新设计主机端IO堆栈。
+
+
+Q:块设备层保序功能的作用?
+A:通用块层可以提交一个带保序标签(BIO_RW_BARRIER)的BIO到IO请求队列,块设备层可以保证在保序BIO之前提交的BIO都先于BIO执行且抵达存储介质;保序BIO执行完毕后,它需要写入的数据必定已经抵达存储介质;在保序IO之后提交的BIO都晚于保序BIO执行,确保BIO不饥饿.
+
+Q:块设备层保序功能的应用?
+A:保序功能最典型的应用场景是文件系统的日志,日志文件系统做文件操作时的日志操作可以简化为:1.开始事务->2.将修改的元数据写入到日志空间->3.向日志空间写入事务提交块->4.事务结束,这个过程中,IO调度器可能重排2,3步的BIO,导致第3步先于第2步执行完毕,掉电后一个不完整的事务被恢复,文件系统数据被破坏.
+
+Q:块设备保序功能的实现?
+
+A:BIO从提交到抵达存储介质需要经过的IO路径有:IO调度器缓存队列->IO分发队列->驱动缓存队列->磁盘缓存->磁盘介质,保序的真正实现需要借助磁盘提供支持,2.6.27的保序实现会根据磁盘提供的功能做不同的操作.其原理是在收到保序请求后,清空IO调度器中缓存的request,同时在保序请求前后插入刷硬盘缓存指令的request,确保保序请求执行完毕后它和它以前请求写入的数据都已抵达存储介质,具体步骤如下:
+1.当块设备层收到保序BIO时,独立创建一个带REQ_HARDBARRIER标志的request,调用add_request()向request_queue添加request,插入的位置是ELEVATOR_INSERT_BACK.
+
+2.elv_insert()收到ELEVATOR_INSERT_BACK位置的请求后,将IO调度器中缓冲的request都转移到分发队列,同时将保序request插入到分发队列的最后.
+
+3.底层驱动提供的q->request_fn()函数被调用,elv_next_request()->blk_do_ordered()处理到保序request时,如果q->ordseq=0且硬盘支持冲刷缓存指令,调用start_ordered()开始保序流程.
+
+4.进入start_ordered(),调用blkdev_dequeue_request()将原始保序request从分发队列移除,用原始request初始化q->bar_rq,用q->bar_rq代替原始request执行,如果原始保序request需要做POSTFLUSH,那么调用queue_flush()往分发队列的头上插入一个冲刷request,否则执行q->ordseq |= QUEUE_ORDSEQ_POSTFLUSH标记POSTFLUSH这个步骤已经完成(或无需进行);将q->bar_rq也添加到分发队列后,对PREFLUSH请求执行类似POSTFLUSH的操作.因为queue_flush()会将冲刷request插到分发队列的头上,因此POSTFLUSH request需要在elv_insert()之前执行,PREFLUSH request需要在elv_insert()之后执行.
+
+5.PREFLUSH请求执行完毕,pre_flush_end_io()被执行,调用elv_completed_request()对完成的request做处理,如果当前q->in_flight == 0表示保序request以前的request都已经执行完毕,同时当前队列保序的阶段为等待保序request之前的request执行完毕(QUEUE_ORDSEQ_DRAIN),此时可以执行blk_ordered_complete_seq(q, QUEUE_ORDSEQ_DRAIN, 0)将QUEUE_ORDSEQ_DRAIN完毕的标志更新到q->ordseq.
+
+6.pre_flush_end_io()调用blk_ordered_complete_seq(rq->q, QUEUE_ORDSEQ_PREFLUSH)将PREFLUSH完毕的标志更新到q->ordseq.
+
+7.q->bar_rq执行完毕,bar_end_io()被执行,调用blk_ordered_complete_seq(rq->q, QUEUE_ORDSEQ_BAR)完成QUEUE_ORDSEQ_BAR步骤.
+
+8.POSTFLUSH request的完成同5,6步,最后进入到blk_ordered_complete_seq(),blk_ordered_cur_seq(q)当前的步骤为QUEUE_ORDSEQ_DONE,整个保序过程完毕,调用__blk_end_request(q->orig_bar_rq)对原始保序请求做完成的回调.
+
+Q:SOFTBARRIER和HARDBARRIER的区别?
+1.SOFTBARRIER和HARDBARRIER都不能与其他request合并
+2.SOFTBARRIER和HARDBARRIER进入到分发队列后,新进入的request只能在它们后面插队不能在它们前面插队
+3.只需对HARDBARRIER做保序操作
