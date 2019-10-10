@@ -41,3 +41,8 @@ File System
 ----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/README.md
+
+Lock
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/locking/README.md
