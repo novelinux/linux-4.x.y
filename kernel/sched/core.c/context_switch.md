@@ -23,10 +23,8 @@ context_switch(struct rq *rq, struct task_struct *prev,
 prepare_task_switch
 ----------------------------------------
 
-紧接着进程切换之前，prepare_task_switch会调用每个体系结构都必须
-定义的prepare_arch_switch挂钩。
-这使得内核执行特定于体系结构的代码，为切换做事先准备。大多数支持
-的体系结构（Sparc64和Sparc除外）都不需要该选项，因此并未使用。
+紧接着进程切换之前，prepare_task_switch会调用每个体系结构都必须定义的prepare_arch_switch挂钩。
+这使得内核执行特定于体系结构的代码，为切换做事先准备。大多数支持的体系结构（Sparc64和Sparc除外）都不需要该选项，因此并未使用。
 
 ```
     prepare_task_switch(rq, prev, next);
@@ -39,9 +37,7 @@ Context Switch
 
 ### switch_mm
 
-switch_mm更换通过task_struct->mm描述的内存管理上下文。该工作的
-细节取决于处理器，主要包括加载页表、刷出地址转换后备缓冲器
-（部分或全部）、向内存管理单元（MMU）提供新的信息。
+switch_mm更换通过task_struct->mm描述的内存管理上下文。该工作的细节取决于处理器，主要包括加载页表、刷出地址转换后备缓冲器（部分或全部）、向内存管理单元（MMU）提供新的信息。
 
 ```
     mm = next->mm;
@@ -79,12 +75,7 @@ switch_mm更换通过task_struct->mm描述的内存管理上下文。该工作�
 
 ### switch_to
 
-switch_to切换处理器寄存器内容和内核栈（虚拟地址空间的用户部分在
-第一步已经变更，其中也包括了用户状态下的栈，因此用户栈就不需要
-显式变更了）。此项工作在不同的体系结构下可能差别很大，代码通常
-都使用汇编语言编写。
-最后用switch_to完成进程切换，该函数切换寄存器状态和栈，新进程在
-该调用之后开始执行
+switch_to切换处理器寄存器内容和内核栈（虚拟地址空间的用户部分在第一步已经变更，其中也包括了用户状态下的栈，因此用户栈就不需要显式变更了）。此项工作在不同的体系结构下可能差别很大，代码通常都使用汇编语言编写。最后用switch_to完成进程切换，该函数切换寄存器状态和栈，新进程在该调用之后开始执行
 
 ```
     /*
@@ -108,11 +99,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/switch
 finish_task_switch
 ----------------------------------------
 
-switch_to之后的代码只有在当前进程下一次被选择运行时才会执行。
-finish_task_switch完成一些清理工作，使得能够正确地释放锁。它
-也向各个体系结构提供了另一个挂钩上下文切换过程的可能性，但只在
-少量计算机上需要。barrier语句是一个编译器指令，确保switch_to和
-finish_task_switch语句的执行顺序不会因为任何可能的优化而改变.
+switch_to之后的代码只有在当前进程下一次被选择运行时才会执行。finish_task_switch完成一些清理工作，使得能够正确地释放锁。它也向各个体系结构提供了另一个挂钩上下文切换过程的可能性，但只在少量计算机上需要。barrier语句是一个编译器指令，确保switch_to和finish_task_switch语句的执行顺序不会因为任何可能的优化而改变.
 
 ```
     barrier();

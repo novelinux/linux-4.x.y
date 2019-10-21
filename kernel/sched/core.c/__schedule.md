@@ -1,10 +1,6 @@
 # __schedule
 
-在内核中的许多地方，如果要将CPU分配给与当前活动进程不同的
-另一个进程，都会直接调用主调度器函数（schedule）。在从系统
-调用返回之后，内核也会检查当前进程是否设置了重调度标志TIF_NEED_RESCHED，
-例如，前述的scheduler_tick就会设置该标志。如果是这样，则内核会调用schedule。
-该函数假定当前活动进程一定会被另一个进程取代。
+在内核中的许多地方，如果要将CPU分配给与当前活动进程不同的另一个进程，都会直接调用主调度器函数（schedule）。在从系统调用返回之后，内核也会检查当前进程是否设置了重调度标志TIF_NEED_RESCHED，例如，前述的scheduler_tick就会设置该标志。如果是这样，则内核会调用schedule。该函数假定当前活动进程一定会被另一个进程取代。 类似于周期性调度器，内核也利用该时机来更新就绪队列的时钟，并清除当前运行进程task_struct中的重调度标志TIF_NEED_RESCHED。
 
 ## Comments
 
@@ -64,11 +60,7 @@ static void __sched notrace __schedule(bool preempt)
 
 ### __sched
 
-该前缀用于可能调用schedule的函数，包括schedule自身。该前缀目的
-在于: 将相关函数的代码编译之后，放到目标文件的一个特定的段中，
-即.sched.text中。该信息使得内核在显示栈转储或类似信息时，忽略
-所有与调度有关的调用。由于调度器函数调用不是普通代码流程的一
-部分，因此在这种情况下是没有意义的。
+该前缀用于可能调用schedule的函数，包括schedule自身。该前缀目的在于: 将相关函数的代码编译之后，放到目标文件的一个特定的段中，即.sched.text中。该信息使得内核在显示栈转储或类似信息时，忽略所有与调度有关的调用。由于调度器函数调用不是普通代码流程的一部分，因此在这种情况下是没有意义的。
 
 ## smp_processor_id
 
@@ -86,6 +78,8 @@ static void __sched notrace __schedule(bool preempt)
 ```
 
 ## pick_next_task
+
+pick_next_task用于选择下一个将要运行的进程，而put_prev_task则在用另一个进程代替当前运行的进程之前调用。要注意，这些操作并不等价于将进程加入或撤出就绪队列的操作，如enqueue_task和dequeue_task。相反，它们负责向进程提供或撤销CPU。但在不同进程之间切换，仍然需要执行一个底层的上下文切换。
 
 ```
     /*
@@ -119,12 +113,11 @@ static void __sched notrace __schedule(bool preempt)
     rq->clock_skip_update <<= 1; /* promote REQ to ACT */
 
     switch_count = &prev->nivcsw;
-    /* 同样因为调度器的模块化结构，大多数工作可以委托给调度类。
-     * 如果当前进程原来处于可中断睡眠状态但现在接收到信号，
-     * 那么它必须再次提升为运行进程。否则，用相应调度器类的方法
-     * 使进程停止活动(deactivate_task实质上最终调用了
-     * sched_class->dequeue_task)
-     */
+```
+
+同样因为调度器的模块化结构，大多数工作可以委托给调度类。如果当前进程原来处于可中断睡眠状态但现在接收到信号，那么它必须再次提升为运行进程。否则，用相应调度器类的方法使进程停止活动（deactivate_task实质上最终调用了sched_class->dequeue_task）：
+
+```
     if (!preempt && prev->state) {
         if (unlikely(signal_pending_state(prev->state, prev))) {
             prev->state = TASK_RUNNING;
@@ -153,16 +146,13 @@ static void __sched notrace __schedule(bool preempt)
     next = pick_next_task(rq, prev);
 ```
 
-选择下一个应该执行的进程，该工作由pick_next_task负责：
-
 ### wq_worker_sleeping
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/wq_worker_sleeping.md
 
 ## clear_tsk_need_resched
 
-类似于周期性调度器，内核也利用该时机来更新就绪队列的时钟，并
-清除当前运行进程task_struct中的重调度标志TIF_NEED_RESCHED。
+类似于周期性调度器，内核也利用该时机来更新就绪队列的时钟，并清除当前运行进程task_struct中的重调度标志TIF_NEED_RESCHED。
 
 ```
     clear_tsk_need_resched(prev);
@@ -172,12 +162,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/wq_worke
 
 ## context_switch
 
-不见得必然选择一个新进程。也可能其他进程都在睡眠，当前只有一个
-进程能够运行，这样它自然就被留在CPU上。但如果已经选择了一个新
-进程，那么必须准备并执行硬件级的进程切换。
-
-context_switch一个接口，供访问特定于体系结构的方法，后者负责执行
-底层上下文切换。
+不见得必然选择一个新进程。也可能其他进程都在睡眠，当前只有一个进程能够运行，这样它自然就被留在CPU上。但如果已经选择了一个新进程，那么必须准备并执行硬件级的进程切换。context_switch一个接口，供访问特定于体系结构的方法，后者负责执行底层上下文切换。
 
 ```
     if (likely(prev != next)) {
@@ -198,12 +183,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/kernel/sched/core.c/context
 
 ## balance_callback
 
-下述代码片段可能在两个不同的上下文中执行。在没有执行上下文切换
-时，它在schedule函数的末尾直接执行。但如果已经执行了上下文切换，
-当前进程会正好在这以前停止运行，新进程已经接管了CPU。但稍后在
-前一进程被再次选择运行时，它会刚好在这一点上恢复执行。在这种
-情况下，由于prev不会指向正确的进程，所以需要通过current和
-test_thread_flag找到当前线程。
+下述代码片段可能在两个不同的上下文中执行。在没有执行上下文切换时，它在schedule函数的末尾直接执行。但如果已经执行了上下文切换，当前进程会正好在这以前停止运行，新进程已经接管了CPU。但稍后在前一进程被再次选择运行时，它会刚好在这一点上恢复执行。在这种情况下，由于prev不会指向正确的进程，所以需要通过current和test_thread_flag找到当前线程。
 
 ```
     balance_callback(rq);

@@ -78,7 +78,27 @@ stack
     int wake_cpu;
 #endif
     int on_rq;
+```
 
+### 进程的优先级
+
+task_struct采用了3个成员来表示进程的优先级：
+
+* static_prio表示进程的静态优先级。静态优先级是进程启动时分配的优先级。它可以用nice和sched_setscheduler系统调用修改，否则在进程运行期间会一直保持恒定。
+
+* prio和normal_prio表示动态优先级.normal_priority表示基于进程的静态优先级和调度策略计算出的优先级。因此，即使普通进程和实时进程具有相同的静态优先级，其普通优先级也是不同的。进程分支时，子进程会继承普通优先级。但调度器考虑的优先级则保存在prio。由于在某些情况下内核需要暂时提高进程的优先级，因此需要第3个成员来表示。由于这些改变不是持久的，因此静态和普通优先级不受影响。
+
+* rt_priority表示实时进程的优先级。该值不会代替先前讨论的那些值！最低的实时优先级为0，而最高的优先级是99。值越大，表明优先级越高。
+
+* sched_class表示该进程所属的调度器类。
+
+* 调度器不限于调度进程，还可以处理更大的实体。这可以用于实现组调度：可用的CPU时间可以首先在一般的进程组（例如，所有进程可以按所有者分组）之间分配，接下来分配的时间在组内再次分配。这种一般性要求调度器不直接操作进程，而是处理可调度实体。一个实体由sched_entity的一个实例表示。在最简单的情况下，调度在各个进程上执行，这也是我们最初关注的情形。由于调度器设计为处理可调度的实体，在调度器看来各个进程必须也像是这样的实体。因此se在task_struct中内嵌了一个sched_entity实例，调度器可据此操作各个task struct
+
+* SCHED_NORMAL用于普通进程，我们主要讲述此类进程。它们通过完全公平调度器来处理。SCHED_BATCH和SCHED_IDLE也通过完全公平调度器来处理，不过可用于次要的进程。SCHED_BATCH用于非交互、CPU使用密集的批处理进程。调度决策对此类进程给予“冷处理”：它们决不会抢占CF调度器处理的另一个进程，因此不会干扰交互式进程。如果不打算用nice降低进程的静态优先级，同时又不希望该进程影响系统的交互性，此时最适合使用该调度类。在调度决策中SCHED_IDLE进程的重要性也比较低，因为其相对权重总是最小的。要注意，尽管名称是SCHED_IDLE，但SCHED_IDLE不负责调度空闲进程。空闲进程由内核提供单独的机制来处理。SCHED_RR和SCHED_FIFO用于实现软实时进程。SCHED_RR实现了一种循环方法，而SCHED_ FIFO则使用先进先出机制。这些不是由完全公平调度器类处理，而是由实时调度器类处理，
+
+* cpus_allowed是一个位域，在多处理器系统上使用，用来限制进程可以在哪些CPU上运行。
+
+```
     int prio, static_prio, normal_prio;
     unsigned int rt_priority;
     const struct sched_class *sched_class;
@@ -101,7 +121,11 @@ stack
     unsigned int policy;
     int nr_cpus_allowed;
     cpumask_t cpus_allowed;
+```
 
+### RCU
+
+```
 #ifdef CONFIG_PREEMPT_RCU
     int rcu_read_lock_nesting;
     union rcu_special rcu_read_unlock_special;
