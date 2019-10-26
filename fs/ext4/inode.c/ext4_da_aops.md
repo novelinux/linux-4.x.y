@@ -5,6 +5,11 @@ path: fs/ext4/inode.c
 ```
 static const struct address_space_operations ext4_da_aops = {
     .readpage        = ext4_readpage,
+```
+
+[ext4_readpage](./ext4_readpage)
+
+```
     .readpages        = ext4_readpages,
     .writepage        = ext4_writepage,
     .writepages        = ext4_writepages,
