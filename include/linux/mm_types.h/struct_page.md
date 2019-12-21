@@ -62,7 +62,7 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/page-flags.h/
                                            */
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
+[Address Space](../fs.h/struct_address_space.md)
 
 mapping指定了页帧所在的地址空间。index是页帧在映射内部的偏移量。地址空间是一个非常一般的概念，
 例如，可以用在向内存读取文件时。地址空间用于将文件的内容（数据）与装载数据的内存区关联起来。

@@ -1,0 +1,24 @@
+digraph G {
+  subgraph cluster0 {
+    node [style=filled,color=white];
+    style=filled;
+    color = lightgrey;
+    label = "Cache";
+
+    a0[label="find_get_page"]
+    a1[label="pagecache_get_page"]
+    a2[label="find_get_entry"]
+    a3[label="xas_load"]
+
+  }
+
+  subgraph cluster1 {
+    node [style=filled];
+    color=blue;
+  }
+
+  start->a0;
+  a12->end;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];

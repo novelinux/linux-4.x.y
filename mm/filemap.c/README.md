@@ -18,6 +18,54 @@ Swap:      2097144          0    2097144
 
 内核的代码和数据结构不必从磁盘读，也不必写入磁盘。
 
+内核的代码和数据结构不必从磁盘读,也不必写入磁盘。因此页面Cache可能是下面的类型:
+
+* 含有普通文件数据的页;
+* 含有目录的页;
+* 含有直接从块设备文件(跳过文件系统层)读出的数据页;
+* 含有用户态进程数据的页,但页中的数据已被交换到磁盘;
+* 属于特殊文件系统的页,如进程间通信中的特殊文件系统shm
+
+块设备I/O操作流程图,从图中我们可以看出具体文件系统(如ext3/ext4、 xfs等),负责在文件Cache和存储设备之间交换数据,位于具体文件系统之上的虚拟文件系统VFS负责在应用程序和文件 Cache 之间通过read()/write()等接口交换数据。
+
+[Read/Write](./read-write.png)
+
+页面Cache中的每页所包含的数据是属于某个文件,这个文件(准确地说是文件的inode)就是该页的拥有者。事实上,所有的read()和write()都依赖于页面Cache;唯一的例外是当进程打开文件时,使用了O_DIRECT标志,在这种情况下,页面Cache被跳过,且使用了进程用户态地址空间的缓冲区。有些数据库应用程序使用O_DIRECT标志,这样他们可以使用自己的磁盘缓冲算法。
+
+内核页面Cache的实现主要为了满足下面两种需要:
+
+* 快速定位含有给定所有者相关数据的特定页。为了尽可能发挥页面Cache的优势,查找过程必须是快速的。
+
+* 记录在读或写页中的数据时,应该如何处理页面Cache中的每个页。例如,从普通文件、块设备文件或交换区读一个数据页,必须用不同的方式;这样内核必须根据页面拥有者来选择正确的操作。
+
+显然,页面Cache中的数据单位是整页数据。当然一个页面中的数据在磁盘上不必是相邻的,这样页面就不能用设备号和块号来识别。取而代之的是,Cache中的页面识别是通过拥有者和拥有者数据中的索引,通常是inode和相应文件内的偏移量。文件Cache是文件数据在内存中的副本,因此文件Cache管理与内存管理系统和文件系统都相关:一方面文件 Cache 作为物理内存的一部分,需要参与物理内存的分配回收过程,另一方面文件Cache中的数据来源于存储设备上的文件,需要通过文件系统与存储设备进行读写交互。从操作系统的角度考虑,文件Cache可以看做是内存管理系统与文件系统之间的联系纽带。因此,文件Cache管理是操作系统的一个重要组成部分,它的性能直接影响着文件系统和内存管理系统的性能。
+
+### Cache重要数据结构和函数
+
+#### address_space
+
+[Address Space](../../include/linux/fs.h/struct_address_space.md)
+
+对页面Cache操作的基本高级函数有查找、增加和删除页:
+
+* find_get_page
+
+find_get_page()的参数有两个:address_space对象的指针和文件页面偏移量。若在xarray中找到了指定页,就增加该页的计数。
+
+[find_get_page](../../include/linux/pagemap.h/find_get_page.md)
+
+* add_to_page_cache_locked
+
+函数add_to_page_cache_locked()的作用是将一个新页插入到页面Cache中
+
+[add_to_page_cache_locked](./add_to_page_cache_locked.md)
+
+* delete_from_page_cache
+
+是从页面Cache中删除某个页
+
+[delete_from_page_cache](./delete_from_page_cache.md)
+
 ### Free命令显示内存
 
 [Free](./free.jpg)
@@ -65,3 +113,7 @@ Buffer cache是针对磁盘块的缓存，也就是在没有文件系统的情�
 简单说来，page cache用来缓存文件数据，buffer cache用来缓存磁盘数据。在有文件系统的情况下，对文件操作，那么数据会缓存到page cache，如果直接采用dd等工具对磁盘进行读写，那么数据会缓存到buffer cache。
 Buffer(Buffer Cache)以块形式缓冲了块设备的操作，定时或手动的同步到硬盘，它是为了缓冲写操作然后一次性将很多改动写入硬盘，避免频繁写硬盘，提高写入效率。
 Cache(Page Cache)以页面形式缓存了文件系统的文件，给需要使用的程序读取，它是为了给读操作提供缓冲，避免频繁读硬盘，提高读取效率。
+
+### readahead
+
+[readahead](./readahead.md)

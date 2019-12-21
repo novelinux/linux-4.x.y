@@ -74,11 +74,13 @@ https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_i
 
 ## i_mapping
 
+i_mapping字段总是指向含有inode数据的页所有者的address_space对象,address_space对象中的host字段指向其所有者的inode对象。
+
 ```
     struct address_space    *i_mapping;
 ```
 
-https://github.com/novelinux/linux-4.x.y/tree/master/include/linux/fs.h/struct_address_space.md
+[Address Space](./struct_address_space.md)
 
 ## i_security
 
@@ -348,8 +350,17 @@ i_fop提供了文件操作。file_operations用于操作文件中包含的数据
 
 ```
     struct file_lock_context    *i_flctx;
+```
+
+## i_data
+
+```
     struct address_space    i_data;
 ```
+
+若页面Cache中页的所有者是文件,address_space对象就嵌入在VFS inode对象中的i_data字段中。
+
+
 
 ## i_devices
 
