@@ -3,6 +3,39 @@ load_elf_binary
 
 load_elf_binary用来装载一个elf格式的二进制文件，其具体实现如下所示:
 
+```
+$ readelf -l app_process32 
+
+Elf file type is DYN (Shared object file)
+Entry point 0x1739
+There are 9 program headers, starting at offset 52
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  PHDR           0x000034 0x00000034 0x00000034 0x00120 0x00120 R   0x4
+  INTERP         0x000154 0x00000154 0x00000154 0x00013 0x00013 R   0x1
+      [Requesting program interpreter: /system/bin/linker]
+  LOAD           0x000000 0x00000000 0x00000000 0x05b87 0x05b87 R E 0x1000
+  LOAD           0x005c98 0x00006c98 0x00006c98 0x00368 0x01205 RW  0x1000
+  DYNAMIC        0x005d4c 0x00006d4c 0x00006d4c 0x00160 0x00160 RW  0x4
+  NOTE           0x000168 0x00000168 0x00000168 0x00038 0x00038 R   0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10
+  EXIDX          0x0050ec 0x000050ec 0x000050ec 0x00220 0x00220 R   0x4
+  GNU_RELRO      0x005c98 0x00006c98 0x00006c98 0x00368 0x00368 RW  0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .interp 
+   02     .interp .note.android.ident .note.gnu.build-id .dynsym .dynstr .gnu.hash .gnu.version .gnu.version_r .rel.dyn .rel.plt .plt .text .ARM.exidx .ARM.extab .rodata 
+   03     .preinit_array .init_array .fini_array .data.rel.ro .dynamic .got .bss 
+   04     .dynamic 
+   05     .note.android.ident .note.gnu.build-id 
+   06     
+   07     .ARM.exidx 
+   08     .preinit_array .init_array .fini_array .data.rel.ro .dynamic .got
+```
+
 Arguments
 ----------------------------------------
 
@@ -49,6 +82,8 @@ interp_elf_ex组成,其中elfhdr是宏.
 ELF Header
 ----------------------------------------
 
+填充并且检查目标程序ELF头部。
+
 ```
     /* Get the exec-header */
     /* bprm 的成员变量buf中存储可执行文件的前128个字节 */
@@ -73,6 +108,8 @@ ELF Header
 
 load_elf_phdrs
 ----------------------------------------
+
+通过load_elf_phdrs加载目标程序的程序头表。
 
 ```
     elf_phdata = load_elf_phdrs(&loc->elf_ex, bprm->file);
@@ -99,6 +136,8 @@ https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf_c/load_elf_ph
 
 Program Headers (PT_INTERP)
 ----------------------------------------
+
+第三步，处理解释器段。
 
 ```
     for (i = 0; i < loc->elf_ex.e_phnum; i++) {
@@ -165,9 +204,7 @@ Program Headers (PT_INTERP)
     }
 ```
 
-INTERP用于指定在程序已经从可执行文件映射到内存之后，必须调用的解释器.
-在这里解释器指的是这样一个程序: 通过链接其它库，来满足为解决的引用.
-在这里/system/bin/linker用于在虚拟地址空间中插入程序运行所需的动态库.
+INTERP用于指定在程序已经从可执行文件映射到内存之后，必须调用的解释器.在这里解释器指的是这样一个程序: 通过链接其它库，来满足为解决的引用.在这里/system/bin/linker用于在虚拟地址空间中插入程序运行所需的动态库.
 
 ```
 INTERP         0x000134 0x00000134 0x00000134 0x00013 0x00013 R   0x1
@@ -207,6 +244,7 @@ elf_interpreter
         retval = -ELIBBAD;
         /* Not an ELF interpreter */
         /* 1.检查解释器文件是否是elf格式文件. */
+	// 检查并读取解释器的程序头表。	
         if (memcmp(loc->interp_elf_ex.e_ident, ELFMAG, SELFMAG) != 0)
             goto out_free_dentry;
         /* Verify the interpreter has a valid arch */
@@ -214,6 +252,9 @@ elf_interpreter
             goto out_free_dentry;
 
         /* Load the interpreter program headers */
+	// 可以看到加载解释器，其实原理和前面加载ELF可执行程序一样，也是线检查解释器头部信息，
+	// 然后通过load_elf_phdrs加载解释器的程序头表。
+	// 完成了解释器初始化工作，并加载了目标执行执行的程序头表后，开始加载程序的段信息。
         interp_elf_phdata = load_elf_phdrs(&loc->interp_elf_ex,
                            interpreter);
         if (!interp_elf_phdata)
@@ -413,8 +454,7 @@ MAP_PRIVATE创建一个与数据源分离的私有映射，对映射区域的写
 
 ### vaddr
 
-找到一个PT_LOAD片以后，先要确定其装入地址。程序头数据结构中的p_vaddr
-提供了映像在连接时确定的装入地址vaddr.
+找到一个PT_LOAD片以后，先要确定其装入地址。程序头数据结构中的p_vaddr提供了映像在连接时确定的装入地址vaddr.
 
 ```
 
@@ -488,13 +528,8 @@ load_addr_set默认是0, 那么针对DYN类型的elf格式文件其load_addr
 
 ### Count addr
 
-下面的一段代码用于计算代码区和数据区的开始位置, 结束位置:
-由于代码区在进程空间的最前面，如果当前映射的这一段的开始位置
-还位于当前的代码区之前，那么代码区的开始位置应该还要向前移，
-至少移到这一段的位置上。
-而如果当前映射的这一段的开始位置还位于当前的数据区之后，
-那么数据区的开始位置还应该向后移，至少移到这一段的位置上。
-这是因为数据区在可装载的段的最后，不应该有哪个段的位置比较数据区还靠后。
+下面的一段代码用于计算代码区和数据区的开始位置, 结束位置: 由于代码区在进程空间的最前面，如果当前映射的这一段的开始位置还位于当前的代码区之前，那么代码区的开始位置应该还要向前移，至少移到这一段的位置上。
+而如果当前映射的这一段的开始位置还位于当前的数据区之后，那么数据区的开始位置还应该向后移，至少移到这一段的位置上。这是因为数据区在可装载的段的最后，不应该有哪个段的位置比较数据区还靠后。
 
 ```
         k = elf_ppnt->p_vaddr;
