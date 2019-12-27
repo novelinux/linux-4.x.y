@@ -44,7 +44,11 @@ int ext4_mpage_readpages(struct address_space *mapping,
 				  mapping_gfp_constraint(mapping, GFP_KERNEL)))
 				goto next_page;
 		}
+```
 
+for循环,循环次数就是要读取的页面数。
+
+```
 		if (page_has_buffers(page))
 			goto confused;
 

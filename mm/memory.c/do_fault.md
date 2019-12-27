@@ -1,6 +1,12 @@
 do_fault
 ========================================
 
+文件映射缺页中断又分为三种：
+
+* flags中不包含FAULT_FLAG_WRITE，说明是只读异常，调用do_read_fault()
+* VMA的vm_flags没有定义VM_SHARED，说明这是一个私有文件映射，发生了写时复制COW，调用do_cow_fault()
+* 其余情况则说明是共享文件映射缺页异常，调用do_shared_fault()
+
 path: mm/memory.c
 ```
 /*

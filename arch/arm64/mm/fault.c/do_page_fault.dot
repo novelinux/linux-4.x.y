@@ -1,0 +1,45 @@
+digraph G {
+  subgraph cluster0 {
+    node [style=filled,color=white];
+    style=filled;
+    color=lightgrey;
+    label = "do_page_fault";
+
+    a0[label="do_page_fault"]
+    
+    a1[label="__do_page_fault"]
+    a2[label="do_kernel_fault"]
+
+    a0->a1[label="user mode"]
+    a0->a2[label="kernel mode"]
+
+    a3[label="handle_mm_fault"]
+    a4[label="__handle_mm_fault"]
+    a5[label="handle_pte_fault"]
+
+    a1->a3->a4->a5;
+
+    a6[label="do_anonymous_page"]
+    a7[label="do_fault"]
+    a8[label="do_swap_page"]
+    a9[label="do_wp_page"]
+
+    a5->a6[label="匿名页面缺页中断"]
+    a5->a7[label="文件映射缺页中断"]
+    a5->a8[label="页被交换到swap分区"]
+    a5->a9[label="写时复制"]
+
+    a10[label="do_read_fault"]
+    a11[label="do_cow_fault"]
+    a12[label="do_shared_fault"]
+
+    a7->a10[label="只读异常"];
+    a7->a11[label="写时复制异常"];
+    a7->a12[label="共享映射异常"];
+  }
+
+  start->a0;
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}

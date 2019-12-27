@@ -1,3 +1,5 @@
+# ARM64 Memory
+
 ## ARM64 Linux 内核虚拟地址空间
 
 32 位 CPU 的最大问题就是虚拟地址空间只有 4GB 大小。即使一些平台支持 PAE (Physical Address Extension)扩展，该问题仍然存在，
@@ -87,3 +89,7 @@ https://github.com/novelinux/linux-4.x.y/blob/master/arch/arm64/mm/res/linux-ker
 
 需要注意到，32 位应用仍然拥有 512GB 的内核虚拟地址空间，并且不与内核共享自己的 4GB 空间。
 但在 ARM32 上，32 位应用只有 3GB 的地址空间。
+
+## 缺页异常的处理
+
+[do_page_fault](./do_page_fault.jpeg)

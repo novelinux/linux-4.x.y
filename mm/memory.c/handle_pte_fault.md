@@ -1,10 +1,6 @@
-handle_pte_fault
-========================================
+# handle_pte_fault
 
 handle_pte_fault函数分析缺页异常的原因。pte是指向相关页表项(pte_t)的指针。
-
-Arguments
-----------------------------------------
 
 path: mm/memory.c
 ```
@@ -43,11 +39,14 @@ static int handle_pte_fault(struct mm_struct *mm,
     barrier();
 ```
 
-!pte_present
-----------------------------------------
+## !pte_present
+
+如果页不在物理内存中，即!pte_present(entry)，则必须区分下面情况:
 
 ```
+    // pte页表项中的L_PTE_PRESENT位没有置位，说明pte对应的物理页面不存在	
     if (!pte_present(entry)) {
+        // pte页表项内容为空，同时pte对应物理页面也不存在
         if (pte_none(entry)) {
             if (vma_is_anonymous(vma))
                 return do_anonymous_page(mm, vma, address,
@@ -56,31 +55,34 @@ static int handle_pte_fault(struct mm_struct *mm,
                 return do_fault(mm, vma, address, pte, pmd,
                         flags, entry);
         }
+	// -pte对应的物理页面不存在，但是pte页表项不为空，说明该页被交换到swap分区了
         return do_swap_page(mm, vma, address,
                     pte, pmd, flags, entry);
     }
 ```
 
-如果页不在物理内存中，即!pte_present(entry)，则必须区分下面情况:
-
 ### do_anonymous_page
 
-如果没有对应的页表项（page_none），则内核必须从头开始加载该页，对匿名映射
-称之为按需分配(demand allocation)，对基于文件的映射，则称之为按需调页（demand paging）。
-内核使用do_anonymous_page返回一个匿名页。
+匿名页面缺页中断: 如果没有对应的页表项（page_none），则内核必须从头开始加载该页，对匿名映射称之为按需分配(demand allocation)，对基于文件的映射，则称之为按需调页（demand paging）。内核使用do_anonymous_page返回一个匿名页。
 
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_anonymous_page.md
+[do_anonymous_page](do_anonymous_page.md)
 
 ### do_fault
 
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_fault.md
+文件映射缺页中断
+
+[do_fault](do_fault.md)
 
 ### do_swap_page
 
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_swap_page.md
+页被交换到swap分区
 
-do_numa_page
-----------------------------------------
+[do_swap_page](do_swap_page.md)
+
+
+下面都是物理页面存在的情
+
+## do_numa_page
 
 ```
     if (pte_protnone(entry))
@@ -92,26 +94,25 @@ do_numa_page
         goto unlock;
 ```
 
-do_wp_page
-----------------------------------------
+## do_wp_page
 
 ```
     if (flags & FAULT_FLAG_WRITE) {
-        if (!pte_write(entry))
+        if (!pte_write(entry)) // 对只读属性的页面产生写异常，触发写时复制缺页中断
             return do_wp_page(mm, vma, address,
                     pte, pmd, ptl, entry);
         entry = pte_mkdirty(entry);
     }
 ```
 
-https://github.com/novelinux/linux-4.x.y/blob/master/mm/memory.c/do_wp_page.md
+[do_wp_page](do_wp_page.md)
 
-pte_mkyoung
-----------------------------------------
+## pte_mkyoung
 
 ```
     entry = pte_mkyoung(entry);
     if (ptep_set_access_flags(vma, address, pte, entry, flags & FAULT_FLAG_WRITE)) {
+        // pte内容发生变化，需要把新的内容写入pte页表项中，并且刷新TLB和cache。
         update_mmu_cache(vma, address, pte);
     } else {
         /*

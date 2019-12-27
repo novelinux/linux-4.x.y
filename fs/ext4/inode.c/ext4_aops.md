@@ -17,6 +17,8 @@ static const struct address_space_operations ext4_aops = {
     .readpages        = ext4_readpages,
 ```
 
+[ext4_readpages](./ext4_readpages.md)
+
 ## writepage
 
 ```
