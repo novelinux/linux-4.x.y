@@ -1,0 +1,172 @@
+## Background
+
+### 背景
+
+   Android o 之前是采用的 Linux capacity 机制，让system_server 具备访问 sys_resource的能力。但是这种机制，谷歌android o 上selinux 阻挡了system_server 对sys_resource的访问，造成了分区预留空间一直没有生效。
+
+   所以data分区填满的情况下，system_server 和 systemui 就会因没有剩余空间访问，而崩溃出现手机屏黑现象。
+
+### 分析思路
+
+ 是否是分区预留空间问题
+    分析屏黑时对应的手机log，确认是system-server 和systemui 因为磁盘空间不足导致访问出问题。
+
+是否是selinux 权限阻挡问题
+   1：分区空间不足时，观察logcat 输出的log，经常会出现
+
+<12>[   12.835933] type=1400 audit(1325843.199:6): avc: denied { write } for pid=XXX comm="XXXX" name="/" ..... permissive=0
+
+   这样system-server 访问sys_resource 受阻的字眼。同样场景下，Android 7上没有出现这样的字眼。
+
+   2：找到android o system.te 文件代码发现有：
+
+        neverallow system_server system_server:capability sys_resource;
+
+     说明代码在这个地方 阻止了对分区预留空间的访问。
+
+     所以确认是谷歌selinux 阻挡了system_server对sys_resource的访问。
+
+跟谷歌沟通selinux 权限阻挡问题
+     经过跟谷歌发邮件，提issue,沟通，详见：
+
+    https://partnerissuetracker.corp.google.com/u/0/issues/73810707
+
+    最后谷歌那边确认selinux 权限阻挡不能去掉，建议我们用resuid, resgid的方式可以绕开selinux权限，访问分区预留空间。
+
+调查分区预留空间生效的新机制resuid, resgid
+      1：首先，查阅kernel Documention 目录下面文档，直接grep resuid Documention -ri 即可
+
+         发现ext4 分区挂载参数章节有resuid介绍：
+
+            resgid=n            The group ID which may use the reserved blocks.
+
+            resuid=n          The user ID which may use the reserved blocks.
+
+        原来resuid, resgid是分区文件系统一个挂载参数，从上面字面意思大概理解为具备该uid,gid的可以使用预留空间。
+
+    2： resuid, resgid概念知道后，想调查谷歌代码中怎么使用该resuid, resgid的.
+
+    于是miui openjork中搜相关字眼，通过对相关字眼的代码分析，发现
+
+       1:  tune2fs 工具 -u -g选项 可以设置resgid,  resuid.
+
+       2: kernel/fs/ext4 代码中super.c 有如下使用方式：
+
+
+
+1143 Opt_resgid, Opt_resuid, Opt_sb, Opt_err_cont, Opt_err_panic, Opt_err_ro, enumerator in enum:__anon41785
+1171 {Opt_resuid, "resuid=%u"},
+1399 {Opt_resuid, 0, MOPT_GTE0},
+1537 } else if (token == Opt_resuid) {
+1543 sbi->s_resuid = uid;
+     说明的确resuid, resgid 是ext4文件系统挂载参数，在mount时候被设置。
+
+
+
+至于预留空间resgid的 方案 在ext4 文件系统中怎样发挥作用，应该跟下面函数有关。
+
+       balloc.c函数 ext4_has_free_clusters有如下使用方式：
+
+(函数ext4_has_free_clusters看代码应该是ext4 块分配的核心函数，该函数大致意思是判断是否满足分配 nclusters 大小块的需求)
+
+537static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
+538                  s64 nclusters, unsigned int flags)
+539{
+
+.........
+
+548    /*
+549     * r_blocks_count should always be multiple of the cluster ratio so
+550     * we are safe to do a plane bit shift only.
+551     */
+// ext4_r_blocks_count 返回我们 user层 设置的预留空间的数值。
+//  resv_clusters  跟我们user层设置的预留空间没有关系，，跟上层所有进程也没关系，是ext4内核层 自己添加的一个resv 策略。
+
+552    rsv = (ext4_r_blocks_count(sbi->s_es) >> sbi->s_cluster_bits) +
+553          resv_clusters;
+
+........
+
+560 /* Check whether we have space after accounting for current
+561  * dirty clusters & root reserved clusters.
+562  */
+//  这个地方的判断 这样分析代码 比较好：
+换成：
+if (free_clusters  - rsv >= (nclusters + dirty_clusters))
+进行分析
+就是先排除 预留空间里面的可用存储，看看是否满足用户的分配需求
+
+563 if (free_clusters >= (rsv + nclusters + dirty_clusters))
+564     return 1;
+
+.........
+
+// 这个地方开始resgid 发挥作用了
+
+558    if (uid_eq(sbi->s_resuid, current_fsuid()) ||
+559        (!gid_eq(sbi->s_resgid, GLOBAL_ROOT_GID) && in_group_p(sbi->s_resgid)) ||
+560        capable(CAP_SYS_RESOURCE) ||
+561        (flags & EXT4_MB_USE_ROOT_BLOCKS)) {
+562
+
+// 没有加rsv，而是只加了resv_clusters，没有加ext4_r_blocks_count，说明预留空间里面的存储也可以用作用户的分配了
+
+563        if (free_clusters >= (nclusters + dirty_clusters +
+564                      resv_clusters))
+565            return 1;
+566    }
+
+......
+
+// 如果super block里面设置 了EXT4_MB_USE_RESERVED， 那么 预留空间应该是对 所有进程 都可以使用。
+576    /* No free blocks. Let's see if we can dip into reserved pool */
+577    if (flags & EXT4_MB_USE_RESERVED) {
+578        if (free_clusters >= (nclusters + dirty_clusters))
+579            return 1;
+580    }
+581
+582    return 0;
+583}
+    从上述代码可以看出采用 resuid,  resgid, CAP_SYS_RESOURCE 这三种方式 都可以达到访问分区预留空间的目的。
+
+   通过上面发现点1， 2 对resuid,resgid代码级别使用有了大概了解后，下来很想知道 怎么在我们的系统中加入这个新机制，从而使分区预留空间最终生效。
+
+分区预留空间代码生效实现
+   我们的openjork中没有完整的怎么实现这个新机制，所以先借助谷歌的gerrit仓库看看。于是搜他们的仓库，看看他们是怎么实现的。在
+
+   https://android-review.googlesource.com/c/platform/system/core/+/581924
+
+中发现有三个相关的changes 是关于怎样让 zygote 进程 具备访问分区预留空间能力的。
+
+ 实现思路：
+
+    libcutils/include/private/android_filesystem_config.h中 新加入一个group AID_RESERVED_DISK
+#define AID_RESERVED_DISK 1065   /* GID that has access to reserved disk space */
+     fs_mgr.cpp里面把这个group 赋给resgid, 这样只有这个group具备权限访问分区预留空间，同时使用tune2fs 工具使resgid设置生效。
+
+auto reserved_blocks_str = std::to_string(reserved_blocks);
+ auto reserved_gid_str = std::to_string(AID_RESERVED_DISK);
+ const char* argv[] = {
+TUNE2FS_BIN, "-r", reserved_blocks_str.c_str(), "-g", reserved_gid_str.c_str(), blk_device}
+    然后让 zygote加入这个group，这样zygote具备访问分区预留空间的能力了。
+
+service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+    class main
+    priority -20
+    user root
+    group root readproc reserved_disk
+   同样我这边也需要让system_server，systemui具备权限访问预留空间，所以只需把这两者加入该group中就行了。
+
+分区预留空间新机制对屏黑问题的解决验证
+  目前c3c, c1上都报了因data分区空间不足，导致手机屏黑重启。
+
+  前面已经有了分区预留空间生效的代码实现思路，所以相关changes制作完后，
+
+   在这两款机型上先验证。
+
+   先不加我的新机制实现changes,  data分区填满，此时 操作手机连接wifi，必现手机黑屏崩溃。
+
+   然后打上我的changes后，分区填满后，可以连上WiFi，可以设置锁屏密码，定制铃声。而且可以重启手机后，wifi 连接的ap信息，锁屏密码，定制的铃声都没有丢失。
+  说明Android 关键进程（system-server，systemui）已经可以访问分区预留空间了，而且创建或者写wifi, 锁屏密码信息数据到该块预留空间了。
+
+     这样说明了分区预留空间新机制changes 的加入，对于分区填满后， 手机屏黑崩溃问题已经大幅度改善了。
