@@ -53,6 +53,31 @@ TIME(s)  COMM           TID    D BYTES   LAT(ms) FILENAME
 aarch64-linux-android29-clang --target=bpf -c  -nostdlibinc -I system/bpf/progs/include/ -isystem bionic/libc/include -isystem bionic/libc/kernel/uapi -isystem bionic/libc/kernel/uapi/asm-arm64 -isystem bionic/libc/kernel/android/uapi -O2 system/bpfprogs/test/bpf_load_tp_prog.c
 ```
 
+### objdump
+
+```
+$ llvm-objdump -d out/target/product/dipper/system/etc/bpf/bpf_load_tp_prog.o
+
+out/target/product/dipper/system/etc/bpf/bpf_load_tp_prog.o:	file format ELF64-BPF
+
+Disassembly of section tracepoint/sched/sched_switch:
+tp_sched_switch:
+       0:	bf 16 00 00 00 00 00 00 	r6 = r1
+       1:	85 00 00 00 08 00 00 00 	call 8
+       2:	63 0a fc ff 00 00 00 00 	*(u32 *)(r10 - 4) = r0
+       3:	61 61 38 00 00 00 00 00 	r1 = *(u32 *)(r6 + 56)
+       4:	63 1a f8 ff 00 00 00 00 	*(u32 *)(r10 - 8) = r1
+       5:	bf a2 00 00 00 00 00 00 	r2 = r10
+       6:	07 02 00 00 fc ff ff ff 	r2 += -4
+       7:	bf a3 00 00 00 00 00 00 	r3 = r10
+       8:	07 03 00 00 f8 ff ff ff 	r3 += -8
+       9:	18 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 	r1 = 0 ll
+      11:	b7 04 00 00 00 00 00 00 	r4 = 0
+      12:	85 00 00 00 02 00 00 00 	call 2
+      13:	b7 00 00 00 00 00 00 00 	r0 = 0
+      14:	95 00 00 00 00 00 00 00 	exit
+```
+
 ## References
 
 * https://www.ibm.com/developerworks/cn/linux/l-lo-eBPF-history/index.html
